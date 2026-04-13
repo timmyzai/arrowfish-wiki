@@ -63,6 +63,12 @@
   .tl-text { font-size: .88rem; color: var(--text-2); }
   .tl-text strong { color: var(--text); }
 
+  /* ── Language toggle ── */
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+  .en-notice { display:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:.7rem 1rem; margin:.75rem 0 1.5rem; font-size:.83rem; color:#1E40AF; }
+
   .toc-toggle { display: none; }
   .mobile-toc { display: none; }
   @media (max-width: 768px) {
@@ -80,44 +86,48 @@
 <div class="topbar">
   <a class="back-btn" href="../index.html">
     <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    返回文档中心
+    <span data-i18n="doc.back">返回文档中心</span>
   </a>
   <div class="topbar-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
     <span class="badge badge-story">Story</span>
-    <span class="topbar-date">2026年4月</span>
+    <span class="topbar-date" data-i18n="doc.date">2026年4月</span>
   </div>
 </div>
 
 <div class="layout">
   <nav class="toc-sidebar" id="tocSidebar">
-    <div class="toc-title">目录</div>
+    <div class="toc-title" data-i18n="doc.toc.label">目录</div>
     <ul class="toc-list" id="tocList">
-      <li><a href="#s1">背景：我们从哪里接手</a></li>
-      <li><a href="#s2">Arrowfish 的现状</a></li>
-      <li><a href="#s3">为什么需要 FFF</a></li>
-      <li><a href="#s4">FFF 是什么</a></li>
-      <li><a href="#s5">两个产品如何并存</a></li>
-      <li><a href="#s6">里程碑时间线</a></li>
-      <li><a href="#s7">对团队意味着什么</a></li>
-      <li><a href="#s8">关键风险</a></li>
+      <li><a href="#s1" data-i18n="story.toc.s1">背景：我们从哪里接手</a></li>
+      <li><a href="#s2" data-i18n="story.toc.s2">Arrowfish 的现状</a></li>
+      <li><a href="#s3" data-i18n="story.toc.s3">为什么需要 FFF</a></li>
+      <li><a href="#s4" data-i18n="story.toc.s4">FFF 是什么</a></li>
+      <li><a href="#s5" data-i18n="story.toc.s5">两个产品如何并存</a></li>
+      <li><a href="#s6" data-i18n="story.toc.s6">里程碑时间线</a></li>
+      <li><a href="#s7" data-i18n="story.toc.s7">对团队意味着什么</a></li>
+      <li><a href="#s8" data-i18n="story.toc.s8">关键风险</a></li>
     </ul>
   </nav>
 
   <main class="article">
     <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
-      <span>目录</span>
+      <span data-i18n="doc.toc.toggle">目录</span>
       <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="mobile-toc" id="mobileToc">
       <ul class="toc-list">
-        <li><a href="#s1">背景：我们从哪里接手</a></li>
-        <li><a href="#s2">Arrowfish 的现状</a></li>
-        <li><a href="#s3">为什么需要 FFF</a></li>
-        <li><a href="#s4">FFF 是什么</a></li>
-        <li><a href="#s5">两个产品如何并存</a></li>
-        <li><a href="#s6">里程碑时间线</a></li>
-        <li><a href="#s7">对团队意味着什么</a></li>
-        <li><a href="#s8">关键风险</a></li>
+        <li><a href="#s1" data-i18n="story.toc.s1">背景：我们从哪里接手</a></li>
+        <li><a href="#s2" data-i18n="story.toc.s2">Arrowfish 的现状</a></li>
+        <li><a href="#s3" data-i18n="story.toc.s3">为什么需要 FFF</a></li>
+        <li><a href="#s4" data-i18n="story.toc.s4">FFF 是什么</a></li>
+        <li><a href="#s5" data-i18n="story.toc.s5">两个产品如何并存</a></li>
+        <li><a href="#s6" data-i18n="story.toc.s6">里程碑时间线</a></li>
+        <li><a href="#s7" data-i18n="story.toc.s7">对团队意味着什么</a></li>
+        <li><a href="#s8" data-i18n="story.toc.s8">关键风险</a></li>
       </ul>
     </div>
 
@@ -128,6 +138,8 @@
         <span>适合：全体团队成员</span>
       </div>
     </div>
+
+    <div class="en-notice" data-i18n="en.notice"></div>
 
     <div class="callout purple">这份文档帮助所有人理解：我们为什么要做 FFF、Arrowfish 的去向，以及这个决定对每个人意味着什么。</div>
 
@@ -146,7 +158,7 @@
     </ul>
     <h3>需要正视的问题</h3>
     <ul>
-      <li><strong>原生 Android 架构</strong>——只能服务 Android，无法复用到 iOS 或 PC</li>
+      <li><strong>架构碎片化</strong>——Android 原生、PC 端 sing-box、iOS 端 HiYou SSH 三套独立实现，互不复用，任何功能改动都要维护三份</li>
       <li><strong>技术债严重</strong>——接手后第一个月就发现并修复了 49+ 个安全和稳定性问题</li>
       <li><strong>用户流失严重</strong>——月活从 2.9 万（10月）降至 1.5 万（3月），新用户第2个月留存率约 10%</li>
       <li><strong>节点频繁中断</strong>——是用户 #1 投诉，节点稳定性是最核心痛点</li>
@@ -162,7 +174,7 @@
     </ul>
     <p>同时，业务上也有迫切需求：</p>
     <ul>
-      <li>需要覆盖 <strong>iOS 用户</strong>（当前 iOS 渗透率不到 1%）</li>
+      <li>需要覆盖 <strong>iOS 用户</strong>（当前 iOS 客户端 HiYou SSH 已停止更新，开发者账号被封，无法继续发版）</li>
       <li>需要覆盖 <strong>PC（macOS / Windows）</strong>用户</li>
       <li>需要在新公司主体下运营（欧盟合规要求）</li>
       <li>需要从第一天起就做好无日志合规架构</li>
@@ -216,7 +228,7 @@
     <ul>
       <li>FFF 完成重构，输出可测试版本</li>
       <li>支付网关切换至新公司名义</li>
-      <li>iOS / Android 开发者账号迁移至新公司</li>
+      <li>Android 开发者账号迁移至新公司；FFF iOS 开发者账号在新公司主体下<strong>重新注册</strong>（旧账号已被封，无法迁移）</li>
     </ul>
 
     <h2 id="s7">七、对团队意味着什么</h2>
@@ -262,5 +274,7 @@ function toggleToc() {
   onScroll();
 })();
 </script>
+<script src="../lang.js"></script>
+<script>initLang();</script>
 </body>
 </html>

@@ -88,6 +88,12 @@
   .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
   .stat-lbl { font-size: .75rem; color: var(--text-3); margin-top: 3px; }
 
+  /* ── Language toggle ── */
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+  .en-notice { display:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:.7rem 1rem; margin:.75rem 0 1.5rem; font-size:.83rem; color:#1E40AF; }
+
   /* ── Mobile TOC toggle ── */
   .toc-toggle { display: none; }
   .mobile-toc { display: none; }
@@ -114,11 +120,15 @@
 <div class="topbar">
   <a class="back-btn" href="../index.html">
     <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    返回文档中心
+    <span data-i18n="doc.back">返回文档中心</span>
   </a>
   <div class="topbar-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
     <span class="badge badge-prd">PRD</span>
-    <span class="topbar-date">2026年4月</span>
+    <span class="topbar-date" data-i18n="doc.date">2026年4月</span>
   </div>
 </div>
 
@@ -126,25 +136,25 @@
 
   <!-- Sidebar TOC -->
   <nav class="toc-sidebar" id="tocSidebar" aria-label="目录">
-    <div class="toc-title">目录</div>
+    <div class="toc-title" data-i18n="doc.toc.label">目录</div>
     <ul class="toc-list" id="tocList">
-      <li><a href="#s1">一、产品是什么</a></li>
-      <li><a href="#s2">二、产品战略方向</a></li>
-      <li><a href="#s3">三、用户体系</a></li>
-      <li><a href="#s4">四、会员套餐</a></li>
-      <li><a href="#s5">五、支付方式</a></li>
-      <li><a href="#s6">六、VPN 连接功能</a></li>
-      <li><a href="#s7">七、免费体验与广告</a></li>
-      <li><a href="#s8">八、积分与抽奖</a></li>
-      <li><a href="#s9">九、推荐与佣金</a></li>
-      <li><a href="#s10">十、优惠券</a></li>
-      <li><a href="#s11">十一、营销与活动</a></li>
-      <li><a href="#s12">十二、内容模块</a></li>
-      <li><a href="#s13">十三、反馈与客服</a></li>
-      <li><a href="#s14">十四、消息通知</a></li>
-      <li><a href="#s15">十五、管理后台</a></li>
-      <li><a href="#s16">十六、合规与隐私</a></li>
-      <li><a href="#s17">十七、业务数据</a></li>
+      <li><a href="#s1" data-i18n="prd.toc.s1">一、产品是什么</a></li>
+      <li><a href="#s2" data-i18n="prd.toc.s2">二、产品战略方向</a></li>
+      <li><a href="#s3" data-i18n="prd.toc.s3">三、用户体系</a></li>
+      <li><a href="#s4" data-i18n="prd.toc.s4">四、会员套餐</a></li>
+      <li><a href="#s5" data-i18n="prd.toc.s5">五、支付方式</a></li>
+      <li><a href="#s6" data-i18n="prd.toc.s6">六、VPN 连接功能</a></li>
+      <li><a href="#s7" data-i18n="prd.toc.s7">七、免费体验与广告</a></li>
+      <li><a href="#s8" data-i18n="prd.toc.s8">八、积分与抽奖</a></li>
+      <li><a href="#s9" data-i18n="prd.toc.s9">九、推荐与佣金</a></li>
+      <li><a href="#s10" data-i18n="prd.toc.s10">十、优惠券</a></li>
+      <li><a href="#s11" data-i18n="prd.toc.s11">十一、营销与活动</a></li>
+      <li><a href="#s12" data-i18n="prd.toc.s12">十二、内容模块</a></li>
+      <li><a href="#s13" data-i18n="prd.toc.s13">十三、反馈与客服</a></li>
+      <li><a href="#s14" data-i18n="prd.toc.s14">十四、消息通知</a></li>
+      <li><a href="#s15" data-i18n="prd.toc.s15">十五、管理后台</a></li>
+      <li><a href="#s16" data-i18n="prd.toc.s16">十六、合规与隐私</a></li>
+      <li><a href="#s17" data-i18n="prd.toc.s17">十七、业务数据</a></li>
     </ul>
   </nav>
 
@@ -152,28 +162,28 @@
 
     <!-- Mobile TOC -->
     <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
-      <span>目录</span>
+      <span data-i18n="doc.toc.toggle">目录</span>
       <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="mobile-toc" id="mobileToc">
       <ul class="toc-list">
-        <li><a href="#s1">一、产品是什么</a></li>
-        <li><a href="#s2">二、产品战略方向</a></li>
-        <li><a href="#s3">三、用户体系</a></li>
-        <li><a href="#s4">四、会员套餐</a></li>
-        <li><a href="#s5">五、支付方式</a></li>
-        <li><a href="#s6">六、VPN 连接功能</a></li>
-        <li><a href="#s7">七、免费体验与广告</a></li>
-        <li><a href="#s8">八、积分与抽奖</a></li>
-        <li><a href="#s9">九、推荐与佣金</a></li>
-        <li><a href="#s10">十、优惠券</a></li>
-        <li><a href="#s11">十一、营销与活动</a></li>
-        <li><a href="#s12">十二、内容模块</a></li>
-        <li><a href="#s13">十三、反馈与客服</a></li>
-        <li><a href="#s14">十四、消息通知</a></li>
-        <li><a href="#s15">十五、管理后台</a></li>
-        <li><a href="#s16">十六、合规与隐私</a></li>
-        <li><a href="#s17">十七、业务数据</a></li>
+        <li><a href="#s1" data-i18n="prd.toc.s1">一、产品是什么</a></li>
+        <li><a href="#s2" data-i18n="prd.toc.s2">二、产品战略方向</a></li>
+        <li><a href="#s3" data-i18n="prd.toc.s3">三、用户体系</a></li>
+        <li><a href="#s4" data-i18n="prd.toc.s4">四、会员套餐</a></li>
+        <li><a href="#s5" data-i18n="prd.toc.s5">五、支付方式</a></li>
+        <li><a href="#s6" data-i18n="prd.toc.s6">六、VPN 连接功能</a></li>
+        <li><a href="#s7" data-i18n="prd.toc.s7">七、免费体验与广告</a></li>
+        <li><a href="#s8" data-i18n="prd.toc.s8">八、积分与抽奖</a></li>
+        <li><a href="#s9" data-i18n="prd.toc.s9">九、推荐与佣金</a></li>
+        <li><a href="#s10" data-i18n="prd.toc.s10">十、优惠券</a></li>
+        <li><a href="#s11" data-i18n="prd.toc.s11">十一、营销与活动</a></li>
+        <li><a href="#s12" data-i18n="prd.toc.s12">十二、内容模块</a></li>
+        <li><a href="#s13" data-i18n="prd.toc.s13">十三、反馈与客服</a></li>
+        <li><a href="#s14" data-i18n="prd.toc.s14">十四、消息通知</a></li>
+        <li><a href="#s15" data-i18n="prd.toc.s15">十五、管理后台</a></li>
+        <li><a href="#s16" data-i18n="prd.toc.s16">十六、合规与隐私</a></li>
+        <li><a href="#s17" data-i18n="prd.toc.s17">十七、业务数据</a></li>
       </ul>
     </div>
 
@@ -186,11 +196,13 @@
       </div>
     </div>
 
+    <div class="en-notice" data-i18n="en.notice"></div>
+
     <h2 id="s1">一、产品是什么</h2>
     <p>Arrowfish VPN 是一款面向中文用户的商业 VPN 服务，帮助用户安全访问 Google、YouTube、社交媒体等被中国防火长城屏蔽的境外网站。</p>
     <table>
       <tr><th>组成部分</th><th>说明</th></tr>
-      <tr><td><strong>Arrowfish（现役）</strong></td><td>现有 Android 应用 + Windows / macOS 客户端</td></tr>
+      <tr><td><strong>Arrowfish（现役）</strong></td><td>Android 应用（主力）+ Windows / macOS 客户端 + iOS 端 HiYou SSH（已冻结，开发者账号被封，无法更新）</td></tr>
       <tr><td><strong>FFF（下一代）</strong></td><td>正在开发的全新跨平台应用，覆盖 Android、iOS、PC，计划2026年6月上线</td></tr>
       <tr><td><strong>管理后台（BO）</strong></td><td>管理用户、订单、节点、内容的内部管理平台</td></tr>
     </table>
@@ -427,5 +439,7 @@ function toggleToc() {
   onScroll();
 })();
 </script>
+<script src="../lang.js"></script>
+<script>initLang();</script>
 </body>
 </html>

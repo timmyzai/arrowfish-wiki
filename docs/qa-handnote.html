@@ -63,6 +63,12 @@
   .bug-yes td:nth-child(3) { color: #059669; font-weight: 600; }
   .bug-no  td:nth-child(3) { color: #DC2626; font-weight: 600; }
   .env-banner { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius); padding: .75rem 1rem; margin-bottom: 1.5rem; font-size: .85rem; color: #1E40AF; display: flex; gap: .5rem; align-items: center; }
+  /* ── Language toggle ── */
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+  .en-notice { display:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:.7rem 1rem; margin:.75rem 0 1.5rem; font-size:.83rem; color:#1E40AF; }
+
   .toc-toggle { display: none; }
   .mobile-toc { display: none; }
   @media (max-width: 768px) {
@@ -80,55 +86,59 @@
 <div class="topbar">
   <a class="back-btn" href="../index.html">
     <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    返回文档中心
+    <span data-i18n="doc.back">返回文档中心</span>
   </a>
   <div class="topbar-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
     <span class="badge badge-qa">QA</span>
     <span class="badge badge-staging">Staging Only</span>
-    <span class="topbar-date">2026年4月</span>
+    <span class="topbar-date" data-i18n="doc.date">2026年4月</span>
   </div>
 </div>
 
 <div class="layout">
   <nav class="toc-sidebar" id="tocSidebar">
-    <div class="toc-title">目录</div>
+    <div class="toc-title" data-i18n="doc.toc.label">目录</div>
     <ul class="toc-list" id="tocList">
-      <li><a href="#s1">测试环境基本信息</a></li>
-      <li><a href="#s2">登录与账号安全</a></li>
-      <li><a href="#s3">免费用户时长限制</a></li>
-      <li><a href="#s4">VPN 连接行为</a></li>
-      <li><a href="#s5">客户端版本控制</a></li>
-      <li><a href="#s6">系统功能开关</a></li>
-      <li><a href="#s7">广告配置</a></li>
-      <li><a href="#s8">支付功能</a></li>
-      <li><a href="#s9">节点同步机制</a></li>
-      <li><a href="#s10">常见误判对照表</a></li>
-      <li><a href="#s11">已知问题清单</a></li>
-      <li><a href="#s12">测试账号管理</a></li>
-      <li><a href="#s13">测试 vs 生产差异</a></li>
+      <li><a href="#s1" data-i18n="qa.toc.s1">测试环境基本信息</a></li>
+      <li><a href="#s2" data-i18n="qa.toc.s2">登录与账号安全</a></li>
+      <li><a href="#s3" data-i18n="qa.toc.s3">免费用户时长限制</a></li>
+      <li><a href="#s4" data-i18n="qa.toc.s4">VPN 连接行为</a></li>
+      <li><a href="#s5" data-i18n="qa.toc.s5">客户端版本控制</a></li>
+      <li><a href="#s6" data-i18n="qa.toc.s6">系统功能开关</a></li>
+      <li><a href="#s7" data-i18n="qa.toc.s7">广告配置</a></li>
+      <li><a href="#s8" data-i18n="qa.toc.s8">支付功能</a></li>
+      <li><a href="#s9" data-i18n="qa.toc.s9">节点同步机制</a></li>
+      <li><a href="#s10" data-i18n="qa.toc.s10">常见误判对照表</a></li>
+      <li><a href="#s11" data-i18n="qa.toc.s11">已知问题清单</a></li>
+      <li><a href="#s12" data-i18n="qa.toc.s12">测试账号管理</a></li>
+      <li><a href="#s13" data-i18n="qa.toc.s13">测试 vs 生产差异</a></li>
     </ul>
   </nav>
 
   <main class="article">
     <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
-      <span>目录</span>
+      <span data-i18n="doc.toc.toggle">目录</span>
       <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="mobile-toc" id="mobileToc">
       <ul class="toc-list">
-        <li><a href="#s1">测试环境基本信息</a></li>
-        <li><a href="#s2">登录与账号安全</a></li>
-        <li><a href="#s3">免费用户时长限制</a></li>
-        <li><a href="#s4">VPN 连接行为</a></li>
-        <li><a href="#s5">客户端版本控制</a></li>
-        <li><a href="#s6">系统功能开关</a></li>
-        <li><a href="#s7">广告配置</a></li>
-        <li><a href="#s8">支付功能</a></li>
-        <li><a href="#s9">节点同步机制</a></li>
-        <li><a href="#s10">常见误判对照表</a></li>
-        <li><a href="#s11">已知问题清单</a></li>
-        <li><a href="#s12">测试账号管理</a></li>
-        <li><a href="#s13">测试 vs 生产差异</a></li>
+        <li><a href="#s1" data-i18n="qa.toc.s1">测试环境基本信息</a></li>
+        <li><a href="#s2" data-i18n="qa.toc.s2">登录与账号安全</a></li>
+        <li><a href="#s3" data-i18n="qa.toc.s3">免费用户时长限制</a></li>
+        <li><a href="#s4" data-i18n="qa.toc.s4">VPN 连接行为</a></li>
+        <li><a href="#s5" data-i18n="qa.toc.s5">客户端版本控制</a></li>
+        <li><a href="#s6" data-i18n="qa.toc.s6">系统功能开关</a></li>
+        <li><a href="#s7" data-i18n="qa.toc.s7">广告配置</a></li>
+        <li><a href="#s8" data-i18n="qa.toc.s8">支付功能</a></li>
+        <li><a href="#s9" data-i18n="qa.toc.s9">节点同步机制</a></li>
+        <li><a href="#s10" data-i18n="qa.toc.s10">常见误判对照表</a></li>
+        <li><a href="#s11" data-i18n="qa.toc.s11">已知问题清单</a></li>
+        <li><a href="#s12" data-i18n="qa.toc.s12">测试账号管理</a></li>
+        <li><a href="#s13" data-i18n="qa.toc.s13">测试 vs 生产差异</a></li>
       </ul>
     </div>
 
@@ -139,6 +149,8 @@
         <span>适合：QA 测试人员</span>
       </div>
     </div>
+
+    <div class="en-notice" data-i18n="en.notice"></div>
 
     <div class="env-banner">ℹ️ 本文档仅适用于<strong>测试（Staging）环境</strong>。正式生产环境配置不同，上线前将另行发布正式环境参考文档。</div>
 
@@ -187,7 +199,7 @@
     <table>
       <tr><th>平台</th><th>版本号</th><th>强制更新</th><th>测试影响</th></tr>
       <tr><td>Android</td><td><code>1.7.36</code></td><td class="ok">关闭</td><td>旧版本可正常使用，不弹强制更新</td></tr>
-      <tr><td>iOS（HiYou）</td><td><code>0.91</code></td><td class="ok">关闭</td><td>同上</td></tr>
+      <tr><td>iOS（HiYou SSH）</td><td><code>1.3.0</code></td><td class="ok">关闭</td><td>App Store 版本已冻结（开发者账号被封），无法发布新版本；现有安装用户仍可使用</td></tr>
       <tr><td>Windows x64</td><td><code>1.6.6</code></td><td class="ok">关闭</td><td>同上</td></tr>
       <tr><td>Windows ARM64</td><td><code>1.6.6</code></td><td class="ok">关闭</td><td>同上</td></tr>
       <tr style="background:#FFF7F7"><td>Mac Intel</td><td><code>1.2.51</code></td><td class="on">⛔ 开启</td><td>打开 App 立即弹强制更新，<strong>无法跳过</strong></td></tr>
@@ -226,6 +238,7 @@
       <li>USDT TRC20：最长等待 15 分钟</li>
       <li>USDT ERC20：最长等待 30 分钟（链上确认时间）</li>
     </ul>
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>已知 Bug（待修复）：</strong>支付成功、后端回调返回 200 后，App 界面不会自动刷新——用户仍看到未付款状态。需<strong>重新登录</strong>才能看到会员已到账。测试支付流程时请注意：支付成功≠App 显示成功，务必重新登录验证实际权限是否生效。</span></div>
 
     <h2 id="s9">九、节点与线路同步机制</h2>
     <div class="callout info"><span class="callout-icon">ℹ️</span><span><strong>关键：</strong>在后台修改用户会员等级或套餐权限后，不要立刻测试——需等待约 <strong>60 秒</strong>让节点同步，再验证权限是否生效。</span></div>
@@ -248,6 +261,7 @@
       <tr class="bug-yes"><td>推荐码输入后无任何反应</td><td>推荐功能开关关闭</td><td>不是</td></tr>
       <tr class="bug-yes"><td>广告内容是英文 / 看起来很奇怪</td><td>测试环境用 Google 测试广告 ID</td><td>不是</td></tr>
       <tr class="bug-yes"><td>USDT 支付后会员没有立刻生效</td><td>TRC20等15分钟，ERC20等30分钟</td><td>不是（超时未到账则是）</td></tr>
+      <tr class="bug-yes"><td>支付成功后会员等级没有变化</td><td>支付已到账，但 App 需重新登录才能刷新状态，不是支付失败</td><td>不是（支付问题）</td></tr>
       <tr class="bug-no"><td>手机锁屏超5分钟，App显示已连线但网站打不开，延迟65535ms</td><td>客户端 Doze 模式 Bug，已知问题</td><td>是（记录）</td></tr>
     </table>
 
@@ -260,6 +274,8 @@
       <tr><td>3</td><td>设备数量限制未实际执行</td><td>所有付费用户</td><td>Sprint 3</td></tr>
       <tr><td>4</td><td>推送通知不可用（JPush / 小米 / 华为未完整注册）</td><td>所有用户</td><td>待排期</td></tr>
       <tr><td>5</td><td>专线分配仍为手动操作（自动化已开发，待上线）</td><td>运营团队</td><td>Sprint 2</td></tr>
+      <tr><td>6</td><td>支付成功后 App 界面不自动刷新——需重新登录才能看到会员到账</td><td>所有支付用户</td><td>Sprint 2</td></tr>
+      <tr><td>7</td><td>Mac 安装后报错 <code>run core failed: connect ENOENT /tmp/arrowflsh-core.sock</code>——socket 路径存在拼写错误（arrowfl<strong>sh</strong> 缺少字母 i）</td><td>Mac 用户</td><td>Sprint 2</td></tr>
     </table>
 
     <h2 id="s12">十二、测试账号管理建议</h2>
@@ -291,6 +307,7 @@
       <tr><td>推荐功能</td><td>关闭</td><td>关闭（也待修复）</td></tr>
       <tr><td>数据库</td><td>独立实例，数据独立</td><td>主从架构，真实数据</td></tr>
       <tr><td>节点端口</td><td>1443</td><td>443</td></tr>
+      <tr><td>iOS（HiYou SSH）</td><td>App Store 上架版本 v1.3.0，<strong>已停止更新</strong>（开发者账号被封）</td><td>仅供现有用户使用，无法推送新版本</td></tr>
     </table>
 
   </main>
@@ -316,5 +333,7 @@ function toggleToc() {
   onScroll();
 })();
 </script>
+<script src="../lang.js"></script>
+<script>initLang();</script>
 </body>
 </html>

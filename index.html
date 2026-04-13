@@ -146,6 +146,11 @@
     font-size: .8rem; color: var(--text-3);
   }
 
+  /* ── Language toggle ── */
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+
   @media (max-width: 600px) {
     .hero { padding: 2rem 1.25rem 2.5rem; }
     .doc-grid, .filter-bar, .section-label { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -165,25 +170,28 @@
         </svg>
       </div>
       <span class="logo-name">Arrowfish Wiki</span>
-      <span class="logo-tag">Internal</span>
+      <span class="logo-tag" data-i18n="logo.tag">Internal</span>
     </a>
-    <div class="header-right">更新于 2026年4月</div>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
   </div>
 </header>
 
 <div class="hero">
-  <h1>团队内部文档中心</h1>
-  <p>产品说明、质量保证手册、项目演进故事——所有核心文档集中在这里</p>
+  <h1 data-i18n="hero.title">团队内部文档中心</h1>
+  <p data-i18n="hero.sub">产品说明、质量保证手册、项目演进故事——所有核心文档集中在这里</p>
 </div>
 
 <div class="filter-bar">
-  <button class="filter-btn active" onclick="filterDocs('all', this)">全部</button>
-  <button class="filter-btn" onclick="filterDocs('prd', this)">PRD</button>
-  <button class="filter-btn" onclick="filterDocs('qa', this)">QA</button>
-  <button class="filter-btn" onclick="filterDocs('story', this)">Story</button>
+  <button class="filter-btn active" onclick="filterDocs('all', this)" data-i18n="filter.all">全部</button>
+  <button class="filter-btn" onclick="filterDocs('prd', this)" data-i18n="filter.prd">PRD</button>
+  <button class="filter-btn" onclick="filterDocs('qa', this)" data-i18n="filter.qa">QA</button>
+  <button class="filter-btn" onclick="filterDocs('story', this)" data-i18n="filter.story">Story</button>
 </div>
 
-<div class="section-label">文档列表</div>
+<div class="section-label" data-i18n="section.docs">文档列表</div>
 
 <div class="doc-grid" id="docGrid">
 
@@ -201,14 +209,14 @@
         </svg>
       </div>
     </div>
-    <div class="card-title">Arrowfish VPN 业务说明文档</div>
-    <div class="card-desc">产品功能全貌、用户体系、套餐与支付、VPN连接机制、营销与内容模块的完整业务逻辑说明。BA / PM 产品上手必读。</div>
+    <div class="card-title" data-i18n="card.prd.title">Arrowfish VPN 业务说明文档</div>
+    <div class="card-desc" data-i18n="card.prd.desc">产品功能全貌、用户体系、套餐与支付、VPN连接机制、营销与内容模块的完整业务逻辑说明。BA / PM 产品上手必读。</div>
     <div class="card-audience">
       <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
-      适合：BA · PM · 非技术成员
+      <span data-i18n="card.prd.audience">适合：BA · PM · 非技术成员</span>
     </div>
     <div class="card-arrow">
-      阅读文档
+      <span data-i18n="card.read">阅读文档</span>
       <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </a>
@@ -227,14 +235,14 @@
         </svg>
       </div>
     </div>
-    <div class="card-title">从 Arrowfish 到 FFF — 产品演进故事</div>
-    <div class="card-desc">为什么我们决定重建一款全新应用？Arrowfish 的现状、局限、FFF 的目标和时间线，帮助所有人理解项目方向。</div>
+    <div class="card-title" data-i18n="card.story.title">从 Arrowfish 到 FFF — 产品演进故事</div>
+    <div class="card-desc" data-i18n="card.story.desc">为什么我们决定重建一款全新应用？Arrowfish 的现状、局限、FFF 的目标和时间线，帮助所有人理解项目方向。</div>
     <div class="card-audience">
       <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
-      适合：全体团队成员
+      <span data-i18n="card.story.audience">适合：全体团队成员</span>
     </div>
     <div class="card-arrow">
-      阅读文档
+      <span data-i18n="card.read">阅读文档</span>
       <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </a>
@@ -253,25 +261,27 @@
         </svg>
       </div>
     </div>
-    <div class="card-title">QA 测试手册 — 测试环境配置</div>
-    <div class="card-desc">Staging 环境所有影响测试结果的配置一览：登录规则、免费时长、VPN 连接行为、版本控制、支付说明及常见误判对照。</div>
+    <div class="card-title" data-i18n="card.qa.title">QA 测试手册 — 测试环境配置</div>
+    <div class="card-desc" data-i18n="card.qa.desc">Staging 环境所有影响测试结果的配置一览：登录规则、免费时长、VPN 连接行为、版本控制、支付说明及常见误判对照。</div>
     <div class="card-audience">
       <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
-      适合：QA 测试人员
+      <span data-i18n="card.qa.audience">适合：QA 测试人员</span>
     </div>
     <div class="card-arrow">
-      阅读文档
+      <span data-i18n="card.read">阅读文档</span>
       <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </a>
 
 </div>
 
-<footer class="site-footer">
+<footer class="site-footer" data-i18n="footer">
   Arrowfish Team · 内部文档 · 请勿对外分享 · 2026
 </footer>
 
+<script src="lang.js"></script>
 <script>
+initLang();
 function filterDocs(type, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
