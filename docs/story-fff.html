@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>从 Arrowfish 到 FFF — 产品演进故事 — Arrowfish Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="../auth-gate.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+    --text: #0F172A; --text-2: #475569; --text-3: #94A3B8;
+    --accent: #7C3AED; --accent-light: #EDE9FE; --navy: #1E3A5F;
+    --radius: 10px;
+    --sidebar-w: 240px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter','Noto Sans SC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .topbar { background: var(--navy); height: 56px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .back-btn { display: flex; align-items: center; gap: 6px; color: #94A3B8; font-size: .85rem; text-decoration: none; transition: color .15s; }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-story { background: #EDE9FE; color: #5B21B6; }
+  .topbar-date { font-size: .78rem; color: #64748B; }
+  .layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; gap: 2rem; align-items: flex-start; }
+  .toc-sidebar { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 72px; max-height: calc(100vh - 80px); overflow-y: auto; padding: 1.5rem 0; }
+  .toc-title { font-size: .72rem; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .75rem; padding-left: .75rem; }
+  .toc-list { list-style: none; }
+  .toc-list li a { display: block; padding: .35rem .75rem; border-left: 2px solid transparent; font-size: .82rem; color: var(--text-2); text-decoration: none; border-radius: 0 4px 4px 0; transition: color .15s, border-color .15s, background .15s; line-height: 1.4; }
+  .toc-list li a:hover { color: var(--accent); background: var(--accent-light); }
+  .toc-list li a.active { color: var(--accent); border-color: var(--accent); font-weight: 500; background: var(--accent-light); }
+  .article { flex: 1; min-width: 0; padding: 2rem 0 4rem; }
+  .doc-hero { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; line-height: 1.3; margin-bottom: .5rem; }
+  .doc-meta { font-size: .83rem; color: var(--text-3); display: flex; gap: 1rem; flex-wrap: wrap; }
+  h2 { font-size: 1.1rem; font-weight: 700; margin: 2.25rem 0 .75rem; padding-bottom: .5rem; border-bottom: 2px solid var(--accent); scroll-margin-top: 80px; }
+  h3 { font-size: .9rem; font-weight: 600; color: var(--text-2); margin: 1.5rem 0 .5rem; text-transform: uppercase; letter-spacing: .04em; }
+  p { font-size: .9rem; color: var(--text-2); margin: .6rem 0; }
+  ul { padding-left: 1.25rem; font-size: .9rem; color: var(--text-2); margin: .5rem 0; }
+  ul li { padding: .25rem 0; }
+  strong { color: var(--text); font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  th { background: #F1F5F9; font-size: .78rem; font-weight: 600; padding: .6rem .85rem; text-align: left; color: var(--text-2); }
+  td { padding: .6rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: var(--text); }
+  .callout { background: #FFFBEB; border-left: 3px solid #F59E0B; border-radius: 0 var(--radius) var(--radius) 0; padding: .85rem 1rem; margin: .75rem 0; font-size: .85rem; color: #78350F; }
+  .callout.purple { background: var(--accent-light); border-color: var(--accent); color: #5B21B6; }
+  .callout.green { background: #F0FDF4; border-color: #059669; color: #065F46; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 1.75rem; margin: 1rem 0; }
+  .timeline::before { content: ''; position: absolute; left: .5rem; top: .5rem; bottom: .5rem; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 1.25rem; }
+  .tl-item::before { content: ''; position: absolute; left: -1.25rem; top: .45rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; }
+  .tl-item.milestone::before { background: #F59E0B; width: 12px; height: 12px; left: -1.35rem; }
+  .tl-date { font-size: .78rem; font-weight: 700; color: var(--accent); margin-bottom: .2rem; }
+  .tl-item.milestone .tl-date { color: #D97706; }
+  .tl-text { font-size: .88rem; color: var(--text-2); }
+  .tl-text strong { color: var(--text); }
+
+  .toc-toggle { display: none; }
+  .mobile-toc { display: none; }
+  @media (max-width: 768px) {
+    .toc-sidebar { display: none; }
+    .layout { padding: 0 1rem; }
+    .toc-toggle { display: flex; align-items: center; gap: 6px; width: 100%; padding: .65rem 1rem; margin: 1rem 0 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .83rem; font-weight: 500; color: var(--text-2); cursor: pointer; justify-content: space-between; }
+    .toc-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .toc-toggle.open svg { transform: rotate(180deg); }
+    .mobile-toc.open { display: block; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: .5rem 0 .75rem; margin-bottom: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="../index.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    返回文档中心
+  </a>
+  <div class="topbar-right">
+    <span class="badge badge-story">Story</span>
+    <span class="topbar-date">2026年4月</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc-sidebar" id="tocSidebar">
+    <div class="toc-title">目录</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#s1">背景：我们从哪里接手</a></li>
+      <li><a href="#s2">Arrowfish 的现状</a></li>
+      <li><a href="#s3">为什么需要 FFF</a></li>
+      <li><a href="#s4">FFF 是什么</a></li>
+      <li><a href="#s5">两个产品如何并存</a></li>
+      <li><a href="#s6">里程碑时间线</a></li>
+      <li><a href="#s7">对团队意味着什么</a></li>
+      <li><a href="#s8">关键风险</a></li>
+    </ul>
+  </nav>
+
+  <main class="article">
+    <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
+      <span>目录</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="mobile-toc" id="mobileToc">
+      <ul class="toc-list">
+        <li><a href="#s1">背景：我们从哪里接手</a></li>
+        <li><a href="#s2">Arrowfish 的现状</a></li>
+        <li><a href="#s3">为什么需要 FFF</a></li>
+        <li><a href="#s4">FFF 是什么</a></li>
+        <li><a href="#s5">两个产品如何并存</a></li>
+        <li><a href="#s6">里程碑时间线</a></li>
+        <li><a href="#s7">对团队意味着什么</a></li>
+        <li><a href="#s8">关键风险</a></li>
+      </ul>
+    </div>
+
+    <div class="doc-hero">
+      <h1>从 Arrowfish 到 FFF — 产品演进故事</h1>
+      <div class="doc-meta">
+        <span>整理日期：2026年4月</span>
+        <span>适合：全体团队成员</span>
+      </div>
+    </div>
+
+    <div class="callout purple">这份文档帮助所有人理解：我们为什么要做 FFF、Arrowfish 的去向，以及这个决定对每个人意味着什么。</div>
+
+    <h2 id="s1">一、背景：我们从哪里接手</h2>
+    <p>2026年3月，我们从台湾外包团队完成了项目交接。原本计划25个工作日完成的交接，被压缩到了 4 天。</p>
+    <p>这意味着：我们在信息高度不完整的情况下，接管了一个有约 32.5 万注册用户、156 个全球节点、每月约 ¥3.5 万收入的线上运营服务。</p>
+    <div class="callout">接手的不只是代码，而是一个正在运行的业务——包括它的历史债务、不稳定节点、不完整文档和正在流失的用户。</div>
+
+    <h2 id="s2">二、Arrowfish 的现状</h2>
+    <h3>做得好的地方</h3>
+    <ul>
+      <li>核心 VPN 连接功能可用，有真实付费用户（约 1,369 人）</li>
+      <li>支付体系完整，微信/支付宝/USDT/IAP 全覆盖</li>
+      <li>后台管理系统（BO）功能齐全</li>
+      <li>有完整的会员套餐体系</li>
+    </ul>
+    <h3>需要正视的问题</h3>
+    <ul>
+      <li><strong>原生 Android 架构</strong>——只能服务 Android，无法复用到 iOS 或 PC</li>
+      <li><strong>技术债严重</strong>——接手后第一个月就发现并修复了 49+ 个安全和稳定性问题</li>
+      <li><strong>用户流失严重</strong>——月活从 2.9 万（10月）降至 1.5 万（3月），新用户第2个月留存率约 10%</li>
+      <li><strong>节点频繁中断</strong>——是用户 #1 投诉，节点稳定性是最核心痛点</li>
+      <li><strong>代码无法复用</strong>——Arrowfish 的任何新功能都无法直接带到下一代产品</li>
+    </ul>
+
+    <h2 id="s3">三、为什么需要 FFF</h2>
+    <div class="callout purple">核心原因：<strong>Arrowfish 是原生 Android，FFF 是跨平台 Flutter。两者架构根本不同，在 Arrowfish 上做的任何功能都无法带到 FFF。</strong></div>
+    <p>继续大量投入 Arrowfish 新功能，等于把资源投进一个即将被替换的系统。这会造成双重浪费：</p>
+    <ul>
+      <li>开发资源浪费在无法复用的代码上</li>
+      <li>用户对 Arrowfish 新功能产生依赖，迁移反而更难</li>
+    </ul>
+    <p>同时，业务上也有迫切需求：</p>
+    <ul>
+      <li>需要覆盖 <strong>iOS 用户</strong>（当前 iOS 渗透率不到 1%）</li>
+      <li>需要覆盖 <strong>PC（macOS / Windows）</strong>用户</li>
+      <li>需要在新公司主体下运营（欧盟合规要求）</li>
+      <li>需要从第一天起就做好无日志合规架构</li>
+    </ul>
+
+    <h2 id="s4">四、FFF 是什么</h2>
+    <table>
+      <tr><th>维度</th><th>说明</th></tr>
+      <tr><td><strong>技术架构</strong></td><td>Flutter 跨平台，一套代码覆盖 Android、iOS、Windows、macOS</td></tr>
+      <tr><td><strong>后端</strong></td><td>独立的新后端，与 Arrowfish 后端完全分开</td></tr>
+      <tr><td><strong>服务器</strong></td><td>独立的节点网络，与 Arrowfish 节点分开</td></tr>
+      <tr><td><strong>运营主体</strong></td><td>爱沙尼亚（Estonia）注册的新公司，欧盟法律框架</td></tr>
+      <tr><td><strong>合规</strong></td><td>从设计层面实现无日志架构，符合 GDPR</td></tr>
+      <tr><td><strong>支付</strong></td><td>支付网关需切换至新公司名义，iOS/Android 开发者账号需迁移</td></tr>
+    </table>
+    <div class="callout green">FFF 不是 Arrowfish 的升级版，而是一款用现代架构从零重建的全新产品，只是服务同一批用户群体。</div>
+
+    <h2 id="s5">五、两个产品如何并存</h2>
+    <p>在 FFF 上线之前，Arrowfish 和 FFF 会并行运行。用户数据不会自动迁移，用户需要主动下载 FFF 并重新注册或迁移账号。</p>
+    <table>
+      <tr><th>产品</th><th>当前策略</th><th>长期方向</th></tr>
+      <tr><td><strong>Arrowfish</strong></td><td>只做 Bug 修复，每周一个维护版本</td><td>FFF 上线后逐步引导用户迁移，最终停止维护</td></tr>
+      <tr><td><strong>FFF</strong></td><td>全力重构与测试，6月正式发布</td><td>成为主力产品，覆盖所有平台</td></tr>
+    </table>
+    <div class="callout">Arrowfish 不会突然下线。两者过渡期内并存，用户迁移是一个渐进过程，不是强制切换。</div>
+
+    <h2 id="s6">六、里程碑时间线</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">2026年3月</div>
+        <div class="tl-text">完成台湾团队交接，开始接管 Arrowfish，Sprint 0 稳定化</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026年4月下旬</div>
+        <div class="tl-text"><strong>Arrowfish 上架 Google Play</strong>——完成应用商店合规修复后提交审核</div>
+      </div>
+      <div class="tl-item milestone">
+        <div class="tl-date">2026年6月</div>
+        <div class="tl-text"><strong>FFF 正式发布</strong>——通过 QA 端到端测试，发布生产版本</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026年6月后</div>
+        <div class="tl-text">启动用户迁移——Arrowfish 用户逐步引导至 FFF</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026年7月起</div>
+        <div class="tl-text">智能路由完整版 + 加密货币支付网关开发</div>
+      </div>
+    </div>
+    <h3>5月底前需完成</h3>
+    <ul>
+      <li>FFF 完成重构，输出可测试版本</li>
+      <li>支付网关切换至新公司名义</li>
+      <li>iOS / Android 开发者账号迁移至新公司</li>
+    </ul>
+
+    <h2 id="s7">七、对团队意味着什么</h2>
+    <table>
+      <tr><th>角色</th><th>当前工作重点</th></tr>
+      <tr><td>后端（Tein Fai）</td><td>维护 Arrowfish 后端，同步建设 FFF 新后端基础</td></tr>
+      <tr><td>Android（Zhen Hao）</td><td>Arrowfish Bug 修复 + Flutter 移动端（FFF）开发</td></tr>
+      <tr><td>PC / sing-box（Lex）</td><td>Flutter PC 端（FFF）开发 + 节点基础设施</td></tr>
+      <tr><td>QA（Amy）</td><td>Arrowfish 版本测试，FFF 上线前端到端测试</td></tr>
+    </table>
+    <div class="callout">QA 角色在 FFF 接近上线时变得特别关键——端到端测试覆盖所有平台，无需具备编程能力。</div>
+
+    <h2 id="s8">八、关键风险</h2>
+    <table>
+      <tr><th>风险</th><th>影响</th><th>当前状态</th></tr>
+      <tr><td>在 Arrowfish 上继续做大量新功能</td><td>资源浪费，无法复用到 FFF</td><td>策略：仅做 Bug 修复</td></tr>
+      <tr><td>FFF 稳定化时间拖延</td><td>上线推迟，Arrowfish 用户继续流失</td><td>6月为目标截止日期</td></tr>
+      <tr><td>用户迁移接受度低</td><td>需要重新下载和注册，部分用户可能流失</td><td>需要迁移激励设计</td></tr>
+      <tr><td>支付 / 开发者账号切换延迟</td><td>FFF 无法正式上架和收款</td><td>5月底前须完成</td></tr>
+      <tr><td>节点稳定性</td><td>是用户 #1 投诉，直接影响口碑</td><td>持续监控，推进自动化</td></tr>
+    </table>
+
+  </main>
+</div>
+
+<script>
+function toggleToc() {
+  var btn = document.getElementById('tocToggle');
+  var toc = document.getElementById('mobileToc');
+  btn.classList.toggle('open');
+  toc.classList.toggle('open');
+}
+(function() {
+  var links = document.querySelectorAll('#tocList a');
+  var sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    var top = window.scrollY + 100;
+    var active = null;
+    sections.forEach((s, i) => { if (s && s.offsetTop <= top) active = i; });
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

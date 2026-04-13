@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Arrowfish Wiki — 内部文档</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="auth-gate.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --text-2: #475569;
+    --text-3: #94A3B8;
+    --accent: #2563EB;
+    --accent-light: #DBEAFE;
+    --navy: #1E3A5F;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.06);
+    --shadow-hover: 0 8px 24px rgba(15,23,42,.12), 0 2px 8px rgba(15,23,42,.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--navy);
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .header-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 18px; height: 18px; }
+  .logo-name { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -.3px; }
+  .logo-tag { font-size: 11px; color: #64748B; margin-left: 4px; font-weight: 400; }
+  .header-right { font-size: 12px; color: #64748B; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy);
+    padding: 3rem 2rem 3.5rem;
+    text-align: center;
+  }
+  .hero h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; color: #fff; margin-bottom: .5rem; }
+  .hero p { font-size: .95rem; color: #94A3B8; max-width: 480px; margin: 0 auto; }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    max-width: 1100px; margin: 2rem auto .5rem; padding: 0 2rem;
+    display: flex; gap: .5rem; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: var(--surface); color: var(--text-2); font-size: .82rem; font-weight: 500;
+    cursor: pointer; transition: all .2s;
+  }
+  .filter-btn:hover, .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── Doc grid ── */
+  .doc-grid {
+    max-width: 1100px; margin: 0 auto 4rem; padding: 1rem 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* ── Doc card ── */
+  .doc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; gap: .75rem;
+    box-shadow: var(--shadow);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
+    cursor: pointer;
+  }
+  .doc-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: #C7D7FD;
+  }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  .card-meta { display: flex; gap: .5rem; align-items: center; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .badge-prd  { background: #DBEAFE; color: #1E40AF; }
+  .badge-qa   { background: #D1FAE5; color: #065F46; }
+  .badge-story{ background: #EDE9FE; color: #5B21B6; }
+  .card-date { font-size: .78rem; color: var(--text-3); }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-icon-prd  { background: #EFF6FF; }
+  .card-icon-qa   { background: #F0FDF4; }
+  .card-icon-story{ background: #F5F3FF; }
+  .card-icon svg { width: 20px; height: 20px; }
+  .card-title { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .card-desc { font-size: .85rem; color: var(--text-2); line-height: 1.6; flex: 1; }
+  .card-audience { font-size: .78rem; color: var(--text-3); display: flex; align-items: center; gap: 5px; }
+  .card-audience svg { width: 13px; height: 13px; }
+  .card-arrow {
+    display: flex; align-items: center; gap: 4px;
+    font-size: .8rem; font-weight: 600; color: var(--accent);
+    margin-top: .25rem;
+  }
+  .card-arrow svg { width: 14px; height: 14px; transition: transform .2s; }
+  .doc-card:hover .card-arrow svg { transform: translateX(3px); }
+
+  /* ── Section label ── */
+  .section-label {
+    max-width: 1100px; margin: 1.5rem auto 0; padding: 0 2rem;
+    font-size: .78rem; font-weight: 600; color: var(--text-3);
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: .8rem; color: var(--text-3);
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 2rem 1.25rem 2.5rem; }
+    .doc-grid, .filter-bar, .section-label { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .doc-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 2L3 6v6l6 4 6-4V6L9 2z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M9 2v10M3 6l6 4 6-4" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="logo-name">Arrowfish Wiki</span>
+      <span class="logo-tag">Internal</span>
+    </a>
+    <div class="header-right">更新于 2026年4月</div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>团队内部文档中心</h1>
+  <p>产品说明、质量保证手册、项目演进故事——所有核心文档集中在这里</p>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterDocs('all', this)">全部</button>
+  <button class="filter-btn" onclick="filterDocs('prd', this)">PRD</button>
+  <button class="filter-btn" onclick="filterDocs('qa', this)">QA</button>
+  <button class="filter-btn" onclick="filterDocs('story', this)">Story</button>
+</div>
+
+<div class="section-label">文档列表</div>
+
+<div class="doc-grid" id="docGrid">
+
+  <!-- Card: Business PRD -->
+  <a class="doc-card" href="docs/prd-arrowfish.html" data-type="prd">
+    <div class="card-top">
+      <div class="card-meta">
+        <span class="badge badge-prd">PRD</span>
+        <span class="card-date">2026年4月</span>
+      </div>
+      <div class="card-icon card-icon-prd">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="#2563EB" stroke-width="1.5"/>
+          <path d="M7 7h6M7 10h6M7 13h4" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-title">Arrowfish VPN 业务说明文档</div>
+    <div class="card-desc">产品功能全貌、用户体系、套餐与支付、VPN连接机制、营销与内容模块的完整业务逻辑说明。BA / PM 产品上手必读。</div>
+    <div class="card-audience">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
+      适合：BA · PM · 非技术成员
+    </div>
+    <div class="card-arrow">
+      阅读文档
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </a>
+
+  <!-- Card: FFF Story -->
+  <a class="doc-card" href="docs/story-fff.html" data-type="story">
+    <div class="card-top">
+      <div class="card-meta">
+        <span class="badge badge-story">Story</span>
+        <span class="card-date">2026年4月</span>
+      </div>
+      <div class="card-icon card-icon-story">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 3L4 7v6l6 4 6-4V7l-6-4z" stroke="#7C3AED" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 3v10M4 7l6 4 6-4" stroke="#7C3AED" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-title">从 Arrowfish 到 FFF — 产品演进故事</div>
+    <div class="card-desc">为什么我们决定重建一款全新应用？Arrowfish 的现状、局限、FFF 的目标和时间线，帮助所有人理解项目方向。</div>
+    <div class="card-audience">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
+      适合：全体团队成员
+    </div>
+    <div class="card-arrow">
+      阅读文档
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </a>
+
+  <!-- Card: QA Handnote -->
+  <a class="doc-card" href="docs/qa-handnote.html" data-type="qa">
+    <div class="card-top">
+      <div class="card-meta">
+        <span class="badge badge-qa">QA</span>
+        <span class="card-date">2026年4月</span>
+      </div>
+      <div class="card-icon card-icon-qa">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="7" stroke="#059669" stroke-width="1.5"/>
+          <path d="M7 10l2 2 4-4" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-title">QA 测试手册 — 测试环境配置</div>
+    <div class="card-desc">Staging 环境所有影响测试结果的配置一览：登录规则、免费时长、VPN 连接行为、版本控制、支付说明及常见误判对照。</div>
+    <div class="card-audience">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
+      适合：QA 测试人员
+    </div>
+    <div class="card-arrow">
+      阅读文档
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </a>
+
+</div>
+
+<footer class="site-footer">
+  Arrowfish Team · 内部文档 · 请勿对外分享 · 2026
+</footer>
+
+<script>
+function filterDocs(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.doc-card').forEach(card => {
+    card.style.display = (type === 'all' || card.dataset.type === type) ? 'flex' : 'none';
+  });
+}
+</script>
+</body>
+</html>

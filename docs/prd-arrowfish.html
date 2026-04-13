@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Arrowfish VPN 业务说明文档 — Arrowfish Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="../auth-gate.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+    --text: #0F172A; --text-2: #475569; --text-3: #94A3B8;
+    --accent: #2563EB; --accent-light: #DBEAFE; --navy: #1E3A5F;
+    --radius: 10px;
+    --sidebar-w: 240px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter','Noto Sans SC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* ── Top bar ── */
+  .topbar {
+    background: var(--navy); height: 56px; padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 200;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    color: #94A3B8; font-size: .85rem; text-decoration: none;
+    transition: color .15s;
+  }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-prd { background: #DBEAFE; color: #1E40AF; }
+  .topbar-date { font-size: .78rem; color: #64748B; }
+
+  /* ── Layout ── */
+  .layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; gap: 2rem; align-items: flex-start; }
+
+  /* ── Sidebar TOC ── */
+  .toc-sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    position: sticky; top: 72px; max-height: calc(100vh - 80px);
+    overflow-y: auto; padding: 1.5rem 0;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .toc-title { font-size: .72rem; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .75rem; padding-left: .75rem; }
+  .toc-list { list-style: none; }
+  .toc-list li a {
+    display: block; padding: .35rem .75rem; border-left: 2px solid transparent;
+    font-size: .82rem; color: var(--text-2); text-decoration: none; border-radius: 0 4px 4px 0;
+    transition: color .15s, border-color .15s, background .15s;
+    line-height: 1.4;
+  }
+  .toc-list li a:hover { color: var(--accent); background: var(--accent-light); }
+  .toc-list li a.active { color: var(--accent); border-color: var(--accent); font-weight: 500; background: var(--accent-light); }
+  .toc-list li.sub a { padding-left: 1.5rem; font-size: .78rem; }
+
+  /* ── Article ── */
+  .article { flex: 1; min-width: 0; padding: 2rem 0 4rem; }
+  .doc-hero { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; line-height: 1.3; margin-bottom: .5rem; }
+  .doc-meta { font-size: .83rem; color: var(--text-3); display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  h2 { font-size: 1.1rem; font-weight: 700; margin: 2.25rem 0 .75rem; padding-bottom: .5rem; border-bottom: 2px solid var(--accent); scroll-margin-top: 80px; }
+  h3 { font-size: .9rem; font-weight: 600; color: var(--text-2); margin: 1.5rem 0 .5rem; text-transform: uppercase; letter-spacing: .04em; scroll-margin-top: 80px; }
+  p { font-size: .9rem; color: var(--text-2); margin: .5rem 0; }
+  ul { padding-left: 1.25rem; font-size: .9rem; color: var(--text-2); margin: .5rem 0; }
+  ul li { padding: .2rem 0; }
+  strong { color: var(--text); font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  th { background: #F1F5F9; font-size: .78rem; font-weight: 600; padding: .6rem .85rem; text-align: left; color: var(--text-2); }
+  td { padding: .6rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFBFD; }
+  td strong { color: var(--text); }
+
+  .callout { background: #FFFBEB; border-left: 3px solid #F59E0B; border-radius: 0 var(--radius) var(--radius) 0; padding: .85rem 1rem; margin: .75rem 0; font-size: .85rem; color: #78350F; }
+  .callout.info { background: var(--accent-light); border-color: var(--accent); color: #1E40AF; }
+  .flow { background: #F1F5F9; border-radius: 8px; padding: .75rem 1rem; font-family: monospace; font-size: .82rem; color: var(--text); margin: .75rem 0; }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 1rem 0; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; }
+  .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+  .stat-lbl { font-size: .75rem; color: var(--text-3); margin-top: 3px; }
+
+  /* ── Mobile TOC toggle ── */
+  .toc-toggle { display: none; }
+  .mobile-toc { display: none; }
+
+  @media (max-width: 768px) {
+    .toc-sidebar { display: none; }
+    .layout { padding: 0 1rem; }
+    .toc-toggle {
+      display: flex; align-items: center; gap: 6px;
+      width: 100%; padding: .65rem 1rem; margin: 1rem 0 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      font-size: .83rem; font-weight: 500; color: var(--text-2); cursor: pointer;
+      justify-content: space-between;
+    }
+    .toc-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .toc-toggle.open svg { transform: rotate(180deg); }
+    .mobile-toc.open { display: block; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: .5rem 0 .75rem; margin-bottom: 1rem; }
+    .mobile-toc .toc-list li a { font-size: .83rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="../index.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    返回文档中心
+  </a>
+  <div class="topbar-right">
+    <span class="badge badge-prd">PRD</span>
+    <span class="topbar-date">2026年4月</span>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar TOC -->
+  <nav class="toc-sidebar" id="tocSidebar" aria-label="目录">
+    <div class="toc-title">目录</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#s1">一、产品是什么</a></li>
+      <li><a href="#s2">二、产品战略方向</a></li>
+      <li><a href="#s3">三、用户体系</a></li>
+      <li><a href="#s4">四、会员套餐</a></li>
+      <li><a href="#s5">五、支付方式</a></li>
+      <li><a href="#s6">六、VPN 连接功能</a></li>
+      <li><a href="#s7">七、免费体验与广告</a></li>
+      <li><a href="#s8">八、积分与抽奖</a></li>
+      <li><a href="#s9">九、推荐与佣金</a></li>
+      <li><a href="#s10">十、优惠券</a></li>
+      <li><a href="#s11">十一、营销与活动</a></li>
+      <li><a href="#s12">十二、内容模块</a></li>
+      <li><a href="#s13">十三、反馈与客服</a></li>
+      <li><a href="#s14">十四、消息通知</a></li>
+      <li><a href="#s15">十五、管理后台</a></li>
+      <li><a href="#s16">十六、合规与隐私</a></li>
+      <li><a href="#s17">十七、业务数据</a></li>
+    </ul>
+  </nav>
+
+  <main class="article">
+
+    <!-- Mobile TOC -->
+    <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
+      <span>目录</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="mobile-toc" id="mobileToc">
+      <ul class="toc-list">
+        <li><a href="#s1">一、产品是什么</a></li>
+        <li><a href="#s2">二、产品战略方向</a></li>
+        <li><a href="#s3">三、用户体系</a></li>
+        <li><a href="#s4">四、会员套餐</a></li>
+        <li><a href="#s5">五、支付方式</a></li>
+        <li><a href="#s6">六、VPN 连接功能</a></li>
+        <li><a href="#s7">七、免费体验与广告</a></li>
+        <li><a href="#s8">八、积分与抽奖</a></li>
+        <li><a href="#s9">九、推荐与佣金</a></li>
+        <li><a href="#s10">十、优惠券</a></li>
+        <li><a href="#s11">十一、营销与活动</a></li>
+        <li><a href="#s12">十二、内容模块</a></li>
+        <li><a href="#s13">十三、反馈与客服</a></li>
+        <li><a href="#s14">十四、消息通知</a></li>
+        <li><a href="#s15">十五、管理后台</a></li>
+        <li><a href="#s16">十六、合规与隐私</a></li>
+        <li><a href="#s17">十七、业务数据</a></li>
+      </ul>
+    </div>
+
+    <div class="doc-hero">
+      <h1>Arrowfish VPN 业务说明文档</h1>
+      <div class="doc-meta">
+        <span>整理日期：2026年4月</span>
+        <span>适用对象：BA · PM · 非技术团队成员</span>
+        <span>用途：产品上手参考 · PRD 素材</span>
+      </div>
+    </div>
+
+    <h2 id="s1">一、产品是什么</h2>
+    <p>Arrowfish VPN 是一款面向中文用户的商业 VPN 服务，帮助用户安全访问 Google、YouTube、社交媒体等被中国防火长城屏蔽的境外网站。</p>
+    <table>
+      <tr><th>组成部分</th><th>说明</th></tr>
+      <tr><td><strong>Arrowfish（现役）</strong></td><td>现有 Android 应用 + Windows / macOS 客户端</td></tr>
+      <tr><td><strong>FFF（下一代）</strong></td><td>正在开发的全新跨平台应用，覆盖 Android、iOS、PC，计划2026年6月上线</td></tr>
+      <tr><td><strong>管理后台（BO）</strong></td><td>管理用户、订单、节点、内容的内部管理平台</td></tr>
+    </table>
+    <div class="callout info">商业模式：<strong>免费体验（有时间限制）→ 付费订阅（月 / 季 / 年）→ 高端专属服务</strong></div>
+
+    <h2 id="s2">二、产品战略方向</h2>
+    <table>
+      <tr><th>产品</th><th>当前策略</th></tr>
+      <tr><td><strong>Arrowfish</strong></td><td>维持稳定，以 Bug 修复为主，不再投入新功能开发</td></tr>
+      <tr><td><strong>FFF</strong></td><td>全力重构与测试，2026年6月正式发布</td></tr>
+    </table>
+    <div class="callout">Arrowfish 与 FFF 架构不同（原生 Android vs Flutter 跨平台），在 Arrowfish 上做的新功能无法复用到 FFF，继续投入会造成资源浪费。</div>
+    <h3>里程碑</h3>
+    <table>
+      <tr><th>时间</th><th>目标</th></tr>
+      <tr><td>2026年4月下旬</td><td>Arrowfish 上架 Google Play</td></tr>
+      <tr><td>2026年6月</td><td>FFF 正式发布</td></tr>
+      <tr><td>2026年6月后</td><td>Arrowfish 用户逐步引导迁移至 FFF</td></tr>
+      <tr><td>2026年7月起</td><td>智能路由 + 加密货币支付网关开发</td></tr>
+    </table>
+    <p>Arrowfish 与 FFF 用户数据独立，用户需主动切换，两款应用过渡期并存。FFF 将以欧盟注册公司独立运营。</p>
+
+    <h2 id="s3">三、用户体系</h2>
+    <h3>注册方式</h3>
+    <table>
+      <tr><th>方式</th><th>流程</th></tr>
+      <tr><td><strong>免密注册（主流）</strong></td><td>手机号 → 6位短信验证码 → 系统生成16位专属登录码 → 下次用登录码直接登录</td></tr>
+      <tr><td><strong>普通注册</strong></td><td>手机号 + 设置密码</td></tr>
+    </table>
+    <h3>账号安全</h3>
+    <table>
+      <tr><td>密码连续输错 <strong>5次</strong></td><td>账号锁定 <strong>30分钟</strong></td></tr>
+      <tr><td>设备绑定</td><td>同一设备只能绑定一个账号</td></tr>
+    </table>
+    <h3>用户规模</h3>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">32.5万</div><div class="stat-lbl">注册用户总数</div></div>
+      <div class="stat-card"><div class="stat-num">1,369</div><div class="stat-lbl">付费会员</div></div>
+      <div class="stat-card"><div class="stat-num">~1,700</div><div class="stat-lbl">日活跃用户</div></div>
+      <div class="stat-card"><div class="stat-num">61%</div><div class="stat-lbl">Android 用户占比</div></div>
+    </div>
+
+    <h2 id="s4">四、会员套餐</h2>
+    <table>
+      <tr><th>套餐</th><th>月费</th><th>网速</th><th>设备数</th><th>核心权益</th></tr>
+      <tr><td><strong>体验会员</strong>（免费）</td><td>免费</td><td>5 Mbps</td><td>不限</td><td>每日最多90分钟，仅基础线路</td></tr>
+      <tr><td><strong>标准会员</strong></td><td>¥18</td><td>20 Mbps</td><td>5台</td><td>无时间限制，标准线路</td></tr>
+      <tr><td><strong>精品会员</strong></td><td>¥59</td><td>30 Mbps</td><td>7台</td><td>精品线路，解锁流媒体（Netflix等）</td></tr>
+      <tr><td><strong>独享专线</strong></td><td>¥356起</td><td>40 Mbps</td><td>按套餐</td><td>整条专线独占，适合企业用户</td></tr>
+      <tr><td><strong>专属IP</strong></td><td>¥38起</td><td>—</td><td>—</td><td>固定独立IP地址，可多个并购</td></tr>
+    </table>
+    <h3>套餐价格</h3>
+    <table>
+      <tr><th>购买周期</th><th>标准会员</th><th>精品会员</th></tr>
+      <tr><td>2周</td><td>¥7</td><td>¥18</td></tr>
+      <tr><td>1个月</td><td>¥18</td><td>¥59</td></tr>
+      <tr><td>1季度</td><td>¥49</td><td>¥158</td></tr>
+      <tr><td>1年</td><td>¥159</td><td>¥583</td></tr>
+      <tr><td>2年</td><td>¥303</td><td>¥995</td></tr>
+    </table>
+    <h3>各套餐可用线路</h3>
+    <table>
+      <tr><th>线路类型</th><th>体验</th><th>标准</th><th>精品</th><th>独享专线</th></tr>
+      <tr><td>免费线路</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td>标准线路</td><td>—</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td>精品线路</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+      <tr><td>独享专线</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+      <tr><td>流媒体解锁</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+    </table>
+    <ul>
+      <li><strong>升级：</strong>剩余天数折算成差价补缴</li>
+      <li><strong>降级：</strong>不支持主动降级，需等当前套餐到期</li>
+      <li><strong>独享专线：</strong>可同时购买多条，任意一条有效即维持 VIP 状态</li>
+    </ul>
+
+    <h2 id="s5">五、支付方式</h2>
+    <table>
+      <tr><th>支付方式</th><th>收入占比</th><th>说明</th></tr>
+      <tr><td>微信支付</td><td><strong>47%</strong></td><td>主流，即时到账</td></tr>
+      <tr><td>支付宝</td><td><strong>47%</strong></td><td>主流，即时到账</td></tr>
+      <tr><td>信用卡 / 银联</td><td>4%</td><td>通过第三方处理</td></tr>
+      <tr><td>账户余额</td><td>1%</td><td>钱包余额抵扣</td></tr>
+      <tr><td>Google Play 内购</td><td>&lt;1%</td><td>Android 应用内购买</td></tr>
+      <tr><td>USDT 加密货币</td><td>&lt;1%</td><td>支持 TRC20 和 ERC20</td></tr>
+      <tr><td>苹果 / 三星 / 华为内购</td><td>极少</td><td>各应用商店内购</td></tr>
+    </table>
+    <p>支付完成后系统自动激活会员。<strong>独享专线套餐除外</strong>——需运营人员手动分配服务器。</p>
+
+    <h2 id="s6">六、VPN 连接功能</h2>
+    <div class="flow">打开 App → 选择线路（或一键连接）→ 建立加密隧道 → 访问境外网站</div>
+    <table>
+      <tr><th>线路类型</th><th>说明</th><th>可用用户</th></tr>
+      <tr><td>免费线路</td><td>基础速度，有时间限制</td><td>所有用户</td></tr>
+      <tr><td>标准线路</td><td>稳定连接</td><td>标准会员+</td></tr>
+      <tr><td>精品线路</td><td>高质量，支持流媒体</td><td>精品会员+</td></tr>
+      <tr><td>独享专线</td><td>整条专线一人独用</td><td>独享专线用户</td></tr>
+      <tr><td>专属IP</td><td>固定出口IP地址</td><td>专属IP用户</td></tr>
+    </table>
+    <p>全球 156 个 VPN 节点，覆盖多国。连接建立超过 4 秒视为失败；手机锁屏超过 5 分钟无流量，服务端自动断连；修改账号权限后节点最多需要 60 秒同步。</p>
+
+    <h2 id="s7">七、免费体验与广告激励</h2>
+    <table>
+      <tr><th>规则</th><th>额度</th></tr>
+      <tr><td>基础免费时长</td><td>30 分钟 / 天</td></tr>
+      <tr><td>看广告奖励</td><td>+30 分钟 / 次</td></tr>
+      <tr><td>每日最多看广告次数</td><td>2 次</td></tr>
+      <tr><td><strong>每日最高总时长</strong></td><td><strong>90 分钟</strong></td></tr>
+    </table>
+    <div class="flow">用户主动点"看广告换时间" → 观看 15–30 秒激励视频 → 自动增加 30 分钟</div>
+
+    <h2 id="s8">八、积分与抽奖</h2>
+    <table>
+      <tr><th>行为</th><th>积分</th></tr>
+      <tr><td>每日签到</td><td>+10</td></tr>
+      <tr><td>7天连续签到</td><td>额外 +40</td></tr>
+      <tr><td>首次购买</td><td>约 +85</td></tr>
+      <tr><td>在线满 30 分钟</td><td>+10</td></tr>
+      <tr><td>每次抽奖</td><td>消耗 100</td></tr>
+    </table>
+    <p>奖品包括：延长会员时长、优惠券、积分等。</p>
+
+    <h2 id="s9">九、推荐与佣金</h2>
+    <table>
+      <tr><th>项目</th><th>说明</th></tr>
+      <tr><td>推荐方式</td><td>分享专属推荐码，新用户注册时填入</td></tr>
+      <tr><td>佣金比例</td><td>被推荐人每次付款的 <strong>15%</strong></td></tr>
+      <tr><td>佣金去向</td><td>计入推荐人账户余额</td></tr>
+      <tr><td>提现</td><td>功能已有，尚未大规模使用</td></tr>
+    </table>
+    <div class="callout">推荐功能目前未完全开放，部分环境下处于关闭状态，测试时相关流程不可用。</div>
+
+    <h2 id="s10">十、优惠券</h2>
+    <table>
+      <tr><th>类型</th><th>说明</th></tr>
+      <tr><td>折扣券</td><td>订单按百分比打折（如8折）</td></tr>
+      <tr><td>立减券</td><td>固定减免金额（如减 ¥10）</td></tr>
+      <tr><td>兑换券</td><td>直接兑换特定套餐，无需支付</td></tr>
+    </table>
+    <p>每张券有领取期限和使用期限，每用户每券限领1次、限用1次。后台可批量发放给指定用户群体。</p>
+
+    <h2 id="s11">十一、营销与活动</h2>
+    <p>系统追踪用户注册来源渠道（Google广告、百度、视频推广等），可按渠道统计注册量与转化率。活动支持限时折扣、注册送券、购买赠时等形式，由管理员配置有效期和发放条件。</p>
+
+    <h2 id="s12">十二、内容模块</h2>
+    <table>
+      <tr><th>模块</th><th>说明</th></tr>
+      <tr><td><strong>发现（Discover）</strong></td><td>应用内精选内容，展示使用教程、活动、新功能介绍</td></tr>
+      <tr><td><strong>FAQ</strong></td><td>常见问题文章，涵盖连接、付款、使用指引</td></tr>
+      <tr><td><strong>知识库</strong></td><td>深度使用指导内容</td></tr>
+    </table>
+    <p>所有内容支持多语言，由后台管理员维护。</p>
+
+    <h2 id="s13">十三、用户反馈与客服</h2>
+    <table>
+      <tr><th>反馈分类</th><th>说明</th></tr>
+      <tr><td>连线问题</td><td>无法连接、速度慢等（<strong>最常见投诉</strong>）</td></tr>
+      <tr><td>付款问题</td><td>支付失败、扣款未到账等</td></tr>
+      <tr><td>联系客服</td><td>通用客服通道</td></tr>
+      <tr><td>其他</td><td>建议、其他问题</td></tr>
+    </table>
+    <p>管理员在后台查看反馈并标记处理状态。当前无自动回复功能。</p>
+
+    <h2 id="s14">十四、消息通知</h2>
+    <table>
+      <tr><th>通知类型</th><th>现状</th></tr>
+      <tr><td>站内消息</td><td>✅ 可用，支持广播和定向推送</td></tr>
+      <tr><td>系统邮件（验证码等）</td><td>✅ 可用</td></tr>
+      <tr><td>推送通知（小米 / 华为 / JPush）</td><td>⚠️ 配置不完整，暂不可用</td></tr>
+      <tr><td>营销邮件</td><td>❌ 未配置</td></tr>
+    </table>
+
+    <h2 id="s15">十五、管理后台（BO）</h2>
+    <table>
+      <tr><th>功能模块</th><th>主要操作</th></tr>
+      <tr><td>用户管理</td><td>搜索用户、手动调整会员、账户操作</td></tr>
+      <tr><td>订单管理</td><td>查看订单、退款处理</td></tr>
+      <tr><td>产品管理</td><td>套餐配置、价格调整、上下架</td></tr>
+      <tr><td>节点管理</td><td>添加节点、监控状态、暂停 / 恢复</td></tr>
+      <tr><td>专线配发</td><td>查看待处理专线订单、分配节点给用户</td></tr>
+      <tr><td>内容管理</td><td>发现、FAQ、知识库文章</td></tr>
+      <tr><td>营销管理</td><td>活动、赠品、渠道统计</td></tr>
+      <tr><td>消息管理</td><td>站内消息发送</td></tr>
+      <tr><td>系统设置</td><td>维护模式、版本控制、功能开关</td></tr>
+    </table>
+    <div class="callout">强制更新开启后，旧版用户打开 App 时必须升级才能继续使用。维护模式开启后，所有客户端显示维护提示，用户无法操作。</div>
+
+    <h2 id="s16">十六、合规与隐私</h2>
+    <table>
+      <tr><th>不记录</th><th>可以保存</th></tr>
+      <tr><td>访问的网站、流量内容、连接了哪个节点、DNS 查询</td><td>账号信息、订阅状态、支付记录、用户主动提交的客服内容</td></tr>
+    </table>
+    <p>会话数据（连接时长、流量量）仅用于实时运营监控，断线后自动删除，不持久化存储。FFF 将以欧盟（爱沙尼亚）注册公司运营，须符合 GDPR。</p>
+
+    <h2 id="s17">十七、业务数据概览</h2>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">32.5万</div><div class="stat-lbl">注册用户总数</div></div>
+      <div class="stat-card"><div class="stat-num">1,369</div><div class="stat-lbl">付费会员</div></div>
+      <div class="stat-card"><div class="stat-num">~1,700</div><div class="stat-lbl">日活跃用户</div></div>
+      <div class="stat-card"><div class="stat-num">~1.5万</div><div class="stat-lbl">月活跃用户</div></div>
+      <div class="stat-card"><div class="stat-num">~5%</div><div class="stat-lbl">首月付费转化率</div></div>
+      <div class="stat-card"><div class="stat-num">94%</div><div class="stat-lbl">微信+支付宝占比</div></div>
+    </div>
+    <table>
+      <tr><th>指标</th><th>说明</th></tr>
+      <tr><td>新注册（日均）</td><td>约 400–500 人</td></tr>
+      <tr><td>第2个月留存率</td><td>约 10%</td></tr>
+      <tr><td>最常见用户投诉</td><td>连线问题（连接不稳定）</td></tr>
+      <tr><td>废单率</td><td>约 64%（发起支付但未完成）</td></tr>
+    </table>
+
+  </main>
+</div>
+
+<script>
+// Mobile TOC toggle
+function toggleToc() {
+  var btn = document.getElementById('tocToggle');
+  var toc = document.getElementById('mobileToc');
+  btn.classList.toggle('open');
+  toc.classList.toggle('open');
+}
+
+// Sidebar active TOC highlighting
+(function() {
+  var links = document.querySelectorAll('#tocList a');
+  var sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    var top = window.scrollY + 100;
+    var active = null;
+    sections.forEach((s, i) => { if (s && s.offsetTop <= top) active = i; });
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

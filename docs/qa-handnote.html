@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>QA 测试手册 — 测试环境配置 — Arrowfish Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="../auth-gate.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+    --text: #0F172A; --text-2: #475569; --text-3: #94A3B8;
+    --accent: #059669; --accent-light: #D1FAE5; --navy: #1E3A5F;
+    --radius: 10px;
+    --sidebar-w: 240px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter','Noto Sans SC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .topbar { background: var(--navy); height: 56px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .back-btn { display: flex; align-items: center; gap: 6px; color: #94A3B8; font-size: .85rem; text-decoration: none; transition: color .15s; }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-qa { background: #D1FAE5; color: #065F46; }
+  .badge-staging { background: #FEF3C7; color: #92400E; }
+  .topbar-date { font-size: .78rem; color: #64748B; }
+  .layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; gap: 2rem; align-items: flex-start; }
+  .toc-sidebar { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 72px; max-height: calc(100vh - 80px); overflow-y: auto; padding: 1.5rem 0; }
+  .toc-title { font-size: .72rem; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .75rem; padding-left: .75rem; }
+  .toc-list { list-style: none; }
+  .toc-list li a { display: block; padding: .35rem .75rem; border-left: 2px solid transparent; font-size: .82rem; color: var(--text-2); text-decoration: none; border-radius: 0 4px 4px 0; transition: color .15s, border-color .15s, background .15s; line-height: 1.4; }
+  .toc-list li a:hover { color: var(--accent); background: var(--accent-light); }
+  .toc-list li a.active { color: var(--accent); border-color: var(--accent); font-weight: 500; background: var(--accent-light); }
+  .article { flex: 1; min-width: 0; padding: 2rem 0 4rem; }
+  .doc-hero { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; line-height: 1.3; margin-bottom: .5rem; }
+  .doc-meta { font-size: .83rem; color: var(--text-3); display: flex; gap: 1rem; flex-wrap: wrap; }
+  h2 { font-size: 1.1rem; font-weight: 700; margin: 2.25rem 0 .75rem; padding-bottom: .5rem; border-bottom: 2px solid var(--accent); scroll-margin-top: 80px; }
+  h3 { font-size: .9rem; font-weight: 600; color: var(--text-2); margin: 1.5rem 0 .5rem; text-transform: uppercase; letter-spacing: .04em; }
+  p { font-size: .9rem; color: var(--text-2); margin: .6rem 0; }
+  ul { padding-left: 1.25rem; font-size: .9rem; color: var(--text-2); margin: .5rem 0; }
+  ul li { padding: .25rem 0; }
+  strong { color: var(--text); font-weight: 600; }
+  code { font-family: 'SF Mono',Consolas,monospace; font-size: .82rem; background: #F1F5F9; padding: 1px 5px; border-radius: 4px; color: #374151; }
+  table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  th { background: #F1F5F9; font-size: .78rem; font-weight: 600; padding: .6rem .85rem; text-align: left; color: var(--text-2); }
+  td { padding: .6rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFBFD; }
+  td strong { color: var(--text); }
+  .callout { padding: .85rem 1rem; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); display: flex; gap: .6rem; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; }
+  .callout.warn { background: #FFFBEB; border: 1px solid #FDE68A; color: #78350F; }
+  .callout.info { background: var(--accent-light); border: 1px solid #A7F3D0; color: #065F46; }
+  .callout.danger { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+  .ok { color: #059669; font-weight: 600; }
+  .warn-text { color: #D97706; font-weight: 600; }
+  .off { color: #9CA3AF; }
+  .on { color: #DC2626; font-weight: 600; }
+  .bug-yes td:nth-child(3) { color: #059669; font-weight: 600; }
+  .bug-no  td:nth-child(3) { color: #DC2626; font-weight: 600; }
+  .env-banner { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius); padding: .75rem 1rem; margin-bottom: 1.5rem; font-size: .85rem; color: #1E40AF; display: flex; gap: .5rem; align-items: center; }
+  .toc-toggle { display: none; }
+  .mobile-toc { display: none; }
+  @media (max-width: 768px) {
+    .toc-sidebar { display: none; }
+    .layout { padding: 0 1rem; }
+    .toc-toggle { display: flex; align-items: center; gap: 6px; width: 100%; padding: .65rem 1rem; margin: 1rem 0 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .83rem; font-weight: 500; color: var(--text-2); cursor: pointer; justify-content: space-between; }
+    .toc-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .toc-toggle.open svg { transform: rotate(180deg); }
+    .mobile-toc.open { display: block; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: .5rem 0 .75rem; margin-bottom: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="../index.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    返回文档中心
+  </a>
+  <div class="topbar-right">
+    <span class="badge badge-qa">QA</span>
+    <span class="badge badge-staging">Staging Only</span>
+    <span class="topbar-date">2026年4月</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc-sidebar" id="tocSidebar">
+    <div class="toc-title">目录</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#s1">测试环境基本信息</a></li>
+      <li><a href="#s2">登录与账号安全</a></li>
+      <li><a href="#s3">免费用户时长限制</a></li>
+      <li><a href="#s4">VPN 连接行为</a></li>
+      <li><a href="#s5">客户端版本控制</a></li>
+      <li><a href="#s6">系统功能开关</a></li>
+      <li><a href="#s7">广告配置</a></li>
+      <li><a href="#s8">支付功能</a></li>
+      <li><a href="#s9">节点同步机制</a></li>
+      <li><a href="#s10">常见误判对照表</a></li>
+      <li><a href="#s11">已知问题清单</a></li>
+      <li><a href="#s12">测试账号管理</a></li>
+      <li><a href="#s13">测试 vs 生产差异</a></li>
+    </ul>
+  </nav>
+
+  <main class="article">
+    <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
+      <span>目录</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="mobile-toc" id="mobileToc">
+      <ul class="toc-list">
+        <li><a href="#s1">测试环境基本信息</a></li>
+        <li><a href="#s2">登录与账号安全</a></li>
+        <li><a href="#s3">免费用户时长限制</a></li>
+        <li><a href="#s4">VPN 连接行为</a></li>
+        <li><a href="#s5">客户端版本控制</a></li>
+        <li><a href="#s6">系统功能开关</a></li>
+        <li><a href="#s7">广告配置</a></li>
+        <li><a href="#s8">支付功能</a></li>
+        <li><a href="#s9">节点同步机制</a></li>
+        <li><a href="#s10">常见误判对照表</a></li>
+        <li><a href="#s11">已知问题清单</a></li>
+        <li><a href="#s12">测试账号管理</a></li>
+        <li><a href="#s13">测试 vs 生产差异</a></li>
+      </ul>
+    </div>
+
+    <div class="doc-hero">
+      <h1>QA 测试手册 — 测试环境配置</h1>
+      <div class="doc-meta">
+        <span>更新日期：2026年4月13日</span>
+        <span>适合：QA 测试人员</span>
+      </div>
+    </div>
+
+    <div class="env-banner">ℹ️ 本文档仅适用于<strong>测试（Staging）环境</strong>。正式生产环境配置不同，上线前将另行发布正式环境参考文档。</div>
+
+    <h2 id="s1">一、测试环境基本信息</h2>
+    <table>
+      <tr><th>项目</th><th>值</th></tr>
+      <tr><td>测试服务器</td><td><code>52.230.7.201</code></td></tr>
+      <tr><td>后端 API 域名（客户端用）</td><td><code>dev-client.o-faster.cc</code></td></tr>
+      <tr><td>管理后台域名</td><td><code>dev-admin.o-faster.cc</code></td></tr>
+      <tr><td>数据库</td><td>MySQL 8.0，与生产完全独立</td></tr>
+      <tr><td>测试节点端口</td><td>1443（生产用 443）</td></tr>
+    </table>
+    <div class="callout info"><span class="callout-icon">ℹ️</span><span>测试环境与生产环境数据库<strong>完全独立</strong>。测试账号不会出现在生产环境，反之亦然。</span></div>
+
+    <h2 id="s2">二、登录与账号安全</h2>
+    <table>
+      <tr><th>配置项</th><th>当前值</th><th>测试影响</th></tr>
+      <tr><td>密码错误上限</td><td><strong>5 次</strong></td><td>连续输错5次后账号锁定，不可无限重试</td></tr>
+      <tr><td>账号锁定时长</td><td><strong>30 分钟</strong></td><td>锁定后必须等30分钟才能再试</td></tr>
+      <tr><td>短信验证码长度</td><td><strong>6 位</strong></td><td>测试注册 / 找回密码时填6位</td></tr>
+    </table>
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span>测试登录错误流程时，触发锁定后该账号30分钟内完全不可用。<strong>建议准备多个测试账号</strong>，避免影响测试进度。如需提前解锁，联系后端开发手动清除。</span></div>
+    <h3>登录码（免密流程）说明</h3>
+    <p>用户通过手机号注册后，系统生成 <strong>16位专属登录码</strong>（格式：4组×4字符）。这是用户下次登录的凭证，明文存储和展示。短信验证码（OTP）是一次性的，加密处理，两者完全不同。</p>
+
+    <h2 id="s3">三、免费用户时长限制</h2>
+    <table>
+      <tr><th>配置项</th><th>测试环境</th><th>生产环境</th><th>测试影响</th></tr>
+      <tr><td>每日基础免费时长</td><td><strong>10 分钟</strong></td><td>30 分钟</td><td>免费账号当天累计连线超过10分钟后自动断线</td></tr>
+      <tr><td>看广告奖励时长</td><td><strong>10 分钟/次</strong></td><td>30 分钟/次</td><td>每看一次广告，免费时长+10分钟</td></tr>
+      <tr><td>每日最多看广告次数</td><td><strong>3 次</strong></td><td>2 次</td><td>最多额外获得30分钟</td></tr>
+      <tr><td><strong>测试环境每日上限</strong></td><td><strong>40 分钟</strong></td><td>90 分钟</td><td>—</td></tr>
+    </table>
+    <div class="callout info"><span class="callout-icon">ℹ️</span><span>测试时长缩短（10分钟基础），是为了让 QA 更快触发"时长耗尽"边界场景。时长耗尽后，需等次日凌晨重置，或<strong>联系后端把该测试账号已用时长清零</strong>。</span></div>
+
+    <h2 id="s4">四、VPN 连接行为</h2>
+    <table>
+      <tr><th>配置项</th><th>当前值</th><th>测试影响</th></tr>
+      <tr><td>ConnIdle（服务端空闲断连）</td><td><strong>300秒（5分钟）</strong></td><td>手机锁屏后，超过5分钟无任何流量才触发服务端断连</td></tr>
+      <tr><td>握手超时</td><td><strong>4秒</strong></td><td>连接建立超过4秒视为失败</td></tr>
+      <tr><td>节点同步间隔</td><td><strong>60秒</strong></td><td>修改账号权限后，节点最多需要60秒才能感知变化</td></tr>
+    </table>
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>已知 Bug（待修复）：</strong>手机锁屏超过5分钟后，App 显示"已连线"，但境外网站打不开，延迟显示 65535ms。这是客户端 Doze 模式问题，与服务端无关。遇到请记录，不算测试环境异常。</span></div>
+
+    <h2 id="s5">五、客户端版本控制</h2>
+    <table>
+      <tr><th>平台</th><th>版本号</th><th>强制更新</th><th>测试影响</th></tr>
+      <tr><td>Android</td><td><code>1.7.36</code></td><td class="ok">关闭</td><td>旧版本可正常使用，不弹强制更新</td></tr>
+      <tr><td>iOS（HiYou）</td><td><code>0.91</code></td><td class="ok">关闭</td><td>同上</td></tr>
+      <tr><td>Windows x64</td><td><code>1.6.6</code></td><td class="ok">关闭</td><td>同上</td></tr>
+      <tr><td>Windows ARM64</td><td><code>1.6.6</code></td><td class="ok">关闭</td><td>同上</td></tr>
+      <tr style="background:#FFF7F7"><td>Mac Intel</td><td><code>1.2.51</code></td><td class="on">⛔ 开启</td><td>打开 App 立即弹强制更新，<strong>无法跳过</strong></td></tr>
+      <tr style="background:#FFF7F7"><td>Mac Silicon</td><td><code>1.2.52</code></td><td class="on">⛔ 开启</td><td>同上</td></tr>
+    </table>
+    <div class="callout danger"><span class="callout-icon">🚫</span><span><strong>Mac 平台当前无法测试。</strong>强制更新已开启，App 打开即被拦截。如需测试 Mac 功能，请提前通知后端关闭 Mac 强制更新开关。</span></div>
+
+    <h2 id="s6">六、系统功能开关状态</h2>
+    <table>
+      <tr><th>功能</th><th>状态</th><th>说明</th></tr>
+      <tr><td>维护模式</td><td class="ok">关闭（正常）</td><td>若维护模式开启，所有客户端显示维护提示，无法操作</td></tr>
+      <tr><td>推荐码 / 邀请码</td><td class="off">关闭</td><td>推荐功能不可用，相关流程测试会失败，属正常</td></tr>
+      <tr><td>通知邮件（活动类）</td><td class="off">未配置</td><td>通知类邮件发不出去（配置为空）</td></tr>
+      <tr><td>系统邮件（验证码等）</td><td class="ok">正常</td><td>SMTP 已配置（Zoho），可正常发送</td></tr>
+      <tr><td>SMS 短信验证码</td><td class="ok">正常</td><td>TeleSign 接入，可正常发送</td></tr>
+    </table>
+
+    <h2 id="s7">七、广告配置</h2>
+    <table>
+      <tr><th>配置项</th><th>测试环境</th><th>生产环境</th><th>说明</th></tr>
+      <tr><td>Google AdMob ID</td><td>测试用 ID</td><td>正式生产 ID</td><td>测试广告，不产生真实收益，广告内容为英文测试素材，属正常现象</td></tr>
+    </table>
+
+    <h2 id="s8">八、支付功能</h2>
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span>测试支付时，请使用<strong>最低金额</strong>（如¥1），避免产生不必要的真实扣款。</span></div>
+    <table>
+      <tr><th>支付方式</th><th>注意事项</th></tr>
+      <tr><td>微信支付 / 支付宝</td><td>可测试，使用真实账号，选最低金额</td></tr>
+      <tr><td>USDT</td><td>链上转账有真实手续费，请谨慎测试</td></tr>
+      <tr><td>Google Play 内购</td><td>以实际测试包配置为准</td></tr>
+      <tr><td>Apple IAP</td><td>使用沙盒测试账号</td></tr>
+    </table>
+    <h3>支付到账时间</h3>
+    <ul>
+      <li>微信 / 支付宝：通常30秒内生效</li>
+      <li>USDT TRC20：最长等待 15 分钟</li>
+      <li>USDT ERC20：最长等待 30 分钟（链上确认时间）</li>
+    </ul>
+
+    <h2 id="s9">九、节点与线路同步机制</h2>
+    <div class="callout info"><span class="callout-icon">ℹ️</span><span><strong>关键：</strong>在后台修改用户会员等级或套餐权限后，不要立刻测试——需等待约 <strong>60 秒</strong>让节点同步，再验证权限是否生效。</span></div>
+    <table>
+      <tr><th>操作</th><th>生效延迟</th></tr>
+      <tr><td>修改用户会员等级</td><td>约 60 秒</td></tr>
+      <tr><td>新增 / 修改线路</td><td>约 60 秒</td></tr>
+      <tr><td>暂停 / 恢复节点</td><td>约 60 秒</td></tr>
+      <tr><td>修改套餐价格</td><td>即时（刷新页面）</td></tr>
+    </table>
+
+    <h2 id="s10">十、快速对照表 — 常见"误判为 Bug"的情况</h2>
+    <table>
+      <tr><th>测试时看到的现象</th><th>真实原因</th><th>是 Bug？</th></tr>
+      <tr class="bug-yes"><td>连续输错密码5次后无法登录</td><td>账号锁定30分钟，配置正常</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>免费账号连上10分钟后自动断线</td><td>测试环境每日时长上限10分钟</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>修改权限后立刻测，效果还没变</td><td>节点60秒同步间隔，等一下再试</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>手机锁屏5分钟以内，连接不断</td><td>ConnIdle=300秒，配置正常</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>Mac 打开 App 直接弹更新页</td><td>Mac 强制更新开关已开启</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>推荐码输入后无任何反应</td><td>推荐功能开关关闭</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>广告内容是英文 / 看起来很奇怪</td><td>测试环境用 Google 测试广告 ID</td><td>不是</td></tr>
+      <tr class="bug-yes"><td>USDT 支付后会员没有立刻生效</td><td>TRC20等15分钟，ERC20等30分钟</td><td>不是（超时未到账则是）</td></tr>
+      <tr class="bug-no"><td>手机锁屏超5分钟，App显示已连线但网站打不开，延迟65535ms</td><td>客户端 Doze 模式 Bug，已知问题</td><td>是（记录）</td></tr>
+    </table>
+
+    <h2 id="s11">十一、已知问题清单</h2>
+    <p>以下问题已由开发团队确认，测试时遇到请记录，<strong>不作为阻断发布的问题</strong>：</p>
+    <table>
+      <tr><th>#</th><th>问题描述</th><th>影响范围</th><th>计划修复</th></tr>
+      <tr><td>1</td><td>手机锁屏>5分钟后 Doze 模式导致 VPN 失连</td><td>Android</td><td>Sprint 3</td></tr>
+      <tr><td>2</td><td>免费时长仅客户端计时，旧版 App（v1.6.x）完全无限制</td><td>旧版用户</td><td>Sprint 3</td></tr>
+      <tr><td>3</td><td>设备数量限制未实际执行</td><td>所有付费用户</td><td>Sprint 3</td></tr>
+      <tr><td>4</td><td>推送通知不可用（JPush / 小米 / 华为未完整注册）</td><td>所有用户</td><td>待排期</td></tr>
+      <tr><td>5</td><td>专线分配仍为手动操作（自动化已开发，待上线）</td><td>运营团队</td><td>Sprint 2</td></tr>
+    </table>
+
+    <h2 id="s12">十二、测试账号管理建议</h2>
+    <table>
+      <tr><th>账号类型</th><th>建议数量</th><th>用途</th></tr>
+      <tr><td>免费体验账号</td><td>3–5 个</td><td>测试时长限制、广告奖励</td></tr>
+      <tr><td>标准会员账号</td><td>2 个</td><td>测试标准线路、设备限制</td></tr>
+      <tr><td>精品会员账号</td><td>2 个</td><td>测试精品线路、流媒体解锁</td></tr>
+      <tr><td>备用免费账号</td><td>5 个以上</td><td>防止触发账号锁定后影响测试进度</td></tr>
+    </table>
+    <h3>账号重置方法</h3>
+    <table>
+      <tr><th>需要重置的状态</th><th>方法</th></tr>
+      <tr><td>账号被锁定（密码输错5次）</td><td>联系后端开发手动解除</td></tr>
+      <tr><td>免费时长耗尽</td><td>联系后端清零当天已用时长</td></tr>
+      <tr><td>会员到期</td><td>联系后端手动赋予会员权限</td></tr>
+      <tr><td>需要专线节点</td><td>联系后端在 BO 后台配发</td></tr>
+    </table>
+
+    <h2 id="s13">十三、测试环境 vs 生产环境差异</h2>
+    <table>
+      <tr><th>配置项</th><th>测试环境</th><th>生产环境</th></tr>
+      <tr><td>每日免费时长</td><td><strong>10 分钟</strong></td><td>30 分钟</td></tr>
+      <tr><td>广告奖励时长/次</td><td><strong>10 分钟</strong></td><td>30 分钟</td></tr>
+      <tr><td>每日广告次数上限</td><td><strong>3 次</strong></td><td>2 次</td></tr>
+      <tr><td>Android 版本</td><td>1.7.36</td><td>1.7.38</td></tr>
+      <tr><td>AdMob ID</td><td>测试 ID</td><td>正式生产 ID</td></tr>
+      <tr><td>Mac 强制更新</td><td><strong>开启</strong></td><td>关闭</td></tr>
+      <tr><td>推荐功能</td><td>关闭</td><td>关闭（也待修复）</td></tr>
+      <tr><td>数据库</td><td>独立实例，数据独立</td><td>主从架构，真实数据</td></tr>
+      <tr><td>节点端口</td><td>1443</td><td>443</td></tr>
+    </table>
+
+  </main>
+</div>
+
+<script>
+function toggleToc() {
+  var btn = document.getElementById('tocToggle');
+  var toc = document.getElementById('mobileToc');
+  btn.classList.toggle('open');
+  toc.classList.toggle('open');
+}
+(function() {
+  var links = document.querySelectorAll('#tocList a');
+  var sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    var top = window.scrollY + 100;
+    var active = null;
+    sections.forEach((s, i) => { if (s && s.offsetTop <= top) active = i; });
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
