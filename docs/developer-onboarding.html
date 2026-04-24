@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>开发者上手手册 — Arrowfish Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="../auth-gate.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+    --text: #0F172A; --text-2: #475569; --text-3: #94A3B8;
+    --accent: #2563EB; --accent-light: #DBEAFE; --navy: #1E3A5F;
+    --radius: 10px;
+    --sidebar-w: 240px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter','Noto Sans SC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .topbar { background: var(--navy); height: 56px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .back-btn { display: flex; align-items: center; gap: 6px; color: #94A3B8; font-size: .85rem; text-decoration: none; transition: color .15s; }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-dev { background: #DBEAFE; color: #1E40AF; }
+  .topbar-date { font-size: .78rem; color: #64748B; }
+  .layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; gap: 2rem; align-items: flex-start; }
+  .toc-sidebar { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 72px; max-height: calc(100vh - 80px); overflow-y: auto; padding: 1.5rem 0; }
+  .toc-title { font-size: .72rem; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .75rem; padding-left: .75rem; }
+  .toc-list { list-style: none; }
+  .toc-list li a { display: block; padding: .35rem .75rem; border-left: 2px solid transparent; font-size: .82rem; color: var(--text-2); text-decoration: none; border-radius: 0 4px 4px 0; transition: color .15s, border-color .15s, background .15s; line-height: 1.4; }
+  .toc-list li a:hover { color: var(--accent); background: var(--accent-light); }
+  .toc-list li a.active { color: var(--accent); border-color: var(--accent); font-weight: 500; background: var(--accent-light); }
+  .article { flex: 1; min-width: 0; padding: 2rem 0 4rem; }
+  .doc-hero { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; line-height: 1.3; margin-bottom: .5rem; }
+  .doc-meta { font-size: .83rem; color: var(--text-3); display: flex; gap: 1rem; flex-wrap: wrap; }
+  h2 { font-size: 1.1rem; font-weight: 700; margin: 2.25rem 0 .75rem; padding-bottom: .5rem; border-bottom: 2px solid var(--accent); scroll-margin-top: 80px; }
+  h3 { font-size: .9rem; font-weight: 600; color: var(--text-2); margin: 1.5rem 0 .5rem; text-transform: uppercase; letter-spacing: .04em; }
+  p { font-size: .9rem; color: var(--text-2); margin: .6rem 0; }
+  ul, ol { padding-left: 1.25rem; font-size: .9rem; color: var(--text-2); margin: .5rem 0; }
+  ul li, ol li { padding: .2rem 0; }
+  strong { color: var(--text); font-weight: 600; }
+  code { font-family: 'SF Mono',Consolas,monospace; font-size: .82rem; background: #F1F5F9; padding: 1px 5px; border-radius: 4px; color: #374151; }
+  pre { background: #0F172A; color: #E2E8F0; padding: 1rem; border-radius: var(--radius); overflow-x: auto; font-size: .78rem; line-height: 1.5; margin: .75rem 0; font-family: 'SF Mono',Consolas,monospace; }
+  pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  th { background: #F1F5F9; font-size: .78rem; font-weight: 600; padding: .6rem .85rem; text-align: left; color: var(--text-2); }
+  td { padding: .6rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFBFD; }
+  td strong { color: var(--text); }
+  .callout { padding: .85rem 1rem; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); display: flex; gap: .6rem; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; }
+  .callout.warn { background: #FFFBEB; border: 1px solid #FDE68A; color: #78350F; }
+  .callout.info { background: var(--accent-light); border: 1px solid #BFDBFE; color: #1E40AF; }
+  .callout.danger { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+  .callout.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; }
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+  .toc-toggle { display: none; }
+  .mobile-toc { display: none; }
+  .phase-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; font-family: 'SF Mono',Consolas,monospace; font-size: .8rem; color: var(--text-2); line-height: 1.7; margin: 1rem 0; white-space: pre; overflow-x: auto; }
+  @media (max-width: 768px) {
+    .toc-sidebar { display: none; }
+    .layout { padding: 0 1rem; }
+    .toc-toggle { display: flex; align-items: center; gap: 6px; width: 100%; padding: .65rem 1rem; margin: 1rem 0 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .83rem; font-weight: 500; color: var(--text-2); cursor: pointer; justify-content: space-between; }
+    .toc-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .toc-toggle.open svg { transform: rotate(180deg); }
+    .mobile-toc.open { display: block; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: .5rem 0 .75rem; margin-bottom: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="../index.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span data-i18n="doc.back">返回文档中心</span>
+  </a>
+  <div class="topbar-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+    <span class="badge badge-dev" data-i18n="dev.badge">Developer</span>
+    <span class="topbar-date" data-i18n="doc.date">2026年4月</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc-sidebar" id="tocSidebar">
+    <div class="toc-title" data-i18n="doc.toc.label">目录</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#s1" data-i18n="dev.toc.s1">首次配置</a></li>
+      <li><a href="#s2" data-i18n="dev.toc.s2">每日开始工作</a></li>
+      <li><a href="#s3" data-i18n="dev.toc.s3">6阶段任务流程</a></li>
+      <li><a href="#s4" data-i18n="dev.toc.s4">Phase 1 — 领取任务</a></li>
+      <li><a href="#s5" data-i18n="dev.toc.s5">Phase 2 — 计划</a></li>
+      <li><a href="#s6" data-i18n="dev.toc.s6">Phase 3 — 执行</a></li>
+      <li><a href="#s7" data-i18n="dev.toc.s7">Phase 4 — 验证</a></li>
+      <li><a href="#s8" data-i18n="dev.toc.s8">Phase 5 — 提交</a></li>
+      <li><a href="#s9" data-i18n="dev.toc.s9">Phase 6 — 收尾</a></li>
+      <li><a href="#s10" data-i18n="dev.toc.s10">角色分工</a></li>
+      <li><a href="#s11" data-i18n="dev.toc.s11">日常铁律</a></li>
+      <li><a href="#s12" data-i18n="dev.toc.s12">出问题怎么办</a></li>
+      <li><a href="#s13" data-i18n="dev.toc.s13">文件位置速查</a></li>
+      <li><a href="#s14" data-i18n="dev.toc.s14">Claude 技能速查</a></li>
+      <li><a href="#s15" data-i18n="dev.toc.s15">详细教学（每个技能怎么用）</a></li>
+      <li><a href="#s16" data-i18n="dev.toc.s16">团队改进建议通道</a></li>
+    </ul>
+  </nav>
+
+  <main class="article">
+    <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
+      <span data-i18n="doc.toc.toggle">目录</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="mobile-toc" id="mobileToc">
+      <ul class="toc-list">
+        <li><a href="#s1" data-i18n="dev.toc.s1">首次配置</a></li>
+        <li><a href="#s2" data-i18n="dev.toc.s2">每日开始工作</a></li>
+        <li><a href="#s3" data-i18n="dev.toc.s3">6阶段任务流程</a></li>
+        <li><a href="#s4" data-i18n="dev.toc.s4">Phase 1 — 领取任务</a></li>
+        <li><a href="#s5" data-i18n="dev.toc.s5">Phase 2 — 计划</a></li>
+        <li><a href="#s6" data-i18n="dev.toc.s6">Phase 3 — 执行</a></li>
+        <li><a href="#s7" data-i18n="dev.toc.s7">Phase 4 — 验证</a></li>
+        <li><a href="#s8" data-i18n="dev.toc.s8">Phase 5 — 提交</a></li>
+        <li><a href="#s9" data-i18n="dev.toc.s9">Phase 6 — 收尾</a></li>
+        <li><a href="#s10" data-i18n="dev.toc.s10">角色分工</a></li>
+        <li><a href="#s11" data-i18n="dev.toc.s11">日常铁律</a></li>
+        <li><a href="#s12" data-i18n="dev.toc.s12">出问题怎么办</a></li>
+        <li><a href="#s13" data-i18n="dev.toc.s13">文件位置速查</a></li>
+        <li><a href="#s14" data-i18n="dev.toc.s14">Claude 技能速查</a></li>
+        <li><a href="#s15" data-i18n="dev.toc.s15">详细教学（每个技能怎么用）</a></li>
+        <li><a href="#s16" data-i18n="dev.toc.s16">团队改进建议通道</a></li>
+      </ul>
+    </div>
+
+    <div class="doc-hero">
+      <h1 data-i18n="dev.title">开发者上手手册 — 使用 Claude 完成 Sprint 任务的标准流程</h1>
+      <div class="doc-meta">
+        <span data-i18n="dev.meta.updated">更新日期：2026年4月24日</span>
+        <span data-i18n="dev.meta.audience">适合：全体开发者（新加入与资深）</span>
+      </div>
+    </div>
+
+    <div class="callout info"><span class="callout-icon">📖</span><span data-i18n="dev.intro">每个开发者都按同样的 6 阶段流程完成每个任务。读一遍、书签保存、每次都按这个流程做。小团队要能"克隆"标准动作，就靠这份文档。</span></div>
+
+    <h2 id="s1" data-i18n="dev.s1.h">一、首次配置（仅一次）</h2>
+    <ul>
+      <li data-i18n="dev.s1.1">把 5 个团队仓库克隆到 <code>~/Documents/GitLab/skytree/</code>：<code>orebackend</code> · <code>proxy_android2</code> · <code>flutter_vpn</code> · <code>vpn-internal-reports</code> · <code>.vscode</code></li>
+      <li data-i18n="dev.s1.2">设置 Git 身份：<code>git config --global user.name "&lt;你的 GitLab 用户名&gt;"</code> + <code>git config --global user.email "&lt;你的邮箱&gt;"</code></li>
+      <li data-i18n="dev.s1.3">安装 Claude Code CLI，从工作区根目录打开：<code>cd ~/Documents/GitLab/skytree &amp;&amp; claude</code></li>
+      <li data-i18n="dev.s1.4">首次会话运行 <code>/start</code>——查看项目结构和当前 Sprint 状态</li>
+      <li data-i18n="dev.s1.5">读一次：<code>vpn-internal-reports/team-workflow-briefing.md</code>（完整简报）</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="dev.s2.h">二、每日开始工作</h2>
+    <ul>
+      <li data-i18n="dev.s2.1">每个仓库 <code>git pull</code></li>
+      <li data-i18n="dev.s2.2">从工作区根目录打开 Claude</li>
+      <li data-i18n="dev.s2.3">重命名会话：<code>/rename "&lt;任务简称&gt;"</code></li>
+      <li data-i18n="dev.s2.4">打开 <code>vpn-internal-reports/Sprint-&lt;N&gt;/README.md</code> 查看 Sprint 状态</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="dev.s3.h">三、6 阶段任务流程</h2>
+    <div class="phase-diagram" data-i18n="dev.s3.diagram">┌──────────────────────────────────────────────────┐
+│  每个任务 = 一个 6 阶段循环                      │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  1. CLAIM    — 从 Sprint 计划中领取未认领任务    │
+│                                                  │
+│  2. PLAN     — /plan  （学习 + 设计 + Sprint 影响检查）│
+│                  ↳ 如超出 Sprint 容量 → 升级给 Lead│
+│                                                  │
+│  3. EXECUTE  — /plan execute                     │
+│                                                  │
+│  4. VERIFY   — /go-specialist 或 /kotlin-specialist│
+│                （只在最终 diff 上运行一次）      │
+│                                                  │
+│  5. COMMIT   — /commit                           │
+│                                                  │
+│  6. CLOSE    — /knowledge-base-updater（如有新发现）│
+│                /report update                    │
+│                /clear                            │
+│                                                  │
+└──────────────────────────────────────────────────┘</div>
+
+    <h2 id="s4" data-i18n="dev.s4.h">四、Phase 1 — 领取任务（CLAIM）</h2>
+    <ul>
+      <li data-i18n="dev.s4.1">在 Sprint README 里找一个未认领、符合你优先级和技术栈的任务</li>
+      <li data-i18n="dev.s4.2">把该任务的 <code>Owner</code> 改为你的名字，<code>Status</code> 改为 <code>in-progress</code></li>
+      <li data-i18n="dev.s4.3">从 <code>main</code> 切出分支，前缀按 <code>rules/general/git.md</code>：<code>fea/</code> 新功能 · <code>enh/</code> 优化 · <code>fix/</code> 修复 · <code>ref/</code> 重构 · <code>hot/</code> 紧急修复</li>
+      <li data-i18n="dev.s4.4">示例：<code>fix/vpn-kill-switch-doze</code></li>
+    </ul>
+
+    <h2 id="s5" data-i18n="dev.s5.h">五、Phase 2 — 计划（PLAN）</h2>
+    <ul>
+      <li data-i18n="dev.s5.1">运行 <code>/plan</code>——进入计划模式</li>
+      <li data-i18n="dev.s5.2">让 Claude 探索代码；它问什么问题就如实回答</li>
+      <li data-i18n="dev.s5.3">把模板 <code>templates/task-plan.template.md</code> 复制到 <code>plans/&lt;分支名&gt;.md</code></li>
+      <li data-i18n="dev.s5.4">填写：背景 · 验收标准 · 方法 · 关键文件 · 风险 · 验证方式 · 不在本次范围 · Sprint 影响</li>
+    </ul>
+    <div class="callout danger"><span class="callout-icon">⚠️</span><span data-i18n="dev.s5.escalate"><strong>如果 Sprint 影响评估为"超出 Sprint 容量"：</strong>在计划文件加 <code>## SPRINT IMPACT</code> 章节，写清楚需要多几天 + 可替换任务候选。<strong>停下来，不要 ExitPlanMode。</strong>在群里告诉 Lead：<code>@lead sprint impact on Task #&lt;N&gt; — +&lt;X&gt;d. Cut-queue: Task #&lt;Y&gt;. Plan at vpn-internal-reports/plans/&lt;file&gt;.md</code>。等 Lead 决策后再继续——绝不自行扩大范围。</span></div>
+
+    <h2 id="s6" data-i18n="dev.s6.h">六、Phase 3 — 执行（EXECUTE）</h2>
+    <ul>
+      <li data-i18n="dev.s6.1">运行 <code>/plan execute</code>——Claude 按计划一步步执行</li>
+      <li data-i18n="dev.s6.2"><strong>执行期间不要调用其他技能</strong>——让 <code>/plan execute</code> 跑完</li>
+      <li data-i18n="dev.s6.3">出现意外情况 → 停下问 Lead，不要偷偷改方向</li>
+    </ul>
+
+    <h2 id="s7" data-i18n="dev.s7.h">七、Phase 4 — 验证（VERIFY）</h2>
+    <p data-i18n="dev.s7.p">只有当 diff 最终完成、准备提交时才运行。</p>
+    <table>
+      <tr><th data-i18n="dev.s7.th.stack">技术栈</th><th data-i18n="dev.s7.th.skill">验证技能</th></tr>
+      <tr><td>orebackend / proxybackend</td><td><code>/go-specialist double check</code></td></tr>
+      <tr><td>proxy_android2</td><td><code>/kotlin-specialist double check</code></td></tr>
+      <tr><td>flutter_vpn</td><td><code>/flutter-specialist double check</code></td></tr>
+      <tr><td data-i18n="dev.s7.td.cross">跨多栈</td><td><code>/code-reviewer</code></td></tr>
+    </table>
+    <ul>
+      <li data-i18n="dev.s7.1">修复 specialist 指出的问题</li>
+      <li data-i18n="dev.s7.2"><strong>Specialist 只跑一次</strong>——不是聊天工具，是检查点</li>
+    </ul>
+
+    <h2 id="s8" data-i18n="dev.s8.h">八、Phase 5 — 提交（COMMIT）</h2>
+    <ul>
+      <li data-i18n="dev.s8.1">运行 <code>/commit</code></li>
+      <li data-i18n="dev.s8.2">审阅起草的提交信息，批准或调整</li>
+      <li data-i18n="dev.s8.3">标题格式：<code>Add | Fix | Update | Remove | Improve &lt;简短描述&gt;</code>（≤72 字符）</li>
+      <li data-i18n="dev.s8.4"><strong>绝对不要</strong>用 <code>--amend</code>、<code>--no-verify</code>、<code>Co-Authored-By</code></li>
+      <li data-i18n="dev.s8.5">Hook 失败？修根因 → <strong>新建</strong>提交（不要 amend）</li>
+    </ul>
+
+    <h2 id="s9" data-i18n="dev.s9.h">九、Phase 6 — 收尾（CLOSE）</h2>
+    <ol>
+      <li data-i18n="dev.s9.1"><strong>知识库</strong>（仅当有非显然的新发现）：<code>/knowledge-base-updater "save: &lt;一句话发现&gt;"</code>。常规工作跳过。</li>
+      <li data-i18n="dev.s9.2"><strong>执行报告</strong>（每次必做）：复制 <code>templates/execution-report-entry.template.md</code>，追加到 <code>Sprint-&lt;N&gt;/execution-reports/phase-&lt;name&gt;.md</code>。填写：完成了什么 · 非显然发现 · 后续任务 · Sprint 影响。</li>
+      <li data-i18n="dev.s9.3"><strong>更新 Sprint README</strong>：把你任务的 <code>Status</code> 改为 <code>done</code>，提交到 vpn-internal-reports。</li>
+      <li data-i18n="dev.s9.4">在产品仓库发起 MR，指派 Lead 审核。</li>
+      <li data-i18n="dev.s9.5"><code>/clear</code>——释放上下文，任务结束。</li>
+    </ol>
+
+    <h2 id="s10" data-i18n="dev.s10.h">十、角色分工（Lead 与 Dev）</h2>
+    <table>
+      <tr><th data-i18n="dev.s10.th.action">动作</th><th>Lead</th><th>Dev</th></tr>
+      <tr><td data-i18n="dev.s10.r1">添加任务到 Sprint 计划</td><td>✅</td><td data-i18n="dev.s10.r1d">❌（群里请求 Lead）</td></tr>
+      <tr><td data-i18n="dev.s10.r2">设置优先级 / 估计天数</td><td>✅</td><td>❌</td></tr>
+      <tr><td data-i18n="dev.s10.r3">认领未分配任务</td><td data-i18n="dev.s10.r3l">✅（如亲自编码）</td><td>✅</td></tr>
+      <tr><td data-i18n="dev.s10.r4">填写任务计划（验收标准/方法/风险）</td><td>❌</td><td>✅</td></tr>
+      <tr><td data-i18n="dev.s10.r5">执行 + 提交 + 推送</td><td>✅</td><td>✅</td></tr>
+      <tr><td data-i18n="dev.s10.r6">决定 cut-queue / 延期</td><td>✅</td><td data-i18n="dev.s10.r6d">❌（升级）</td></tr>
+      <tr><td data-i18n="dev.s10.r7">审核 MR</td><td>✅</td><td>❌</td></tr>
+      <tr><td data-i18n="dev.s10.r8">写执行报告条目</td><td>❌</td><td>✅</td></tr>
+      <tr><td data-i18n="dev.s10.r9">更新 Sprint README 状态</td><td>✅</td><td data-i18n="dev.s10.r9d">✅（仅自己的行）</td></tr>
+    </table>
+
+    <h2 id="s11" data-i18n="dev.s11.h">十一、日常铁律（永远不要破坏）</h2>
+    <ul>
+      <li data-i18n="dev.s11.1"><strong>一次一个技能</strong>——不要把 <code>/plan</code> + <code>/plan execute</code> + <code>/commit</code> 堆在一起</li>
+      <li data-i18n="dev.s11.2"><strong>一个会话 = 一个任务</strong>——任务之间 <code>/clear</code></li>
+      <li data-i18n="dev.s11.3"><strong>不准自行扩大范围</strong>——发现任务变大了，升级给 Lead</li>
+      <li data-i18n="dev.s11.4"><strong>Specialist 仅 Phase 4</strong>——不是"帮我看看方案"的聊天工具</li>
+      <li data-i18n="dev.s11.5"><strong>永远用模板</strong>——task-plan 和 execution-report 模板，不要自由发挥</li>
+      <li data-i18n="dev.s11.6"><strong>一任务一 MR</strong>——Lead 审核通过才合并</li>
+    </ul>
+
+    <h2 id="s12" data-i18n="dev.s12.h">十二、出问题怎么办</h2>
+    <table>
+      <tr><th data-i18n="dev.s12.th.issue">情况</th><th data-i18n="dev.s12.th.fix">处理方式</th></tr>
+      <tr><td data-i18n="dev.s12.r1">Build 失败</td><td data-i18n="dev.s12.r1f">当前会话修复，重新跑 specialist，修好才能提交</td></tr>
+      <tr><td data-i18n="dev.s12.r2">提交 hook 阻止</td><td data-i18n="dev.s12.r2f">修根因，<strong>新建</strong>提交，永远不用 <code>--no-verify</code></td></tr>
+      <tr><td data-i18n="dev.s12.r3">Merge 冲突</td><td data-i18n="dev.s12.r3f">本地解决，在解决后的 diff 上重新跑 specialist</td></tr>
+      <tr><td data-i18n="dev.s12.r4">远程有新提交</td><td data-i18n="dev.s12.r4f"><code>git stash -u</code> → <code>git pull --ff-only</code> → <code>git stash pop</code> → 重新 build</td></tr>
+      <tr><td data-i18n="dev.s12.r5">会话乱了、没有计划</td><td data-i18n="dev.s12.r5f"><code>/clear</code>，从 Phase 2 重新开始</td></tr>
+    </table>
+
+    <h2 id="s13" data-i18n="dev.s13.h">十三、文件位置速查</h2>
+    <table>
+      <tr><th data-i18n="dev.s13.th.need">需要</th><th data-i18n="dev.s13.th.where">位置</th></tr>
+      <tr><td data-i18n="dev.s13.r1">当前 Sprint 状态</td><td><code>vpn-internal-reports/Sprint-&lt;N&gt;/README.md</code></td></tr>
+      <tr><td data-i18n="dev.s13.r2">你的任务计划</td><td><code>vpn-internal-reports/plans/&lt;分支名&gt;.md</code></td></tr>
+      <tr><td data-i18n="dev.s13.r3">执行报告</td><td><code>vpn-internal-reports/Sprint-&lt;N&gt;/execution-reports/</code></td></tr>
+      <tr><td data-i18n="dev.s13.r4">模板</td><td><code>vpn-internal-reports/templates/</code></td></tr>
+      <tr><td data-i18n="dev.s13.r5">完整简报</td><td><code>vpn-internal-reports/team-workflow-briefing.md</code></td></tr>
+      <tr><td data-i18n="dev.s13.r6">知识库</td><td><code>.claude/knowledge/INDEX.md</code></td></tr>
+      <tr><td data-i18n="dev.s13.r7">自动加载的角色规则</td><td><code>.claude/rules/general/sprint-workflow.md</code></td></tr>
+    </table>
+
+    <h2 id="s14" data-i18n="dev.s14.h">十四、Claude 技能速查</h2>
+    <table>
+      <tr><th data-i18n="dev.s14.th.skill">技能</th><th data-i18n="dev.s14.th.use">一句话用途</th><th data-i18n="dev.s14.th.phase">阶段</th></tr>
+      <tr><td><code>/plan</code></td><td data-i18n="dev.s14.r1">决定要做什么、按什么顺序做</td><td>1 &amp; 2</td></tr>
+      <tr><td><code>/plan execute</code></td><td data-i18n="dev.s14.r2">按已批准的计划执行</td><td>3</td></tr>
+      <tr><td><code>/go-specialist</code></td><td data-i18n="dev.s14.r3">Go 代码规范与正确性检查</td><td>4 (orebackend)</td></tr>
+      <tr><td><code>/kotlin-specialist</code></td><td data-i18n="dev.s14.r4">Kotlin / Android 代码检查</td><td>4 (proxy_android2)</td></tr>
+      <tr><td><code>/flutter-specialist</code></td><td data-i18n="dev.s14.r5">Flutter / Dart 代码检查</td><td>4 (flutter_vpn)</td></tr>
+      <tr><td><code>/commit</code></td><td data-i18n="dev.s14.r6">按团队规范起草并推送提交</td><td>5</td></tr>
+      <tr><td><code>/knowledge-base-updater</code></td><td data-i18n="dev.s14.r7">把非显然的发现存入知识库</td><td data-i18n="dev.s14.r7p">6（适用时）</td></tr>
+      <tr><td><code>/report update</code></td><td data-i18n="dev.s14.r8">追加本 Sprint 的执行报告条目</td><td data-i18n="dev.s14.r8p">6（每次）</td></tr>
+    </table>
+
+    <div class="callout success" style="margin-top: 2rem;"><span class="callout-icon">💡</span><span data-i18n="dev.summary"><strong>要点总结：</strong>按 6 阶段顺序做事 · 一次一个技能 · 发现超范围就升级给 Lead · 任务之间 <code>/clear</code>。小事多 practice，大事自然顺。</span></div>
+
+    <h2 id="s15">十五、详细教学 — 每个技能到底怎么用</h2>
+    <p>按真实场景演示，照着做就行。每个技能只展示最常见的用法，不堆砌冷门选项。</p>
+
+    <h3>15.1 <code>/plan</code> — 开始计划一个任务</h3>
+    <p><strong>什么时候用：</strong>新任务开始。<strong>目标：</strong>让 Claude 帮你把"要做什么"想清楚，写到计划文件里。</p>
+    <pre><code>你：/plan
+Claude：(进入计划模式，可能派出 Explore 子代理扫代码)
+Claude：我看到你想修 kill switch 在 Doze 下失效的 bug。
+        几个问题先确认：
+        1. 只改 Android 还是也要改 iOS？
+        2. 你希望 kill switch 在 Doze 下保持锁定，还是允许用户手动释放？
+        3. 之前有没有测过 Android 13+ 的新 Doze 规则？
+你：只改 Android；保持锁定；没测过 13+
+Claude：好的，写计划到 ~/.claude/plans/abc-xyz.md
+        (列出方法 / 关键文件 / 风险 / 验证方式)
+你：(检查计划文件，填入或补充 acceptance criteria)
+你：看起来 OK，可以进入 execute
+Claude：ExitPlanMode</code></pre>
+    <div class="callout info"><span class="callout-icon">💡</span><span><strong>关键点：</strong>Claude 问问题时<strong>如实回答</strong>，不要敷衍。计划错了，后面全错。</span></div>
+
+    <h3>15.2 <code>/plan execute</code> — 按计划执行</h3>
+    <p><strong>什么时候用：</strong>计划已批准，准备写代码。</p>
+    <pre><code>你：/plan execute
+Claude：开始 Phase 1 的第一个逻辑组...
+        (Claude 按计划一步步做：学习 → 实现 → 验证 → 提交 → 报告 → 更新索引)
+Claude：Phase 1 完成，要不要继续 Phase 2？
+你：继续
+...</code></pre>
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>不要</strong>在 <code>/plan execute</code> 跑的时候调其他技能（<code>/go-specialist</code>、<code>/commit</code> 等）。让它跑完一整组再说。</span></div>
+
+    <h3>15.3 <code>/go-specialist double check</code>（或 kotlin / flutter）— 验证</h3>
+    <p><strong>什么时候用：</strong>代码改好了、build 过了、准备提交之前。<strong>只运行一次。</strong></p>
+    <pre><code>你：/go-specialist double check
+Claude：(读 git diff，跑 go build，检查规范)
+Claude：发现 3 个问题：
+        1. handler/client/user.go:305 — 应该用 MDBSlave() 而不是 MDB()
+        2. mod/models/user_device.go:40 — 错误没有用 %w 包装
+        3. handler/client/init.go — gofmt 告警
+你：(修这 3 个问题)
+你：/go-specialist double check
+Claude：所有问题已解决，build 通过，可以提交。</code></pre>
+    <div class="callout danger"><span class="callout-icon">🚫</span><span><strong>反模式：</strong>把 specialist 当成"帮我想方案"的聊天工具。它是<strong>检查点</strong>，不是设计伙伴。设计问题用普通 prompt 或 <code>/plan</code> 阶段解决。</span></div>
+
+    <h3>15.4 <code>/commit</code> — 提交 + 推送</h3>
+    <pre><code>你：/commit
+Claude：起草提交信息：
+        "Fix VPN kill switch Android Doze failure"
+        (显示所有 staged 文件列表)
+你：批准
+Claude：git commit && git push origin HEAD
+Claude：提交 1e23b3a 已推送到 origin。</code></pre>
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span>如果 pre-commit hook 失败：<strong>修根因</strong>（不是 --no-verify），然后<strong>新建</strong>提交（不是 --amend）。</span></div>
+
+    <h3>15.5 <code>/knowledge-base-updater</code> — 保存非显然发现</h3>
+    <p><strong>只有在你学到了代码里看不出来的东西</strong>才用。例如：</p>
+    <ul>
+      <li>某个线上客户端依赖某响应字段，删了会无限循环</li>
+      <li>某错误码有副作用（比如触发重新登录弹窗）</li>
+      <li>某 Redis key 的 TTL 比文档写的短</li>
+    </ul>
+    <p><strong>不要</strong>用来存"我改了这个函数"之类的常规信息——代码和 commit message 就是文档。</p>
+    <pre><code>你：/knowledge-base-updater "save: skytree_pc v2.2.71 always sends nonce to /user/auto-register; backend must keep nonce validation optional-when-present"
+Claude：(确认要写到哪个知识库文件，展示 diff)
+你：批准
+Claude：已写入 .claude/knowledge/auth-passwordless-design.md</code></pre>
+
+    <h3>15.6 <code>/report update</code> — 写执行报告</h3>
+    <p>每任务必做。即使是 trivial 的修改。让后来人知道你做了什么。</p>
+    <pre><code>你：/report update
+Claude：这次 Sprint 是 Sprint-2。最近的 phase 是 phase-android-stability-refactor。
+        要追加新条目吗？
+你：新建 phase-auth-register-rewrite
+Claude：(按 template 生成条目)
+        ## Task #3 — Collapse register flow to single endpoint (2026-04-24)
+        Owner: Tein Fai
+        Commits: orebackend 9786b9eac, proxy_android2 cd3c925d
+        What shipped: ...
+        Non-obvious findings: ...
+        Follow-ups: ...
+        Sprint impact: 0 days (fit)
+你：批准
+Claude：已追加。</code></pre>
+
+    <h3>15.7 <code>/clear</code> — 清上下文</h3>
+    <p>任务结束后必做。把当前会话的上下文全部释放，下个任务从干净的上下文开始。<strong>保证 token 不浪费</strong>、不串任务。</p>
+    <pre><code>你：/clear
+Claude：上下文已清空。准备好接下一个任务了。</code></pre>
+
+    <h3>15.8 逃生出口 — 会话乱了怎么办</h3>
+    <p>以下三种情况，直接 <code>/clear</code> 重来，不要继续撑：</p>
+    <ol>
+      <li>同一个会话开了好几个无关话题</li>
+      <li>修了好几处但已经不记得哪些改对了</li>
+      <li>Claude 的回答开始重复或矛盾</li>
+    </ol>
+    <p>重来一次 10 分钟；硬撑 1 小时代价更大。</p>
+
+    <h2 id="s16">十六、团队改进建议通道</h2>
+    <div class="callout info"><span class="callout-icon">🗣️</span><span><strong>这份流程不是刻在石头上的。</strong>团队每个人都欢迎提改进建议——在实际使用中发现哪里别扭、哪里浪费时间、哪里规则说不通，直接提出来一起优化。</span></div>
+
+    <h3>你可以随时反馈</h3>
+    <table>
+      <tr><th>发现什么</th><th>怎么做</th></tr>
+      <tr><td>某个技能用起来卡、报错、表现不符合预期</td><td>在群里 @Lead + 代码仓库贴出来。如果很急，先用 <code>/contribute-rules</code> 记录。</td></tr>
+      <tr><td>某个阶段的规则不合理（比如"specialist 只跑一次"在某场景下做不到）</td><td>在周会提出，或先写一个 counter-example 发群里</td></tr>
+      <tr><td>某个模板缺字段 / 多余字段</td><td>直接改模板，发 MR 到 <code>vpn-internal-reports/templates/</code>，Lead 审核合并</td></tr>
+      <tr><td>某个知识点应该加进知识库</td><td><code>/knowledge-base-updater</code> 直接写，或群里告诉 Lead 由他补</td></tr>
+      <tr><td>某个技能应该增加新功能 / 删掉冗余</td><td>用 <code>/contribute-rules</code> 起草改动，MR 到 <code>.claude/skills/</code> 对应技能</td></tr>
+    </table>
+
+    <h3>Sprint 回顾（每个 Sprint 结束）</h3>
+    <p>每次 Sprint 结束，Lead 会召开 15 分钟回顾会，三个问题：</p>
+    <ol>
+      <li><strong>什么流程卡住你了？</strong>——哪些阶段浪费时间、哪些规则反人类</li>
+      <li><strong>什么发现应该写进团队文档？</strong>——这个 sprint 学到的非显然知识</li>
+      <li><strong>下个 Sprint 有什么建议？</strong>——技能 / 模板 / 规则 / 知识库的改进</li>
+    </ol>
+    <p>反馈直接导致下一个 Sprint 的 <code>.claude/</code> 更新。每人的意见都算数。</p>
+
+    <h3>匿名 / 不好意思公开说的</h3>
+    <p>任何时候，直接私聊 Lead。特别是以下情况请直接说：</p>
+    <ul>
+      <li>你对流程感到困惑但不好意思在群里问（100% 是流程写得不清楚，不是你问题）</li>
+      <li>你觉得某条规则会害你出错，但不确定怎么改</li>
+      <li>你发现其他同事在绕过流程（先不要点名，描述现象即可）</li>
+    </ul>
+
+    <h3>文档改进原则</h3>
+    <ul>
+      <li><strong>改文档就是改流程</strong>——文档是真的 source of truth，不是摆设</li>
+      <li><strong>小改动直接 MR</strong>——别开会讨论 typo</li>
+      <li><strong>大改动（删规则、加阶段）</strong>——先群里讨论，共识后再改</li>
+      <li><strong>改完要告诉团队</strong>——Slack 一条消息："我把 XX 改成 YY，原因是 ZZ"</li>
+    </ul>
+
+    <div class="callout success" style="margin-top: 1rem;"><span class="callout-icon">🤝</span><span><strong>这份流程属于团队。</strong>不是 Lead 一个人定的、不是 Claude 一个工具的规矩。每次有人用起来觉得别扭，就是流程还能更好的信号。说出来，一起改。</span></div>
+
+    <h3>AI 使用透明度 — 每周导出用量</h3>
+    <div class="callout info"><span class="callout-icon">📊</span><span><strong>每个人每周导出一次自己的 AI 使用数据，分享到团队频道。</strong>不是考勤打卡——是让大家都能看到"一个任务应该花多少 token、哪种操作最贵"，集体学会更高效地用 Claude。</span></div>
+
+    <h4>怎么导出</h4>
+    <ul>
+      <li>在当前会话（或任意会话）运行：<code>/cost</code>——显示该会话的 token 用量 + 成本</li>
+      <li>如需跨会话汇总，参考 Claude Code 的 <code>~/.claude/projects/</code> 下的会话日志</li>
+      <li>（如果团队后续做了自定义的 <code>/insights</code> 聚合脚本，直接用它）</li>
+    </ul>
+
+    <h4>每周分享什么（发到 Slack / 群）</h4>
+    <table>
+      <tr><th>字段</th><th>示例</th><th>为什么分享</th></tr>
+      <tr><td>本周任务数</td><td>3 个</td><td>看 throughput</td></tr>
+      <tr><td>总 token 消耗</td><td>2.1M</td><td>估算成本</td></tr>
+      <tr><td>平均每任务 token</td><td>~700K</td><td>看是否偏高——可能流程没跑好</td></tr>
+      <tr><td>最贵的一次是什么</td><td>Task #5：一个会话里连调了 4 个技能</td><td>反模式早期发现</td></tr>
+      <tr><td>最省的一次是什么</td><td>Task #2：按 6 阶段跑、每阶段 clear</td><td>Pattern 推广</td></tr>
+      <tr><td>一个发现</td><td>"spawn Explore agent 比 /plan 贵很多"</td><td>沉淀到知识库</td></tr>
+    </table>
+
+    <h4>为什么要做这个</h4>
+    <ul>
+      <li><strong>token 就是钱</strong>——Opus 一次会话轻松上 100 万 token。团队年支出不小。</li>
+      <li><strong>量化 = 改进</strong>——看不到数字就不知道哪里浪费。</li>
+      <li><strong>同辈学习</strong>——新人看老人怎么用最省 token，成长最快。</li>
+      <li><strong>找 anti-pattern</strong>——如果全组都花大，说明流程本身需要改（不是个人问题）。</li>
+    </ul>
+
+    <h4>匿名化原则</h4>
+    <p>分享数据是团队成长工具，<strong>不是绩效考核</strong>。Lead 不会根据 token 用量评价个人。重点是发现流程问题、传授最佳实践。</p>
+
+    <div class="callout warn" style="margin-top: 1rem;"><span class="callout-icon">⚠️</span><span><strong>反过来也要说：</strong>"少用 token" 不等于"少用 Claude"。一次深入的 <code>/plan</code> 比 10 次零散问答有价值得多。目标是<strong>有意识地花</strong>，不是吝啬。</span></div>
+
+  </main>
+</div>
+
+<script>
+function toggleToc() {
+  var btn = document.getElementById('tocToggle');
+  var toc = document.getElementById('mobileToc');
+  btn.classList.toggle('open');
+  toc.classList.toggle('open');
+}
+(function() {
+  var links = document.querySelectorAll('#tocList a');
+  var sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    var top = window.scrollY + 100;
+    var active = null;
+    sections.forEach((s, i) => { if (s && s.offsetTop <= top) active = i; });
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+<script src="../lang.js"></script>
+<script>initLang();</script>
+</body>
+</html>

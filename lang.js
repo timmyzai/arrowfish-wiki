@@ -14,6 +14,7 @@ const T = {
     'filter.prd':        'PRD',
     'filter.qa':         'QA',
     'filter.story':      'Story',
+    'filter.dev':        'Dev',
     'section.docs':      '文档列表',
     'card.prd.title':    'Arrowfish VPN 业务说明文档',
     'card.prd.desc':     '产品功能全貌、用户体系、套餐与支付、VPN连接机制、营销与内容模块的完整业务逻辑说明。BA / PM 产品上手必读。',
@@ -24,6 +25,9 @@ const T = {
     'card.qa.title':     'QA 测试手册 — 测试环境配置',
     'card.qa.desc':      'Staging 环境所有影响测试结果的配置一览：登录规则、免费时长、VPN 连接行为、版本控制、支付说明及常见误判对照。',
     'card.qa.audience':  '适合：QA 测试人员',
+    'card.dev.title':    '开发者上手手册 — Claude Sprint 流程',
+    'card.dev.desc':     '6 阶段任务流程（领取 → 计划 → 执行 → 验证 → 提交 → 收尾）、Lead vs Dev 角色分工、Sprint 影响升级路径、Claude 技能速查。团队统一标准，新成员上手必读。',
+    'card.dev.audience': '适合：开发团队（全体）',
     'card.read':         '阅读文档',
     'footer':            'Arrowfish Team · 内部文档 · 请勿对外分享 · 2026',
 
@@ -77,6 +81,10 @@ const T = {
     'qa.toc.s11': '已知问题清单',
     'qa.toc.s12': '测试账号管理',
     'qa.toc.s13': '测试 vs 生产差异',
+    'qa.toc.s14': '最近发布变更（本 Sprint）',
+
+    /* ── Dev onboarding ── */
+    'dev.badge':    'Developer',
   },
 
   en: {
@@ -88,6 +96,7 @@ const T = {
     'filter.prd':        'PRD',
     'filter.qa':         'QA',
     'filter.story':      'Story',
+    'filter.dev':        'Dev',
     'section.docs':      'Documents',
     'card.prd.title':    'Arrowfish VPN Business PRD',
     'card.prd.desc':     'Full product overview: user tiers, membership plans &amp; payments, VPN connection, marketing and content modules. Required reading for BA / PM.',
@@ -98,6 +107,9 @@ const T = {
     'card.qa.title':     'QA Test Handbook — Staging Environment Config',
     'card.qa.desc':      'All staging configs that affect test outcomes: login rules, free duration, VPN connection behavior, versioning, payments, and common false-positive reference.',
     'card.qa.audience':  'For: QA Testers',
+    'card.dev.title':    'Developer Onboarding — Claude Sprint Workflow',
+    'card.dev.desc':     '6-phase per-task workflow (Claim → Plan → Execute → Verify → Commit → Close), Lead vs Dev role split, sprint-impact escalation, Claude skill cheat-sheet. Required reading for every developer.',
+    'card.dev.audience': 'For: All developers',
     'card.read':         'Read Document',
     'footer':            'Arrowfish Team · Internal · Do Not Share · 2026',
 
@@ -151,6 +163,10 @@ const T = {
     'qa.toc.s11': 'Known Issues List',
     'qa.toc.s12': 'Test Account Management',
     'qa.toc.s13': 'Staging vs Production Differences',
+    'qa.toc.s14': 'Recent Releases (This Sprint)',
+
+    /* ── Dev onboarding ── */
+    'dev.badge':    'Developer',
   }
 };
 

@@ -110,6 +110,7 @@
   .badge-prd  { background: #DBEAFE; color: #1E40AF; }
   .badge-qa   { background: #D1FAE5; color: #065F46; }
   .badge-story{ background: #EDE9FE; color: #5B21B6; }
+  .badge-dev  { background: #FEF3C7; color: #92400E; }
   .card-date { font-size: .78rem; color: var(--text-3); }
   .card-icon {
     width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
@@ -118,6 +119,7 @@
   .card-icon-prd  { background: #EFF6FF; }
   .card-icon-qa   { background: #F0FDF4; }
   .card-icon-story{ background: #F5F3FF; }
+  .card-icon-dev  { background: #FFFBEB; }
   .card-icon svg { width: 20px; height: 20px; }
   .card-title { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
   .card-desc { font-size: .85rem; color: var(--text-2); line-height: 1.6; flex: 1; }
@@ -189,6 +191,7 @@
   <button class="filter-btn" onclick="filterDocs('prd', this)" data-i18n="filter.prd">PRD</button>
   <button class="filter-btn" onclick="filterDocs('qa', this)" data-i18n="filter.qa">QA</button>
   <button class="filter-btn" onclick="filterDocs('story', this)" data-i18n="filter.story">Story</button>
+  <button class="filter-btn" onclick="filterDocs('dev', this)" data-i18n="filter.dev">Dev</button>
 </div>
 
 <div class="section-label" data-i18n="section.docs">文档列表</div>
@@ -240,6 +243,31 @@
     <div class="card-audience">
       <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
       <span data-i18n="card.story.audience">适合：全体团队成员</span>
+    </div>
+    <div class="card-arrow">
+      <span data-i18n="card.read">阅读文档</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </a>
+
+  <!-- Card: Developer Onboarding -->
+  <a class="doc-card" href="docs/developer-onboarding.html" data-type="dev">
+    <div class="card-top">
+      <div class="card-meta">
+        <span class="badge badge-dev">DEV</span>
+        <span class="card-date">2026年4月</span>
+      </div>
+      <div class="card-icon card-icon-dev">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 3l-4 7 4 7M13 3l4 7-4 7" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-title" data-i18n="card.dev.title">开发者上手手册 — Claude Sprint 流程</div>
+    <div class="card-desc" data-i18n="card.dev.desc">6 阶段任务流程（领取 → 计划 → 执行 → 验证 → 提交 → 收尾）、Lead vs Dev 角色分工、Sprint 影响升级路径、Claude 技能速查。团队统一标准，新成员上手必读。</div>
+    <div class="card-audience">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span data-i18n="card.dev.audience">适合：开发团队（全体）</span>
     </div>
     <div class="card-arrow">
       <span data-i18n="card.read">阅读文档</span>

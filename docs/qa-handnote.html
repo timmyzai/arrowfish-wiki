@@ -116,6 +116,7 @@
       <li><a href="#s11" data-i18n="qa.toc.s11">已知问题清单</a></li>
       <li><a href="#s12" data-i18n="qa.toc.s12">测试账号管理</a></li>
       <li><a href="#s13" data-i18n="qa.toc.s13">测试 vs 生产差异</a></li>
+      <li><a href="#s14" data-i18n="qa.toc.s14">最近发布变更（本 Sprint）</a></li>
     </ul>
   </nav>
 
@@ -139,6 +140,7 @@
         <li><a href="#s11" data-i18n="qa.toc.s11">已知问题清单</a></li>
         <li><a href="#s12" data-i18n="qa.toc.s12">测试账号管理</a></li>
         <li><a href="#s13" data-i18n="qa.toc.s13">测试 vs 生产差异</a></li>
+        <li><a href="#s14" data-i18n="qa.toc.s14">最近发布变更（本 Sprint）</a></li>
       </ul>
     </div>
 
@@ -309,6 +311,54 @@
       <tr><td>节点端口</td><td>1443</td><td>443</td></tr>
       <tr><td>iOS（HiYou SSH）</td><td>App Store 上架版本 v1.3.0，<strong>已停止更新</strong>（开发者账号被封）</td><td>仅供现有用户使用，无法推送新版本</td></tr>
     </table>
+
+    <h2 id="s14">十四、最近发布变更（本 Sprint）</h2>
+    <p>本节列出 QA 最需关注的近期后端 / 客户端变更。测试时请参照这里的新行为，避免把正常行为误报为 Bug。</p>
+
+    <h3>1. Android 免注册 / 游客注册流程重构（2026-04-24）</h3>
+    <p><strong>变更：</strong>Android 的"无需注册使用"按钮背后的后端交互从三步（<code>device/status</code> → <code>nonce/generate</code> → <code>auto-register</code>）简化为<strong>单步</strong> <code>POST /user/auto-register</code>。响应体新增 <code>status</code> 字段：</p>
+    <table>
+      <tr><th>status</th><th>触发条件</th><th>客户端行为</th></tr>
+      <tr><td><code>NEW</code></td><td>全新设备（未注册过）</td><td>显示新生成的 16 位登录码，等用户点"开始使用"</td></tr>
+      <tr><td><code>PASSWORDLESS</code></td><td>同一台设备之前已注册过免密账号，但本地缓存被清除</td><td>显示原来的 16 位登录码（后端找回），等用户点"开始使用"</td></tr>
+      <tr><td><code>CONVERTED</code></td><td>设备之前注册过账号，且已转为正式账号（绑定用户名/密码）</td><td><strong>自动登录</strong>，直接跳进主页，不再显示登录码</td></tr>
+    </table>
+
+    <h3>QA 测试场景</h3>
+    <table>
+      <tr><th>#</th><th>场景</th><th>预期行为</th></tr>
+      <tr><td>1</td><td>全新安装 Android App，点"无需注册"</td><td>1 次网络请求到 <code>/user/auto-register</code>，响应 status=NEW，显示新登录码</td></tr>
+      <tr><td>2</td><td>清除 App 数据（不卸载），重新打开，点"无需注册"</td><td>1 次请求，status=PASSWORDLESS，显示<strong>原来的</strong>登录码（而非新码）</td></tr>
+      <tr><td>3</td><td>清除 App 数据后，重新打开并点"无需注册"，账号之前已转正（绑定手机号/邮箱/密码）</td><td>1 次请求，status=CONVERTED，<strong>自动进入主页</strong>（不弹错误、不显示码）</td></tr>
+      <tr><td>4</td><td>旋转屏幕 / 后台切换回来</td><td>不触发额外网络请求；Adjust 和渠道事件<strong>仅首次注册时</strong>发送一次</td></tr>
+      <tr><td>5</td><td>一秒内快速连续点击"无需注册"</td><td>后端限流 2 次/秒。第 3 次请求应返回 429。不是 Bug。</td></tr>
+    </table>
+
+    <h3>已修复（不再重现）</h3>
+    <div class="callout success"><span class="callout-icon">✅</span><span><strong>"此设备创建账号次数过多"错误</strong>（错误码 <code>400155</code>）：2026-04-24 修复。清除数据后重新打开不应再弹此错误。如果 QA 还能重现，请立刻记录设备型号 + 用户 ID + 时间，反馈给后端。</span></div>
+
+    <h3>iOS / Windows 客户端影响</h3>
+    <ul>
+      <li><strong>iOS (HiYou SSH v2.2.71)</strong>：不使用 <code>/user/auto-register</code>，完全<strong>不受影响</strong>。</li>
+      <li><strong>Windows (skytree_pc v2.2.71)</strong>：继续使用旧的两步流程（<code>nonce/generate</code> → <code>auto-register</code>）。响应多出 <code>status</code> 字段但客户端忽略，<strong>不受影响</strong>。转正后重新安装仍可拿到原登录码（不会无限循环）。</li>
+    </ul>
+
+    <h3>2. 错误码变更</h3>
+    <table>
+      <tr><th>错误码</th><th>含义</th><th>说明</th></tr>
+      <tr><td><code>400155</code> ErrDeviceRegisterLimitExceeded</td><td>设备注册次数超限</td><td>仍保留，但本次修复后正常用户<strong>不应再触发</strong>。仅异常情况或攻击行为会触发。</td></tr>
+      <tr><td><code>400160</code> ErrDeviceAlreadyRegistered</td><td>设备已注册</td><td>新增错误码（客户端若绕过新流程直接重复调用才会看到）。现有用户不应看到。</td></tr>
+    </table>
+
+    <h3>3. 限流（Rate Limit）</h3>
+    <table>
+      <tr><th>限流类型</th><th>限制</th><th>说明</th></tr>
+      <tr><td>Auth-burst 限流</td><td><strong>2 次 / 秒</strong>（按 IP + 指纹）</td><td>针对所有登录/注册/免密类接口。客户端 1 秒内发超过 2 个请求会被 429。</td></tr>
+      <tr><td>L1 每设备日限</td><td>3 次 / 天</td><td>每个设备每天最多创建 3 个免密账号。</td></tr>
+      <tr><td>L2 每 IP 日限</td><td>30 次 / 天</td><td>每个 IP 每天最多 30 次免密注册（含自动恢复不算）。</td></tr>
+    </table>
+
+    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>QA 批量测试提醒：</strong>如果你在一台机器上做批量压力测试（快速连续"无需注册"），很容易触发 429 或 L1/L2 日限。这<strong>不是 Bug</strong>。如果需要更大测试量，请先联系后端临时放宽限流。</span></div>
 
   </main>
 </div>
