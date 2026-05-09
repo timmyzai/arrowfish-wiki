@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>BA 业务分析手册 — Arrowfish Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="../auth-gate.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+    --text: #0F172A; --text-2: #475569; --text-3: #94A3B8;
+    --accent: #BE185D; --accent-light: #FCE7F3; --navy: #1E3A5F;
+    --radius: 10px;
+    --sidebar-w: 240px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter','Noto Sans SC',-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .topbar { background: var(--navy); height: 56px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .back-btn { display: flex; align-items: center; gap: 6px; color: #94A3B8; font-size: .85rem; text-decoration: none; transition: color .15s; }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-ba { background: #FCE7F3; color: #9D174D; }
+  .topbar-date { font-size: .78rem; color: #64748B; }
+  .layout { display: flex; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; gap: 2rem; align-items: flex-start; }
+  .toc-sidebar { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 72px; max-height: calc(100vh - 80px); overflow-y: auto; padding: 1.5rem 0; }
+  .toc-title { font-size: .72rem; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .75rem; padding-left: .75rem; }
+  .toc-list { list-style: none; }
+  .toc-list li a { display: block; padding: .35rem .75rem; border-left: 2px solid transparent; font-size: .82rem; color: var(--text-2); text-decoration: none; border-radius: 0 4px 4px 0; transition: color .15s, border-color .15s, background .15s; line-height: 1.4; }
+  .toc-list li a:hover { color: var(--accent); background: var(--accent-light); }
+  .toc-list li a.active { color: var(--accent); border-color: var(--accent); font-weight: 500; background: var(--accent-light); }
+  .article { flex: 1; min-width: 0; padding: 2rem 0 4rem; }
+  .doc-hero { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 700; line-height: 1.3; margin-bottom: .5rem; }
+  .doc-meta { font-size: .83rem; color: var(--text-3); display: flex; gap: 1rem; flex-wrap: wrap; }
+  h2 { font-size: 1.1rem; font-weight: 700; margin: 2.25rem 0 .75rem; padding-bottom: .5rem; border-bottom: 2px solid var(--accent); scroll-margin-top: 80px; }
+  h3 { font-size: .9rem; font-weight: 600; color: var(--text-2); margin: 1.5rem 0 .5rem; text-transform: uppercase; letter-spacing: .04em; }
+  p { font-size: .9rem; color: var(--text-2); margin: .6rem 0; }
+  ul { padding-left: 1.25rem; font-size: .9rem; color: var(--text-2); margin: .5rem 0; }
+  ul li { padding: .25rem 0; }
+  strong { color: var(--text); font-weight: 600; }
+  code { font-family: 'SF Mono',Consolas,monospace; font-size: .82rem; background: #F1F5F9; padding: 1px 5px; border-radius: 4px; color: #374151; }
+  table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  th { background: #F1F5F9; font-size: .78rem; font-weight: 600; padding: .6rem .85rem; text-align: left; color: var(--text-2); }
+  td { padding: .6rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFBFD; }
+  td strong { color: var(--text); }
+  .callout { padding: .85rem 1rem; margin: .75rem 0; font-size: .85rem; border-radius: var(--radius); display: flex; gap: .6rem; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; }
+  .callout.warn { background: #FFFBEB; border: 1px solid #FDE68A; color: #78350F; }
+  .callout.info { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+  .callout.danger { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+
+  /* Bilingual content toggle */
+  html[lang='zh-CN'] .en, html[lang='zh-CN'] .en-only { display: none; }
+  html[lang='en']    .zh, html[lang='en'] .zh-only { display: none; }
+
+  .toc-toggle { display: none; }
+  .mobile-toc { display: none; }
+  @media (max-width: 768px) {
+    .toc-sidebar { display: none; }
+    .layout { padding: 0 1rem; }
+    .toc-toggle { display: flex; align-items: center; gap: 6px; width: 100%; padding: .65rem 1rem; margin: 1rem 0 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .83rem; font-weight: 500; color: var(--text-2); cursor: pointer; justify-content: space-between; }
+    .toc-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .toc-toggle.open svg { transform: rotate(180deg); }
+    .mobile-toc.open { display: block; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: .5rem 0 .75rem; margin-bottom: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="../index.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span data-i18n="doc.back">返回文档中心</span>
+  </a>
+  <div class="topbar-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+    <span class="badge badge-ba">BA</span>
+    <span class="topbar-date" data-i18n="doc.date">2026年5月</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc-sidebar" id="tocSidebar">
+    <div class="toc-title" data-i18n="doc.toc.label">目录</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#s1" data-i18n="ba.toc.s1">用户漏斗与关键指标</a></li>
+      <li><a href="#s2" data-i18n="ba.toc.s2">会员套餐与定价</a></li>
+      <li><a href="#s3" data-i18n="ba.toc.s3">专线 / 专属 IP 工作流</a></li>
+      <li><a href="#s4" data-i18n="ba.toc.s4">支付通道与对账</a></li>
+      <li><a href="#s5" data-i18n="ba.toc.s5">退款与客服升级</a></li>
+      <li><a href="#s6" data-i18n="ba.toc.s6">抽奖 · 优惠券 · 推荐机制</a></li>
+      <li><a href="#s7" data-i18n="ba.toc.s7">节点与线路（业务侧）</a></li>
+      <li><a href="#s8" data-i18n="ba.toc.s8">后台常用操作速查</a></li>
+      <li><a href="#s9" data-i18n="ba.toc.s9">客户端与冻结版本</a></li>
+      <li><a href="#s10" data-i18n="ba.toc.s10">术语对照表</a></li>
+    </ul>
+  </nav>
+
+  <main class="article">
+    <button class="toc-toggle" id="tocToggle" onclick="toggleToc()">
+      <span data-i18n="doc.toc.toggle">目录</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="mobile-toc" id="mobileToc">
+      <ul class="toc-list">
+        <li><a href="#s1" data-i18n="ba.toc.s1">用户漏斗与关键指标</a></li>
+        <li><a href="#s2" data-i18n="ba.toc.s2">会员套餐与定价</a></li>
+        <li><a href="#s3" data-i18n="ba.toc.s3">专线 / 专属 IP 工作流</a></li>
+        <li><a href="#s4" data-i18n="ba.toc.s4">支付通道与对账</a></li>
+        <li><a href="#s5" data-i18n="ba.toc.s5">退款与客服升级</a></li>
+        <li><a href="#s6" data-i18n="ba.toc.s6">抽奖 · 优惠券 · 推荐机制</a></li>
+        <li><a href="#s7" data-i18n="ba.toc.s7">节点与线路（业务侧）</a></li>
+        <li><a href="#s8" data-i18n="ba.toc.s8">后台常用操作速查</a></li>
+        <li><a href="#s9" data-i18n="ba.toc.s9">客户端与冻结版本</a></li>
+        <li><a href="#s10" data-i18n="ba.toc.s10">术语对照表</a></li>
+      </ul>
+    </div>
+
+    <div class="doc-hero">
+      <h1 class="zh">BA 业务分析手册 — 数据 · 流程 · 后台</h1>
+      <h1 class="en">BA Business Handbook — Data · Flow · Admin</h1>
+      <div class="doc-meta">
+        <span class="zh">更新日期：2026年5月9日</span>
+        <span class="en">Updated: 2026-05-09</span>
+        <span class="zh">适合：BA · 运营 · 客服</span>
+        <span class="en">For: BA · Operations · Customer Support</span>
+      </div>
+    </div>
+
+    <div class="callout info zh"><span class="callout-icon">ℹ️</span><span>本手册聚焦<strong>业务流程与数据</strong>，与产品 PRD 互补：PRD 解释「产品做什么」，BA 手册解释「业务怎么跑」。所有数字截至 2026 年 5 月当下。</span></div>
+    <div class="callout info en"><span class="callout-icon">ℹ️</span><span>This handbook focuses on <strong>business workflows and data</strong>, complementing the PRD: the PRD describes "what the product does", this handbook describes "how the business runs". All figures are current as of May 2026.</span></div>
+
+    <h2 id="s1"><span class="zh">一、用户漏斗与关键指标</span><span class="en">1. User Funnel &amp; Key Metrics</span></h2>
+
+    <h3><span class="zh">用户构成（截至 2026-05）</span><span class="en">User Mix (as of 2026-05)</span></h3>
+    <table>
+      <thead>
+        <tr><th class="zh">类别</th><th class="zh">规模</th><th class="zh">说明</th><th class="en">Category</th><th class="en">Size</th><th class="en">Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">注册用户总数</td><td class="zh">~325K</td><td class="zh">累计注册（含已流失）</td><td class="en">Total registered</td><td class="en">~325K</td><td class="en">Cumulative (incl. churned)</td></tr>
+        <tr><td class="zh">付费用户</td><td class="zh">~1,369</td><td class="zh">活跃订阅 + 专线 / 专属 IP</td><td class="en">Paid users</td><td class="en">~1,369</td><td class="en">Active subscriptions + dedicated</td></tr>
+        <tr><td class="zh">日活（DAU）</td><td class="zh">~1,700</td><td class="zh">连接 VPN 至少一次</td><td class="en">DAU</td><td class="en">~1,700</td><td class="en">Connected at least once</td></tr>
+        <tr><td class="zh">付费转化率</td><td class="zh">~5%</td><td class="zh">从免费到首次付费</td><td class="en">Paid conversion</td><td class="en">~5%</td><td class="en">Free → first payment</td></tr>
+        <tr><td class="zh">M1 流失率</td><td class="zh">~90%</td><td class="zh">注册首月内未再回访</td><td class="en">M1 churn</td><td class="en">~90%</td><td class="en">No return within first month</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">主要漏斗</span><span class="en">Main Funnel</span></h3>
+    <ul class="zh">
+      <li><strong>下载 → 启动</strong>：渠道（Google Play / 官网 / 华为）；渠道事件首次注册时上报一次（详见 PRD 推荐章节）</li>
+      <li><strong>启动 → 注册</strong>：免密注册（一键，单个 <code>/user/auto-register</code>）或正式注册（手机号 / 邮箱 + 密码）</li>
+      <li><strong>注册 → 首次连接</strong>：默认线路自动选择，跳过线路选择减少流失</li>
+      <li><strong>免费连接 → 看广告 / 付费</strong>：免费每天 30 分钟，看广告再加 30 分钟（每天最多 2 次）</li>
+      <li><strong>付费首单 → 续费</strong>：续费由 IAP 自动续订（Google Play / Apple）或微信 / 支付宝 / USDT 手动续</li>
+      <li><strong>付费 → 升级专线</strong>：高客单价品类，需要后台分配节点</li>
+    </ul>
+    <ul class="en">
+      <li><strong>Download → Launch</strong>: channels (Google Play / official site / Huawei); channel events fire once at first registration (see PRD referral chapter)</li>
+      <li><strong>Launch → Register</strong>: passwordless (one-tap, single <code>/user/auto-register</code>) or full sign-up (phone / email + password)</li>
+      <li><strong>Register → First Connect</strong>: default line auto-selected to skip line picker and reduce drop-off</li>
+      <li><strong>Free Connect → Ad / Paid</strong>: free 30 min/day; +30 min per ad watched (max 2/day)</li>
+      <li><strong>First Order → Renew</strong>: auto-renewal via IAP (Google Play / Apple) or manual via WeChat / Alipay / USDT</li>
+      <li><strong>Paid → Dedicated Upgrade</strong>: high-ARPU category; requires admin to allocate a node</li>
+    </ul>
+
+    <h2 id="s2"><span class="zh">二、会员套餐与定价</span><span class="en">2. Membership Plans &amp; Pricing</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">套餐</th><th class="zh">价格（人民币）</th><th class="zh">线路</th><th class="zh">设备数上限</th><th class="zh">说明</th><th class="en">Plan</th><th class="en">Price (CNY)</th><th class="en">Lines</th><th class="en">Device cap</th><th class="en">Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">免费</td><td class="zh">¥0</td><td class="zh">基础线路</td><td class="zh">1</td><td class="zh">每天 30 分钟 + 看广告 +30 分钟（最多 2 次）</td><td class="en">Free</td><td class="en">¥0</td><td class="en">Basic lines</td><td class="en">1</td><td class="en">30 min/day + 30 min per ad watched (max 2/day)</td></tr>
+        <tr><td class="zh">标准会员</td><td class="zh">¥18 / 月</td><td class="zh">标准线路</td><td class="zh">3</td><td class="zh">无时长限制；季度 / 年度有折扣</td><td class="en">Standard</td><td class="en">¥18 / mo</td><td class="en">Standard lines</td><td class="en">3</td><td class="en">No time cap; quarter/annual discounts apply</td></tr>
+        <tr><td class="zh">精品会员</td><td class="zh">¥59 / 月</td><td class="zh">精品 + 标准</td><td class="zh">5</td><td class="zh">流媒体优化、低延迟、家庭共享</td><td class="en">Premium</td><td class="en">¥59 / mo</td><td class="en">Premium + Standard</td><td class="en">5</td><td class="en">Streaming-optimized, low-latency, family share</td></tr>
+        <tr><td class="zh">专线（按节点）</td><td class="zh">按节点报价</td><td class="zh">独占 1 条专线</td><td class="zh">5</td><td class="zh">客户独占节点，IP 固定，需后台配发</td><td class="en">Dedicated Line</td><td class="en">Per-node pricing</td><td class="en">1 dedicated line</td><td class="en">5</td><td class="en">Exclusive node, fixed IP, admin-allocated</td></tr>
+        <tr><td class="zh">专属 IP</td><td class="zh">按 IP 报价</td><td class="zh">在共享节点上独占 IP</td><td class="zh">5</td><td class="zh">独占公网出口 IP（不独占节点）</td><td class="en">Dedicated IP</td><td class="en">Per-IP pricing</td><td class="en">Dedicated IP on shared node</td><td class="en">5</td><td class="en">Exclusive egress IP (node still shared)</td></tr>
+      </tbody>
+    </table>
+
+    <p class="zh"><strong>币种支持</strong>：CNY · USD · TWD · USDT。前端按用户地区显示主币种，后台对账以人民币结算。</p>
+    <p class="en"><strong>Currencies</strong>: CNY · USD · TWD · USDT. Front-end displays the user's regional currency; back-office reconciliation is in CNY.</p>
+
+    <div class="callout warn zh"><span class="callout-icon">⚠️</span><span><strong>专线续费缺口（待修复）</strong>：现有付费客户专线到期后<strong>必须重新购买</strong>，节点会被重新分配，原 IP 与路由习惯被打断。第3阶段已修复「到期自动释放节点回库存」的清理动作；<strong>「自动续费扣款 + 保留原节点绑定」</strong>列入第4阶段 P1。客服收到相关投诉时请记录用户 ID + 节点编号，便于后续主动联系。</span></div>
+    <div class="callout warn en"><span class="callout-icon">⚠️</span><span><strong>Dedicated-line renewal gap (in progress)</strong>: today, when a dedicated line expires the customer must <strong>re-purchase</strong>; the new order is reassigned to a different node, breaking IP &amp; routing affinity. Sprint 3 already shipped the "release node to inventory on expiry" job; <strong>"auto-renew billing + keep node binding"</strong> is locked as Sprint 4 P1. Support: log user ID + node ID on every related complaint so we can reach out proactively.</span></div>
+
+    <h2 id="s3"><span class="zh">三、专线 / 专属 IP 工作流</span><span class="en">3. Dedicated Line / IP Workflow</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">阶段</th><th class="zh">操作方</th><th class="zh">系统行为</th><th class="en">Stage</th><th class="en">Owner</th><th class="en">System behavior</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">下单</td><td class="zh">用户</td><td class="zh">App 内购买，支付通道回调成功</td><td class="en">Order</td><td class="en">User</td><td class="en">In-app purchase; payment channel callback OK</td></tr>
+        <tr><td class="zh">自动分配</td><td class="zh">系统（每分钟）</td><td class="zh">从可用库存中绑定一个节点 / IP，自动写入用户配置</td><td class="en">Auto-assign</td><td class="en">System (1-min cron)</td><td class="en">Pick from inventory; bind node / IP; write user config</td></tr>
+        <tr><td class="zh">用户使用</td><td class="zh">用户</td><td class="zh">App 显示「我的专线」线路；连接后走独占节点 / IP</td><td class="en">In use</td><td class="en">User</td><td class="en">"My Dedicated Line" appears in app; connection routes to exclusive node / IP</td></tr>
+        <tr><td class="zh">到期检查</td><td class="zh">系统（每日）</td><td class="zh">到期订单标记 expired；释放节点 / IP 回库存（第3阶段已修复）</td><td class="en">Expiry check</td><td class="en">System (daily)</td><td class="en">Mark order expired; release node / IP to inventory (fixed in Sprint 3)</td></tr>
+        <tr><td class="zh">客户续费（当前）</td><td class="zh">用户 + 客服</td><td class="zh"><strong>需要重新下单</strong>，节点会换一个；客服可主动联系挽留</td><td class="en">Renewal (today)</td><td class="en">User + Support</td><td class="en"><strong>Must re-purchase</strong>; node will change; support should proactively reach out</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">客服操作要点</span><span class="en">Support quick reference</span></h3>
+    <ul class="zh">
+      <li><strong>确认账号</strong>：后台搜索用户 ID / 邮箱 / 手机号。专线绑定信息在用户详情页「专线」标签</li>
+      <li><strong>分配延迟</strong>：自动分配是 1 分钟内的定时任务；下单后 60 秒内还没看到线路是正常的，超过 5 分钟未分配请上报</li>
+      <li><strong>节点不可用</strong>：用户专线节点出问题时，运维侧的「节点健康状态机」会自动剔除轮换；客服需要做的是<strong>记录受影响的用户列表</strong>并告知用户预计恢复时间</li>
+    </ul>
+    <ul class="en">
+      <li><strong>Find the account</strong>: search admin by user ID / email / phone. Dedicated bindings live under the user-detail "Dedicated" tab</li>
+      <li><strong>Assignment lag</strong>: auto-assign is a 1-min cron; missing line within 60 s is expected; report if not assigned after 5 min</li>
+      <li><strong>Node unhealthy</strong>: ops-side health state machine auto-removes from rotation; support's job is to <strong>log impacted users</strong> and inform them of ETA</li>
+    </ul>
+
+    <h2 id="s4"><span class="zh">四、支付通道与对账</span><span class="en">4. Payment Channels &amp; Reconciliation</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">通道</th><th class="zh">占比</th><th class="zh">到账时间</th><th class="zh">备注</th><th class="en">Channel</th><th class="en">Share</th><th class="en">Settlement</th><th class="en">Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">微信支付 / 支付宝</td><td class="zh">~94%（合计）</td><td class="zh">通常 30 秒内</td><td class="zh">主流通道</td><td class="en">WeChat / Alipay</td><td class="en">~94% (combined)</td><td class="en">Usually within 30 s</td><td class="en">Primary channel</td></tr>
+        <tr><td class="zh">USDT TRC20</td><td class="zh">小</td><td class="zh">最长 15 分钟</td><td class="zh">链上手续费由用户承担</td><td class="en">USDT TRC20</td><td class="en">Small</td><td class="en">Up to 15 min</td><td class="en">User pays gas</td></tr>
+        <tr><td class="zh">USDT ERC20</td><td class="zh">小</td><td class="zh">最长 30 分钟</td><td class="zh">同上，链上确认更慢</td><td class="en">USDT ERC20</td><td class="en">Small</td><td class="en">Up to 30 min</td><td class="en">Slower on-chain confirmation</td></tr>
+        <tr><td class="zh">Google Play 内购</td><td class="zh">中</td><td class="zh">即时（IAP 回调）</td><td class="zh">订阅 / 一次性两种</td><td class="en">Google Play IAP</td><td class="en">Medium</td><td class="en">Instant (IAP callback)</td><td class="en">Subscription &amp; one-time</td></tr>
+        <tr><td class="zh">Apple IAP</td><td class="zh">小</td><td class="zh">即时</td><td class="zh">仅 iOS（HiYou）有，已冻结但仍续费</td><td class="en">Apple IAP</td><td class="en">Small</td><td class="en">Instant</td><td class="en">iOS HiYou only (frozen but renewals still flow)</td></tr>
+        <tr><td class="zh">Stripe（钱包充值）</td><td class="zh">小</td><td class="zh">即时</td><td class="zh">海外信用卡</td><td class="en">Stripe (wallet top-up)</td><td class="en">Small</td><td class="en">Instant</td><td class="en">International cards</td></tr>
+      </tbody>
+    </table>
+
+    <p class="zh"><strong>当月营收量级</strong>：约 ¥35K / 月（最近 12 个月平均，含订阅 + 专线 + 钱包充值）。</p>
+    <p class="en"><strong>Current monthly revenue scale</strong>: ~¥35K/month (last 12-month average, incl. subscriptions + dedicated + wallet top-up).</p>
+
+    <div class="callout info zh"><span class="callout-icon">ℹ️</span><span><strong>对账参考</strong>：后台「订单」页面可按通道、时间范围导出 Excel；财务侧每月对账以「交易完成」状态为准（不是「订单创建」）。USDT 链上手续费<strong>不在</strong>统计内。</span></div>
+    <div class="callout info en"><span class="callout-icon">ℹ️</span><span><strong>Reconciliation</strong>: the admin "Orders" page exports Excel by channel + date range; finance reconciles monthly based on "transaction completed" status (not "order created"). USDT on-chain fees are <strong>not</strong> counted.</span></div>
+
+    <h3><span class="zh">已知支付场景</span><span class="en">Known payment scenarios</span></h3>
+    <ul class="zh">
+      <li><strong>支付成功但 App 没刷新</strong>：v3.7.0 之前的版本可能出现，重新登录后看到 VIP 已生效。这是<strong>客户端展示问题</strong>，不是支付失败。后端日志可查证扣款是否完成</li>
+      <li><strong>第二个月续订没生效（已修复）</strong>：续订代币推进 bug 导致 IAP 第二月续订无法验证，2026-05 第3阶段已修复。如收到 2026-04 之前的相关投诉，按客服补发流程处理</li>
+      <li><strong>USDT 转账迟迟未到账</strong>：先看链上确认数（TRC20 ≥ 19 个，ERC20 ≥ 12 个）；超过预计时长仍未到账才上报后端</li>
+    </ul>
+    <ul class="en">
+      <li><strong>Paid but app not refreshing</strong>: pre-v3.7.0 may show stale state; user re-login surfaces VIP. This is a <strong>display bug</strong>, not a payment failure — backend logs confirm settlement</li>
+      <li><strong>Month-2 IAP renewal not granted (fixed)</strong>: token-advance bug blocked verification on month-2 renewals; fixed Sprint 3 (May 2026). For complaints dated before 2026-04, follow standard reissue flow</li>
+      <li><strong>USDT settlement slow</strong>: check chain confirmations first (TRC20 ≥ 19, ERC20 ≥ 12); only escalate if past expected window</li>
+    </ul>
+
+    <h2 id="s5"><span class="zh">五、退款与客服升级</span><span class="en">5. Refunds &amp; Support Escalation</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">情景</th><th class="zh">是否可退</th><th class="zh">谁来处理</th><th class="zh">渠道</th><th class="en">Scenario</th><th class="en">Refundable</th><th class="en">Owner</th><th class="en">Path</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">微信 / 支付宝 7 日内、未消费</td><td class="zh">是</td><td class="zh">客服</td><td class="zh">通道原路退回</td><td class="en">WeChat/Alipay within 7 days, unused</td><td class="en">Yes</td><td class="en">Support</td><td class="en">Refund via original channel</td></tr>
+        <tr><td class="zh">已使用部分，按比例退</td><td class="zh">个案</td><td class="zh">客服 + 财务</td><td class="zh">人工核算</td><td class="en">Partially used, prorated</td><td class="en">Case-by-case</td><td class="en">Support + Finance</td><td class="en">Manual calc</td></tr>
+        <tr><td class="zh">USDT 链上交易</td><td class="zh">否（不可逆）</td><td class="zh">客服 + 钱包充值替代</td><td class="zh">改为钱包充值补偿</td><td class="en">USDT on-chain</td><td class="en">No (irreversible)</td><td class="en">Support + wallet credit</td><td class="en">Compensate via wallet credit</td></tr>
+        <tr><td class="zh">Google Play / Apple IAP</td><td class="zh">是（平台规则）</td><td class="zh">用户自行向平台申请</td><td class="zh">客服指引截图说明</td><td class="en">Google Play / Apple IAP</td><td class="en">Yes (platform rules)</td><td class="en">User submits to platform</td><td class="en">Support provides guide</td></tr>
+        <tr><td class="zh">专线节点不可用</td><td class="zh">补偿（不退）</td><td class="zh">客服 + 运维</td><td class="zh">延长服务时长 / 换节点</td><td class="en">Dedicated node unavailable</td><td class="en">Compensate (not refund)</td><td class="en">Support + Ops</td><td class="en">Extend term / swap node</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">客服升级路径</span><span class="en">Escalation path</span></h3>
+    <table>
+      <thead>
+        <tr><th class="zh">问题严重度</th><th class="zh">第一响应</th><th class="zh">升级到</th><th class="en">Severity</th><th class="en">First responder</th><th class="en">Escalate to</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">用法咨询</td><td class="zh">客服</td><td class="zh">不需升级</td><td class="en">How-to question</td><td class="en">Support</td><td class="en">No escalation</td></tr>
+        <tr><td class="zh">单用户支付 / 账号问题</td><td class="zh">客服</td><td class="zh">后端开发（需要后台数据时）</td><td class="en">Single-user payment / account</td><td class="en">Support</td><td class="en">Backend dev (when data lookup needed)</td></tr>
+        <tr><td class="zh">多用户报相同问题（≥3 人）</td><td class="zh">客服</td><td class="zh">立即上报技术 lead</td><td class="en">Multiple users same issue (≥3)</td><td class="en">Support</td><td class="en">Tech lead immediately</td></tr>
+        <tr><td class="zh">付费用户无法连接 ≥10 分钟</td><td class="zh">客服</td><td class="zh">立即上报运维</td><td class="en">Paid user can't connect ≥10 min</td><td class="en">Support</td><td class="en">Ops immediately</td></tr>
+        <tr><td class="zh">疑似支付到账但未发 VIP</td><td class="zh">客服</td><td class="zh">后端开发（提供订单号 + 用户 ID）</td><td class="en">Suspected paid-but-no-VIP</td><td class="en">Support</td><td class="en">Backend dev (order ID + user ID)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s6"><span class="zh">六、抽奖 · 优惠券 · 推荐机制</span><span class="en">6. Lottery · Coupons · Referral</span></h2>
+
+    <h3><span class="zh">抽奖（在线时长奖励）</span><span class="en">Lottery (online-time reward)</span></h3>
+    <ul class="zh">
+      <li><strong>规则</strong>：免费用户每天连接 VPN 一段时长后获得抽奖资格；奖品池含会员时长券、优惠券、额度等</li>
+      <li><strong>在线时长由节点统计</strong>（v3.7.0 起）— 不再由客户端上报；用户挂着不用 VPN 不会累积时长</li>
+      <li><strong>每日上限</strong>：单日在线时长封顶 2 小时；30 分钟墙钟宽限期；并发结算已加锁防重复领取</li>
+      <li><strong>累计参与</strong>：约 1,772 次抽奖（接手以来累计）</li>
+    </ul>
+    <ul class="en">
+      <li><strong>Rule</strong>: free users earn a draw after a daily connect-time threshold; prize pool includes plan vouchers, coupons, free-quota credits</li>
+      <li><strong>Time counted by node</strong> (v3.7.0+) — no longer reported by client; users idling on a paused VPN don't accumulate time</li>
+      <li><strong>Daily caps</strong>: 2-hour hard cap per day; 30-min wall-clock grace; concurrent-settle race protected with a Lua lock</li>
+      <li><strong>Participation</strong>: ~1,772 draws (cumulative since handover)</li>
+    </ul>
+
+    <h3><span class="zh">优惠券</span><span class="en">Coupons</span></h3>
+    <ul class="zh">
+      <li>当前模板数：~78 个（覆盖新人 / 活动 / 老客户挽回 / 客服补偿等场景）</li>
+      <li>可发放：用户列表批量发放、单用户后台手动发放</li>
+      <li>使用约束：每张券绑定<strong>套餐适用范围 + 有效期 + 单用户次数</strong>，BA 在创建模板时指定</li>
+    </ul>
+    <ul class="en">
+      <li>Templates today: ~78 (new-user / campaign / win-back / support-comp scenarios)</li>
+      <li>Issuance: bulk via user list, or single-user manual from admin</li>
+      <li>Constraints: each coupon binds <strong>plan eligibility + validity window + per-user limit</strong>, set at template creation</li>
+    </ul>
+
+    <h3><span class="zh">推荐 / 邀请码</span><span class="en">Referral / Invite Code</span></h3>
+    <ul class="zh">
+      <li>累计推荐人：约 912 个有效推荐人</li>
+      <li>奖励逻辑：被推荐人首次付费 → 推荐人获得佣金（钱包余额）</li>
+      <li><strong>测试环境功能开关关闭</strong>，QA 测推荐流程会失败属正常</li>
+    </ul>
+    <ul class="en">
+      <li>Active referrers: ~912 cumulative</li>
+      <li>Reward: when referred user makes first payment → referrer earns commission (wallet credit)</li>
+      <li><strong>Disabled in staging</strong>; QA failures on referral flow are expected, not a bug</li>
+    </ul>
+
+    <h2 id="s7"><span class="zh">七、节点与线路（业务侧）</span><span class="en">7. Nodes &amp; Lines (Business View)</span></h2>
+
+    <p class="zh">技术细节请参考<a href="node-operations.html">节点运维手册</a>。下面是 BA 视角下需要知道的几条事实。</p>
+    <p class="en">Technical depth lives in the <a href="node-operations.html">Node Operations Handbook</a>. Below: the BA-relevant facts.</p>
+
+    <table>
+      <thead>
+        <tr><th class="zh">维度</th><th class="zh">规模 / 状态</th><th class="en">Dimension</th><th class="en">Scale / state</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">在用节点</td><td class="zh">~157</td><td class="en">Active nodes</td><td class="en">~157</td></tr>
+        <tr><td class="zh">线路总数</td><td class="zh">~113</td><td class="en">Lines</td><td class="en">~113</td></tr>
+        <tr><td class="zh">协议</td><td class="zh">主要 Trojan；新增 Hysteria2 / TUIC（中国封锁应对）</td><td class="en">Protocols</td><td class="en">Mostly Trojan; Hysteria2 / TUIC added for China-blocking response</td></tr>
+        <tr><td class="zh">线路分级</td><td class="zh">基础 / 标准 / 精品 / 专线（按套餐开放）</td><td class="en">Tiers</td><td class="en">Basic / Standard / Premium / Dedicated (gated by plan)</td></tr>
+        <tr><td class="zh">节点开通时长</td><td class="zh">后台一键 ~30 秒（v3.7.0 时代）</td><td class="en">Node setup time</td><td class="en">~30 s via admin one-click (v3.7.0 era)</td></tr>
+        <tr><td class="zh">节点回收</td><td class="zh">一键 Format ~2 分钟</td><td class="en">Node recycle</td><td class="en">One-click Format ~2 min</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info zh"><span class="callout-icon">ℹ️</span><span><strong>BA 关注点</strong>：节点封锁 / 替换是<strong>业务侧成本结构</strong>的一部分。中国封锁加剧期间，每月节点替换成本会上升；后台「供应商总览」页面可看到按供应商汇总的节点数 / 成本 / 健康，是采购决策的依据。</span></div>
+    <div class="callout info en"><span class="callout-icon">ℹ️</span><span><strong>BA focus</strong>: node bans / replacements are part of the <strong>cost structure</strong>. During heavy-blocking periods, monthly replacement cost rises; the admin "Provider Overview" page aggregates node count / cost / health by supplier — input for procurement decisions.</span></div>
+
+    <h2 id="s8"><span class="zh">八、后台常用操作速查</span><span class="en">8. Common Admin Actions</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">需要做</th><th class="zh">在哪里</th><th class="zh">备注</th><th class="en">Need to do</th><th class="en">Where</th><th class="en">Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">查找用户</td><td class="zh">用户管理 → 搜索（ID / 邮箱 / 手机）</td><td class="zh">支持模糊匹配</td><td class="en">Find user</td><td class="en">Users → Search (ID / email / phone)</td><td class="en">Fuzzy match supported</td></tr>
+        <tr><td class="zh">手动发放会员</td><td class="zh">用户详情 → 套餐</td><td class="zh">客服补偿场景</td><td class="en">Grant membership</td><td class="en">User detail → Plan</td><td class="en">Support compensation</td></tr>
+        <tr><td class="zh">解除账号锁定</td><td class="zh">用户详情 → 安全</td><td class="zh">5 次密码错误自动锁 30 分钟</td><td class="en">Unlock account</td><td class="en">User detail → Security</td><td class="en">Auto-locks 30 min after 5 failed logins</td></tr>
+        <tr><td class="zh">清零免费时长</td><td class="zh">用户详情 → 免费配额</td><td class="zh">QA / 客服补偿用</td><td class="en">Reset free time</td><td class="en">User detail → Free quota</td><td class="en">QA / support comp</td></tr>
+        <tr><td class="zh">查订单 / 退款</td><td class="zh">订单管理 → 订单号</td><td class="zh">含支付通道、时间、状态</td><td class="en">Order &amp; refund</td><td class="en">Orders → Order ID</td><td class="en">Channel, time, status visible</td></tr>
+        <tr><td class="zh">发优惠券</td><td class="zh">营销 → 优惠券模板 → 发放</td><td class="zh">支持批量 / 单用户</td><td class="en">Issue coupon</td><td class="en">Marketing → Coupon templates → Issue</td><td class="en">Bulk or single-user</td></tr>
+        <tr><td class="zh">查看节点 / 线路状态</td><td class="zh">基础设施 → VM 主机 / 线路</td><td class="zh">状态徽章一目了然</td><td class="en">Check node / line</td><td class="en">Infrastructure → VM Hosts / Lines</td><td class="en">Status badges at a glance</td></tr>
+        <tr><td class="zh">配发专线 / 专属 IP</td><td class="zh">订单 → 专线 / IP 分配</td><td class="zh">通常自动；异常时手动指派</td><td class="en">Allocate dedicated</td><td class="en">Orders → Dedicated allocation</td><td class="en">Usually auto; manual override on exception</td></tr>
+        <tr><td class="zh">查看反馈</td><td class="zh">客户支持 → 用户反馈</td><td class="zh">含截图与设备信息</td><td class="en">Read feedback</td><td class="en">Support → User Feedback</td><td class="en">Includes screenshots + device info</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s9"><span class="zh">九、客户端与冻结版本</span><span class="en">9. Clients &amp; Frozen Versions</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">客户端</th><th class="zh">当前版本</th><th class="zh">状态</th><th class="zh">业务侧含义</th><th class="en">Client</th><th class="en">Current version</th><th class="en">Status</th><th class="en">Business meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">Android（Google / 官网 / 华为）</td><td class="zh"><strong>v3.7.0</strong></td><td class="zh">活跃迭代</td><td class="zh">主流量端，每周可发版</td><td class="en">Android (Google / Official / Huawei)</td><td class="en"><strong>v3.7.0</strong></td><td class="en">Actively iterated</td><td class="en">Primary traffic; weekly releases possible</td></tr>
+        <tr><td class="zh">iOS（HiYou SSH）</td><td class="zh">v1.3.0</td><td class="zh"><strong>已冻结</strong>（开发者账号被封）</td><td class="zh">现存用户继续使用，无法上新版；后端必须保持向后兼容</td><td class="en">iOS (HiYou SSH)</td><td class="en">v1.3.0</td><td class="en"><strong>Frozen</strong> (developer account banned)</td><td class="en">Existing users keep working; no new release possible; backend stays backward-compatible</td></tr>
+        <tr><td class="zh">Windows（skytree_pc）</td><td class="zh">v2.2.71</td><td class="zh"><strong>已冻结</strong>（签名证书过期）</td><td class="zh">同上；正在调研虚拟签名方案</td><td class="en">Windows (skytree_pc)</td><td class="en">v2.2.71</td><td class="en"><strong>Frozen</strong> (cert expired)</td><td class="en">Same; virtual-sign approach under research</td></tr>
+        <tr><td class="zh">Mac（Intel / Silicon）</td><td class="zh">v1.2.51 / v1.2.52</td><td class="zh">强制更新开启 — 实际不可用</td><td class="zh">老版本被强制更新拦截，新版尚未发布</td><td class="en">Mac (Intel / Silicon)</td><td class="en">v1.2.51 / v1.2.52</td><td class="en">Force-update on — effectively unavailable</td><td class="en">Old build force-blocked; new build not yet released</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn zh"><span class="callout-icon">⚠️</span><span><strong>BA 沟通要点</strong>：iOS 与 Windows 的「冻结」是<strong>外部商务依赖</strong>（Apple 账号申诉 / Windows 签名方案）— 不是工程能在内部解决的事。客服收到「为什么 iOS / Windows 不更新」类咨询时，告知用户「现有版本继续可用，正在准备替代方案」即可。</span></div>
+    <div class="callout warn en"><span class="callout-icon">⚠️</span><span><strong>BA talking point</strong>: iOS &amp; Windows being frozen is an <strong>external business dependency</strong> (Apple appeal / Windows signing) — not something engineering can fix internally. For "why no iOS / Windows updates" inquiries: the existing version keeps working, replacement path is under preparation.</span></div>
+
+    <h2 id="s10"><span class="zh">十、术语对照表</span><span class="en">10. Glossary</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">术语</th><th class="zh">含义</th><th class="en">Term</th><th class="en">Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">VIP</td><td class="zh">付费会员（标准 / 精品 / 专线）的统称</td><td class="en">VIP</td><td class="en">Umbrella term for paid plans (Standard / Premium / Dedicated)</td></tr>
+        <tr><td class="zh">免密注册 / 一键注册</td><td class="zh">不要密码，靠设备指纹自动创建账号</td><td class="en">Passwordless / one-tap reg</td><td class="en">No password; device-fingerprint-based auto account creation</td></tr>
+        <tr><td class="zh">登录码</td><td class="zh">免密账号的 16 位代码（恢复账号用）</td><td class="en">Login code</td><td class="en">16-char code for passwordless account recovery</td></tr>
+        <tr><td class="zh">专线</td><td class="zh">独占节点 + 独占 IP，单客户使用</td><td class="en">Dedicated line</td><td class="en">Exclusive node + exclusive IP, single customer</td></tr>
+        <tr><td class="zh">专属 IP</td><td class="zh">在共享节点上独占 IP（节点仍是共享）</td><td class="en">Dedicated IP</td><td class="en">Exclusive IP on a shared node</td></tr>
+        <tr><td class="zh">线路 / Line</td><td class="zh">用户在 App 中选择的连接选项（一条线路通常对应多个节点）</td><td class="en">Line</td><td class="en">A connection option in the app (typically maps to multiple nodes)</td></tr>
+        <tr><td class="zh">节点 / Node</td><td class="zh">物理或虚拟服务器（VM）</td><td class="en">Node</td><td class="en">Physical or virtual server (VM)</td></tr>
+        <tr><td class="zh">BO（Back Office）</td><td class="zh">管理后台，运营 / 客服 / 开发共用</td><td class="en">BO (Back Office)</td><td class="en">Admin dashboard, shared by ops / support / engineering</td></tr>
+        <tr><td class="zh">Trojan / Hysteria2 / TUIC</td><td class="zh">VPN 协议名称；不同协议在不同网络环境下穿透能力不同</td><td class="en">Trojan / Hysteria2 / TUIC</td><td class="en">VPN protocol names; different protocols penetrate different networks differently</td></tr>
+        <tr><td class="zh">QA / Staging</td><td class="zh">测试环境，与生产数据隔离</td><td class="en">QA / Staging</td><td class="en">Testing environment, isolated from production data</td></tr>
+        <tr><td class="zh">FFF</td><td class="zh">下一代独立 App（与 Arrowfish 并行运营，无用户迁移）</td><td class="en">FFF</td><td class="en">Next-generation standalone app (runs in parallel with Arrowfish, no user migration)</td></tr>
+      </tbody>
+    </table>
+
+  </main>
+</div>
+
+<script>
+function toggleToc() {
+  var btn = document.getElementById('tocToggle');
+  var toc = document.getElementById('mobileToc');
+  btn.classList.toggle('open');
+  toc.classList.toggle('open');
+}
+(function() {
+  var links = document.querySelectorAll('#tocList a');
+  var sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    var top = window.scrollY + 100;
+    var active = null;
+    sections.forEach((s, i) => { if (s && s.offsetTop <= top) active = i; });
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+</script>
+<script src="../lang.js"></script>
+<script>initLang();</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>QA 测试手册 — 测试环境配置 — Arrowfish Wiki</title>
+<title>QA 测试手册 — v3.7.0 测试环境配置 — Arrowfish Wiki</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="../auth-gate.js"></script>
@@ -55,6 +55,7 @@
   .callout-icon { flex-shrink: 0; font-size: 1rem; }
   .callout.warn { background: #FFFBEB; border: 1px solid #FDE68A; color: #78350F; }
   .callout.info { background: var(--accent-light); border: 1px solid #A7F3D0; color: #065F46; }
+  .callout.success { background: var(--accent-light); border: 1px solid #A7F3D0; color: #065F46; }
   .callout.danger { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
   .ok { color: #059669; font-weight: 600; }
   .warn-text { color: #D97706; font-weight: 600; }
@@ -63,11 +64,13 @@
   .bug-yes td:nth-child(3) { color: #059669; font-weight: 600; }
   .bug-no  td:nth-child(3) { color: #DC2626; font-weight: 600; }
   .env-banner { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius); padding: .75rem 1rem; margin-bottom: 1.5rem; font-size: .85rem; color: #1E40AF; display: flex; gap: .5rem; align-items: center; }
-  /* ── Language toggle ── */
   .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
   .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
   .lang-btn.active { background:#fff; color:#1E3A5F; }
-  .en-notice { display:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:.7rem 1rem; margin:.75rem 0 1.5rem; font-size:.83rem; color:#1E40AF; }
+
+  /* Bilingual content toggle */
+  html[lang='zh-CN'] .en, html[lang='zh-CN'] .en-only { display: none; }
+  html[lang='en']    .zh, html[lang='en'] .zh-only { display: none; }
 
   .toc-toggle { display: none; }
   .mobile-toc { display: none; }
@@ -95,7 +98,7 @@
     </div>
     <span class="badge badge-qa">QA</span>
     <span class="badge badge-staging">Staging Only</span>
-    <span class="topbar-date" data-i18n="doc.date">2026年4月</span>
+    <span class="topbar-date" data-i18n="doc.date">2026年5月</span>
   </div>
 </div>
 
@@ -106,17 +109,18 @@
       <li><a href="#s1" data-i18n="qa.toc.s1">测试环境基本信息</a></li>
       <li><a href="#s2" data-i18n="qa.toc.s2">登录与账号安全</a></li>
       <li><a href="#s3" data-i18n="qa.toc.s3">免费用户时长限制</a></li>
-      <li><a href="#s4" data-i18n="qa.toc.s4">VPN 连接行为</a></li>
+      <li><a href="#s4" data-i18n="qa.toc.s4">VPN 连接行为（v3.6.x 重连特性）</a></li>
       <li><a href="#s5" data-i18n="qa.toc.s5">客户端版本控制</a></li>
       <li><a href="#s6" data-i18n="qa.toc.s6">系统功能开关</a></li>
       <li><a href="#s7" data-i18n="qa.toc.s7">广告配置</a></li>
-      <li><a href="#s8" data-i18n="qa.toc.s8">支付功能</a></li>
-      <li><a href="#s9" data-i18n="qa.toc.s9">节点同步机制</a></li>
+      <li><a href="#s8" data-i18n="qa.toc.s8">支付功能（含 IAP 续订）</a></li>
+      <li><a href="#s9" data-i18n="qa.toc.s9">节点同步机制（含一键开通 / Format）</a></li>
       <li><a href="#s10" data-i18n="qa.toc.s10">常见误判对照表</a></li>
       <li><a href="#s11" data-i18n="qa.toc.s11">已知问题清单</a></li>
       <li><a href="#s12" data-i18n="qa.toc.s12">测试账号管理</a></li>
       <li><a href="#s13" data-i18n="qa.toc.s13">测试 vs 生产差异</a></li>
-      <li><a href="#s14" data-i18n="qa.toc.s14">最近发布变更（本 Sprint）</a></li>
+      <li><a href="#s14" data-i18n="qa.toc.s14">最近发布变更（v3.7.0 / v3.2.0 上线）</a></li>
+      <li><a href="#s15" data-i18n="qa.toc.s15">4 渠道下载站验证流程</a></li>
     </ul>
   </nav>
 
@@ -130,235 +134,422 @@
         <li><a href="#s1" data-i18n="qa.toc.s1">测试环境基本信息</a></li>
         <li><a href="#s2" data-i18n="qa.toc.s2">登录与账号安全</a></li>
         <li><a href="#s3" data-i18n="qa.toc.s3">免费用户时长限制</a></li>
-        <li><a href="#s4" data-i18n="qa.toc.s4">VPN 连接行为</a></li>
+        <li><a href="#s4" data-i18n="qa.toc.s4">VPN 连接行为（v3.6.x 重连特性）</a></li>
         <li><a href="#s5" data-i18n="qa.toc.s5">客户端版本控制</a></li>
         <li><a href="#s6" data-i18n="qa.toc.s6">系统功能开关</a></li>
         <li><a href="#s7" data-i18n="qa.toc.s7">广告配置</a></li>
-        <li><a href="#s8" data-i18n="qa.toc.s8">支付功能</a></li>
-        <li><a href="#s9" data-i18n="qa.toc.s9">节点同步机制</a></li>
+        <li><a href="#s8" data-i18n="qa.toc.s8">支付功能（含 IAP 续订）</a></li>
+        <li><a href="#s9" data-i18n="qa.toc.s9">节点同步机制（含一键开通 / Format）</a></li>
         <li><a href="#s10" data-i18n="qa.toc.s10">常见误判对照表</a></li>
         <li><a href="#s11" data-i18n="qa.toc.s11">已知问题清单</a></li>
         <li><a href="#s12" data-i18n="qa.toc.s12">测试账号管理</a></li>
         <li><a href="#s13" data-i18n="qa.toc.s13">测试 vs 生产差异</a></li>
-        <li><a href="#s14" data-i18n="qa.toc.s14">最近发布变更（本 Sprint）</a></li>
+        <li><a href="#s14" data-i18n="qa.toc.s14">最近发布变更（v3.7.0 / v3.2.0 上线）</a></li>
+        <li><a href="#s15" data-i18n="qa.toc.s15">4 渠道下载站验证流程</a></li>
       </ul>
     </div>
 
     <div class="doc-hero">
-      <h1>QA 测试手册 — 测试环境配置</h1>
+      <h1 class="zh">QA 测试手册 — v3.7.0 测试环境配置</h1>
+      <h1 class="en">QA Test Handbook — v3.7.0 Staging Configuration</h1>
       <div class="doc-meta">
-        <span>更新日期：2026年4月13日</span>
-        <span>适合：QA 测试人员</span>
+        <span class="zh">更新日期：2026年5月9日</span>
+        <span class="en">Updated: 2026-05-09</span>
+        <span class="zh">适合：QA 测试人员</span>
+        <span class="en">For: QA Testers</span>
       </div>
     </div>
 
-    <div class="en-notice" data-i18n="en.notice"></div>
+    <div class="env-banner zh">ℹ️ 本文档仅适用于<strong>测试（Staging）环境</strong>。当前测试基线 Android <strong>v3.7.0</strong>。生产环境配置不同，每条差异在「测试 vs 生产差异」节列出。</div>
+    <div class="env-banner en">ℹ️ This document covers the <strong>Staging</strong> environment only. Current testing baseline: Android <strong>v3.7.0</strong>. Production differs; every delta is listed under "Staging vs Production Differences".</div>
 
-    <div class="env-banner">ℹ️ 本文档仅适用于<strong>测试（Staging）环境</strong>。正式生产环境配置不同，上线前将另行发布正式环境参考文档。</div>
-
-    <h2 id="s1">一、测试环境基本信息</h2>
+    <h2 id="s1"><span class="zh">一、测试环境基本信息</span><span class="en">1. Testing Environment Overview</span></h2>
     <table>
-      <tr><th>项目</th><th>值</th></tr>
-      <tr><td>测试服务器</td><td><code>52.230.7.201</code></td></tr>
-      <tr><td>后端 API 域名（客户端用）</td><td><code>dev-client.o-faster.cc</code></td></tr>
-      <tr><td>管理后台域名</td><td><code>dev-admin.o-faster.cc</code></td></tr>
-      <tr><td>数据库</td><td>MySQL 8.0，与生产完全独立</td></tr>
-      <tr><td>测试节点端口</td><td>1443（生产用 443）</td></tr>
-    </table>
-    <div class="callout info"><span class="callout-icon">ℹ️</span><span>测试环境与生产环境数据库<strong>完全独立</strong>。测试账号不会出现在生产环境，反之亦然。</span></div>
-
-    <h2 id="s2">二、登录与账号安全</h2>
-    <table>
-      <tr><th>配置项</th><th>当前值</th><th>测试影响</th></tr>
-      <tr><td>密码错误上限</td><td><strong>5 次</strong></td><td>连续输错5次后账号锁定，不可无限重试</td></tr>
-      <tr><td>账号锁定时长</td><td><strong>30 分钟</strong></td><td>锁定后必须等30分钟才能再试</td></tr>
-      <tr><td>短信验证码长度</td><td><strong>6 位</strong></td><td>测试注册 / 找回密码时填6位</td></tr>
-    </table>
-    <div class="callout warn"><span class="callout-icon">⚠️</span><span>测试登录错误流程时，触发锁定后该账号30分钟内完全不可用。<strong>建议准备多个测试账号</strong>，避免影响测试进度。如需提前解锁，联系后端开发手动清除。</span></div>
-    <h3>登录码（免密流程）说明</h3>
-    <p>用户通过手机号注册后，系统生成 <strong>16位专属登录码</strong>（格式：4组×4字符）。这是用户下次登录的凭证，明文存储和展示。短信验证码（OTP）是一次性的，加密处理，两者完全不同。</p>
-
-    <h2 id="s3">三、免费用户时长限制</h2>
-    <table>
-      <tr><th>配置项</th><th>测试环境</th><th>生产环境</th><th>测试影响</th></tr>
-      <tr><td>每日基础免费时长</td><td><strong>10 分钟</strong></td><td>30 分钟</td><td>免费账号当天累计连线超过10分钟后自动断线</td></tr>
-      <tr><td>看广告奖励时长</td><td><strong>10 分钟/次</strong></td><td>30 分钟/次</td><td>每看一次广告，免费时长+10分钟</td></tr>
-      <tr><td>每日最多看广告次数</td><td><strong>3 次</strong></td><td>2 次</td><td>最多额外获得30分钟</td></tr>
-      <tr><td><strong>测试环境每日上限</strong></td><td><strong>40 分钟</strong></td><td>90 分钟</td><td>—</td></tr>
-    </table>
-    <div class="callout info"><span class="callout-icon">ℹ️</span><span>测试时长缩短（10分钟基础），是为了让 QA 更快触发"时长耗尽"边界场景。时长耗尽后，需等次日凌晨重置，或<strong>联系后端把该测试账号已用时长清零</strong>。</span></div>
-
-    <h2 id="s4">四、VPN 连接行为</h2>
-    <table>
-      <tr><th>配置项</th><th>当前值</th><th>测试影响</th></tr>
-      <tr><td>ConnIdle（服务端空闲断连）</td><td><strong>300秒（5分钟）</strong></td><td>手机锁屏后，超过5分钟无任何流量才触发服务端断连</td></tr>
-      <tr><td>握手超时</td><td><strong>4秒</strong></td><td>连接建立超过4秒视为失败</td></tr>
-      <tr><td>节点同步间隔</td><td><strong>60秒</strong></td><td>修改账号权限后，节点最多需要60秒才能感知变化</td></tr>
-    </table>
-    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>已知 Bug（待修复）：</strong>手机锁屏超过5分钟后，App 显示"已连线"，但境外网站打不开，延迟显示 65535ms。这是客户端 Doze 模式问题，与服务端无关。遇到请记录，不算测试环境异常。</span></div>
-
-    <h2 id="s5">五、客户端版本控制</h2>
-    <table>
-      <tr><th>平台</th><th>版本号</th><th>强制更新</th><th>测试影响</th></tr>
-      <tr><td>Android</td><td><code>1.7.36</code></td><td class="ok">关闭</td><td>旧版本可正常使用，不弹强制更新</td></tr>
-      <tr><td>iOS（HiYou SSH）</td><td><code>1.3.0</code></td><td class="ok">关闭</td><td>App Store 版本已冻结（开发者账号被封），无法发布新版本；现有安装用户仍可使用</td></tr>
-      <tr><td>Windows x64</td><td><code>1.6.6</code></td><td class="ok">关闭</td><td>同上</td></tr>
-      <tr><td>Windows ARM64</td><td><code>1.6.6</code></td><td class="ok">关闭</td><td>同上</td></tr>
-      <tr style="background:#FFF7F7"><td>Mac Intel</td><td><code>1.2.51</code></td><td class="on">⛔ 开启</td><td>打开 App 立即弹强制更新，<strong>无法跳过</strong></td></tr>
-      <tr style="background:#FFF7F7"><td>Mac Silicon</td><td><code>1.2.52</code></td><td class="on">⛔ 开启</td><td>同上</td></tr>
-    </table>
-    <div class="callout danger"><span class="callout-icon">🚫</span><span><strong>Mac 平台当前无法测试。</strong>强制更新已开启，App 打开即被拦截。如需测试 Mac 功能，请提前通知后端关闭 Mac 强制更新开关。</span></div>
-
-    <h2 id="s6">六、系统功能开关状态</h2>
-    <table>
-      <tr><th>功能</th><th>状态</th><th>说明</th></tr>
-      <tr><td>维护模式</td><td class="ok">关闭（正常）</td><td>若维护模式开启，所有客户端显示维护提示，无法操作</td></tr>
-      <tr><td>推荐码 / 邀请码</td><td class="off">关闭</td><td>推荐功能不可用，相关流程测试会失败，属正常</td></tr>
-      <tr><td>通知邮件（活动类）</td><td class="off">未配置</td><td>通知类邮件发不出去（配置为空）</td></tr>
-      <tr><td>系统邮件（验证码等）</td><td class="ok">正常</td><td>SMTP 已配置（Zoho），可正常发送</td></tr>
-      <tr><td>SMS 短信验证码</td><td class="ok">正常</td><td>TeleSign 接入，可正常发送</td></tr>
+      <thead>
+        <tr><th class="zh">项目</th><th class="zh">值</th><th class="en">Item</th><th class="en">Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">环境名称</td><td class="zh">Staging（测试）</td><td class="en">Environment</td><td class="en">Staging</td></tr>
+        <tr><td class="zh">Android 测试基线</td><td class="zh"><code>v3.7.0</code>（versionCode 30700）</td><td class="en">Android baseline</td><td class="en"><code>v3.7.0</code> (versionCode 30700)</td></tr>
+        <tr><td class="zh">下载入口</td><td class="zh"><code>apk.arrowfishadv.com</code>（双语门户，4 渠道）</td><td class="en">Download portal</td><td class="en"><code>apk.arrowfishadv.com</code> (bilingual, 4 variants)</td></tr>
+        <tr><td class="zh">数据库</td><td class="zh">独立 staging 实例</td><td class="en">Database</td><td class="en">Dedicated staging instance</td></tr>
+        <tr><td class="zh">节点端口</td><td class="zh">1443</td><td class="en">Node port</td><td class="en">1443</td></tr>
+        <tr><td class="zh">SSH 端口（运维）</td><td class="zh">35698</td><td class="en">SSH port (ops)</td><td class="en">35698</td></tr>
+      </tbody>
     </table>
 
-    <h2 id="s7">七、广告配置</h2>
+    <h2 id="s2"><span class="zh">二、登录与账号安全</span><span class="en">2. Login &amp; Account Security</span></h2>
     <table>
-      <tr><th>配置项</th><th>测试环境</th><th>生产环境</th><th>说明</th></tr>
-      <tr><td>Google AdMob ID</td><td>测试用 ID</td><td>正式生产 ID</td><td>测试广告，不产生真实收益，广告内容为英文测试素材，属正常现象</td></tr>
+      <thead>
+        <tr><th class="zh">规则</th><th class="zh">值</th><th class="zh">测试影响</th><th class="en">Rule</th><th class="en">Value</th><th class="en">Test impact</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">密码错误锁定</td><td class="zh">5 次 / 30 分钟</td><td class="zh">超过 5 次后账号锁定 30 分钟，不能继续测试</td><td class="en">Password-fail lockout</td><td class="en">5 attempts / 30 min</td><td class="en">Account locked for 30 min after 5 wrong attempts</td></tr>
+        <tr><td class="zh">每设备每日免密注册</td><td class="zh">3 次 / 天</td><td class="zh">同一设备一天最多创建 3 个免密账号</td><td class="en">Per-device daily registration</td><td class="en">3 / day</td><td class="en">Max 3 passwordless accounts per device per day</td></tr>
+        <tr><td class="zh">每 IP 每日免密注册</td><td class="zh">30 次 / 天</td><td class="zh">同一 IP 一天最多 30 次（不含恢复）</td><td class="en">Per-IP daily registration</td><td class="en">30 / day</td><td class="en">Max 30 per IP per day (excludes recovery)</td></tr>
+        <tr><td class="zh">登录 / 注册 burst 限流</td><td class="zh">2 次 / 秒（按 IP + 指纹）</td><td class="zh">1 秒内超 2 次返回 429</td><td class="en">Auth burst limit</td><td class="en">2 / sec (per IP + fingerprint)</td><td class="en">3rd request within 1 s returns 429</td></tr>
+        <tr><td class="zh">免密注册端点</td><td class="zh"><code>POST /user/auto-register</code>（单步）</td><td class="zh">Android v3.7.0 已用单步流程</td><td class="en">Passwordless endpoint</td><td class="en"><code>POST /user/auto-register</code> (single-step)</td><td class="en">Android v3.7.0 uses single-step flow</td></tr>
+      </tbody>
     </table>
 
-    <h2 id="s8">八、支付功能</h2>
-    <div class="callout warn"><span class="callout-icon">⚠️</span><span>测试支付时，请使用<strong>最低金额</strong>（如¥1），避免产生不必要的真实扣款。</span></div>
+    <h3><span class="zh">免密注册响应 status</span><span class="en">Auto-register response status</span></h3>
     <table>
-      <tr><th>支付方式</th><th>注意事项</th></tr>
-      <tr><td>微信支付 / 支付宝</td><td>可测试，使用真实账号，选最低金额</td></tr>
-      <tr><td>USDT</td><td>链上转账有真实手续费，请谨慎测试</td></tr>
-      <tr><td>Google Play 内购</td><td>以实际测试包配置为准</td></tr>
-      <tr><td>Apple IAP</td><td>使用沙盒测试账号</td></tr>
+      <thead>
+        <tr><th>status</th><th class="zh">触发条件</th><th class="zh">客户端行为</th><th class="en">Trigger</th><th class="en">Client behavior</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>NEW</code></td><td class="zh">全新设备（未注册过）</td><td class="zh">显示新生成的 16 位登录码</td><td class="en">Brand-new device (never registered)</td><td class="en">Show newly generated 16-char login code</td></tr>
+        <tr><td><code>PASSWORDLESS</code></td><td class="zh">同设备之前已注册免密账号但本地缓存被清</td><td class="zh">显示原来的登录码（后端找回）</td><td class="en">Same device previously registered passwordless but local cache cleared</td><td class="en">Show the original login code (backend recovery)</td></tr>
+        <tr><td><code>CONVERTED</code></td><td class="zh">设备账号已转正（绑定用户名 / 密码）</td><td class="zh"><strong>自动登录</strong>，直接进主页</td><td class="en">Device account already converted (bound to user/pass)</td><td class="en"><strong>Auto-login</strong>, straight to home</td></tr>
+      </tbody>
     </table>
-    <h3>支付到账时间</h3>
-    <ul>
-      <li>微信 / 支付宝：通常30秒内生效</li>
-      <li>USDT TRC20：最长等待 15 分钟</li>
-      <li>USDT ERC20：最长等待 30 分钟（链上确认时间）</li>
+
+    <h2 id="s3"><span class="zh">三、免费用户时长限制</span><span class="en">3. Free User Time Limits</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">配置项</th><th class="zh">测试</th><th class="zh">生产</th><th class="zh">测试影响</th><th class="en">Config</th><th class="en">Staging</th><th class="en">Production</th><th class="en">Test impact</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">每日基础免费时长</td><td class="zh"><strong>10 分钟</strong></td><td class="zh">30 分钟</td><td class="zh">免费账号当天累计连接超过 10 分钟自动断线</td><td class="en">Daily base time</td><td class="en"><strong>10 min</strong></td><td class="en">30 min</td><td class="en">Free account auto-disconnects after 10 min cumulative</td></tr>
+        <tr><td class="zh">看广告奖励 / 次</td><td class="zh"><strong>10 分钟</strong></td><td class="zh">30 分钟</td><td class="zh">每看一次广告，时长 +10 分钟</td><td class="en">Per-ad reward</td><td class="en"><strong>10 min</strong></td><td class="en">30 min</td><td class="en">+10 min per ad watched</td></tr>
+        <tr><td class="zh">每日最多看广告次数</td><td class="zh"><strong>3 次</strong></td><td class="zh">2 次</td><td class="zh">最多再获得 30 分钟</td><td class="en">Max ads / day</td><td class="en"><strong>3</strong></td><td class="en">2</td><td class="en">Max +30 min total</td></tr>
+        <tr><td class="zh"><strong>测试每日上限</strong></td><td class="zh"><strong>40 分钟</strong></td><td class="zh">90 分钟</td><td class="zh">—</td><td class="en"><strong>Daily ceiling (test)</strong></td><td class="en"><strong>40 min</strong></td><td class="en">90 min</td><td class="en">—</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info zh"><span class="callout-icon">ℹ️</span><span>测试时长缩短是为了让 QA 更快触发「时长耗尽」边界场景。耗尽后等次日 0 点重置，或<strong>联系后端清零</strong>。配额在 v3.7.0 起<strong>由节点统计</strong>（不再客户端计时），客户端故意挂着不用 VPN 不会累积时长。</span></div>
+    <div class="callout info en"><span class="callout-icon">ℹ️</span><span>Staging time is intentionally shortened to let QA hit "quota exhausted" edge cases faster. Reset at midnight or <strong>ask backend to clear</strong>. As of v3.7.0, quota is <strong>counted by the node</strong> (no longer client-side); idling on a paused VPN doesn't accumulate time.</span></div>
+
+    <h2 id="s4"><span class="zh">四、VPN 连接行为（v3.6.x 重连特性）</span><span class="en">4. VPN Connection Behavior (v3.6.x reconnect features)</span></h2>
+
+    <table>
+      <thead>
+        <tr><th class="zh">项目</th><th class="zh">当前值</th><th class="zh">测试影响</th><th class="en">Item</th><th class="en">Current</th><th class="en">Test impact</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">服务端空闲断连（ConnIdle）</td><td class="zh">300 秒（5 分钟）</td><td class="zh">超过 5 分钟无任何流量才触发服务端断连</td><td class="en">Server idle disconnect</td><td class="en">300 s (5 min)</td><td class="en">Server-side disconnect only after 5 min with no traffic</td></tr>
+        <tr><td class="zh">握手超时</td><td class="zh">4 秒</td><td class="zh">连接建立超过 4 秒视为失败</td><td class="en">Handshake timeout</td><td class="en">4 s</td><td class="en">Connection setup &gt;4 s = failure</td></tr>
+        <tr><td class="zh">网络切换不掉线（v3.6.x）</td><td class="zh"><span class="ok">已启用</span></td><td class="zh">Wi-Fi ↔ 4G 切换时隧道保持，不需重连</td><td class="en">Network-switch persistent tunnel (v3.6.x)</td><td class="en"><span class="ok">Enabled</span></td><td class="en">Tunnel survives Wi-Fi ↔ cellular handoff, no reconnect needed</td></tr>
+        <tr><td class="zh">网络瞬断误判</td><td class="zh"><span class="ok">已修复</span></td><td class="zh">Wi-Fi 抖动不再误触发断开（已迁移到 activeNetwork API）</td><td class="en">Network-flicker false-positive</td><td class="en"><span class="ok">Fixed</span></td><td class="en">Wi-Fi flicker no longer triggers disconnect (migrated to activeNetwork API)</td></tr>
+        <tr><td class="zh">自动重连配置</td><td class="zh">默认开启（所有用户）</td><td class="zh">设置页可关闭；连接断开后自动尝试重连</td><td class="en">Auto-reconnect setting</td><td class="en">Default ON (all users)</td><td class="en">Toggle in settings; auto-retry after disconnect</td></tr>
+        <tr><td class="zh">闲置自动断开</td><td class="zh"><span class="off">已移除</span></td><td class="zh">VPN 永远不因闲置主动断开（产品政策）</td><td class="en">Idle auto-disconnect</td><td class="en"><span class="off">Removed</span></td><td class="en">VPN never auto-disconnects on idle (product policy)</td></tr>
+        <tr><td class="zh">从 v2.x 升级</td><td class="zh"><span class="ok">已自愈</span></td><td class="zh">v2.x → v3.x 升级用户连接失败问题已修复</td><td class="en">Upgrade from v2.x</td><td class="en"><span class="ok">Self-healed</span></td><td class="en">v2.x → v3.x upgrade-connect-fail issue fixed</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">QA 测试场景</span><span class="en">QA Test Scenarios</span></h3>
+    <table>
+      <thead>
+        <tr><th>#</th><th class="zh">场景</th><th class="zh">预期</th><th class="en">Scenario</th><th class="en">Expected</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="zh">连接 VPN → 关闭 Wi-Fi 接 4G</td><td class="zh">隧道保持，不显示「重连中」；底层 socket 自动迁移</td><td class="en">Connect VPN → turn off Wi-Fi onto cellular</td><td class="en">Tunnel stays up; no "Reconnecting…" UI; socket auto-migrates</td></tr>
+        <tr><td>2</td><td class="zh">连接中 → 飞行模式 5 秒 → 恢复</td><td class="zh">自动重连成功（默认开启）</td><td class="en">Connected → airplane mode 5 s → restore</td><td class="en">Auto-reconnects (default ON)</td></tr>
+        <tr><td>3</td><td class="zh">连接成功后挂着不用 10 分钟（屏幕亮）</td><td class="zh">VPN 不主动断开（idle 政策已移除）</td><td class="en">Connected, idle 10 min (screen on)</td><td class="en">VPN does not auto-disconnect (idle policy removed)</td></tr>
+        <tr><td>4</td><td class="zh">在线路选择页快速切换线路</td><td class="zh">单次切换，不抖动；只触发一次重连</td><td class="en">Quickly switch lines on selection page</td><td class="en">Single transition, no double-reconnect</td></tr>
+        <tr><td>5</td><td class="zh">从 v2.x 升级到 v3.7.0 后首次连接</td><td class="zh">连接成功（本地状态自愈）</td><td class="en">First connect after v2.x → v3.7.0 upgrade</td><td class="en">Connects successfully (local state self-heals)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s5"><span class="zh">五、客户端版本控制</span><span class="en">5. Client Version Control</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">平台</th><th class="zh">版本</th><th class="zh">强制更新</th><th class="zh">测试影响</th><th class="en">Platform</th><th class="en">Version</th><th class="en">Force update</th><th class="en">Test impact</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">Android（Google / 官网 / 华为）</td><td class="zh"><code>3.7.0</code></td><td class="zh ok">关闭</td><td class="zh">所有当前在用版本可正常使用</td><td class="en">Android (Google / Official / Huawei)</td><td class="en"><code>3.7.0</code></td><td class="en ok">Off</td><td class="en">All current versions usable</td></tr>
+        <tr><td class="zh">iOS（HiYou SSH）</td><td class="zh"><code>1.3.0</code></td><td class="zh ok">关闭</td><td class="zh">App Store 版本<strong>已冻结</strong>（开发者账号被封）；现存安装可继续使用，无法发新版</td><td class="en">iOS (HiYou SSH)</td><td class="en"><code>1.3.0</code></td><td class="en ok">Off</td><td class="en">App Store version <strong>frozen</strong> (dev account banned); existing installs work; no new release possible</td></tr>
+        <tr><td class="zh">Windows x64 / ARM64（skytree_pc）</td><td class="zh"><code>2.2.71</code></td><td class="zh ok">关闭</td><td class="zh"><strong>已冻结</strong>（签名证书过期）；正在调研虚拟签名方案</td><td class="en">Windows x64 / ARM64 (skytree_pc)</td><td class="en"><code>2.2.71</code></td><td class="en ok">Off</td><td class="en"><strong>Frozen</strong> (cert expired); virtual-sign approach under research</td></tr>
+        <tr style="background:#FFF7F7"><td class="zh">Mac Intel</td><td class="zh"><code>1.2.51</code></td><td class="zh on">⛔ 开启</td><td class="zh">App 打开立即弹强制更新，<strong>无法跳过</strong></td><td class="en">Mac Intel</td><td class="en"><code>1.2.51</code></td><td class="en on">⛔ ON</td><td class="en">Force-update on app open, <strong>cannot skip</strong></td></tr>
+        <tr style="background:#FFF7F7"><td class="zh">Mac Silicon</td><td class="zh"><code>1.2.52</code></td><td class="zh on">⛔ 开启</td><td class="zh">同上</td><td class="en">Mac Silicon</td><td class="en"><code>1.2.52</code></td><td class="en on">⛔ ON</td><td class="en">Same</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout danger zh"><span class="callout-icon">🚫</span><span><strong>Mac 当前无法测试。</strong>强制更新已开启，App 打开即被拦截。如需测试 Mac 功能，请提前通知后端关闭 Mac 强制更新开关。</span></div>
+    <div class="callout danger en"><span class="callout-icon">🚫</span><span><strong>Mac is currently untestable.</strong> Force-update is on; app is blocked on launch. To test Mac, ask backend to disable Mac force-update first.</span></div>
+
+    <h2 id="s6"><span class="zh">六、系统功能开关</span><span class="en">6. System Feature Toggles</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">功能</th><th class="zh">状态</th><th class="zh">说明</th><th class="en">Feature</th><th class="en">State</th><th class="en">Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">维护模式</td><td class="zh ok">关闭</td><td class="zh">若开启则所有客户端显示维护提示</td><td class="en">Maintenance mode</td><td class="en ok">Off</td><td class="en">If on, all clients show maintenance screen</td></tr>
+        <tr><td class="zh">推荐 / 邀请码</td><td class="zh off">关闭</td><td class="zh">推荐流程在测试环境失败属<strong>正常</strong></td><td class="en">Referral / invite</td><td class="en off">Off</td><td class="en">Referral flow failures are <strong>expected</strong> in staging</td></tr>
+        <tr><td class="zh">活动通知邮件</td><td class="zh off">未配置</td><td class="zh">活动类邮件发不出去（配置为空）</td><td class="en">Marketing emails</td><td class="en off">Not configured</td><td class="en">Marketing emails won't send (empty config)</td></tr>
+        <tr><td class="zh">系统邮件（验证码等）</td><td class="zh ok">正常</td><td class="zh">SMTP（Zoho）已配置</td><td class="en">System emails (OTP)</td><td class="en ok">Working</td><td class="en">SMTP (Zoho) configured</td></tr>
+        <tr><td class="zh">SMS 短信</td><td class="zh ok">正常</td><td class="zh">TeleSign 已接入</td><td class="en">SMS</td><td class="en ok">Working</td><td class="en">TeleSign integrated</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s7"><span class="zh">七、广告配置</span><span class="en">7. Ad Configuration</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">配置</th><th class="zh">测试</th><th class="zh">生产</th><th class="zh">说明</th><th class="en">Config</th><th class="en">Staging</th><th class="en">Production</th><th class="en">Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">Google AdMob ID</td><td class="zh">测试用 ID</td><td class="zh">正式生产 ID</td><td class="zh">测试广告内容为英文测试素材，<strong>属正常现象</strong>；不会产生真实收益</td><td class="en">Google AdMob ID</td><td class="en">Test ID</td><td class="en">Production ID</td><td class="en">Test ads use English placeholder content; <strong>this is expected</strong>; no revenue generated</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">广告 UI 标准化（v3.2.0+）</span><span class="en">Ad UI standardization (v3.2.0+)</span></h3>
+    <ul class="zh">
+      <li>关闭按钮统一在右上角，重新设计后任何背景图都清晰</li>
+      <li>多个广告弹窗的顺序冲突已修复（不会再两个弹窗抢前台）</li>
+      <li>VIP 用户看不到展示广告与过期签到弹窗</li>
+      <li>账号切换会清空抽奖与广告缓存</li>
     </ul>
-    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>已知 Bug（待修复）：</strong>支付成功、后端回调返回 200 后，App 界面不会自动刷新——用户仍看到未付款状态。需<strong>重新登录</strong>才能看到会员已到账。测试支付流程时请注意：支付成功≠App 显示成功，务必重新登录验证实际权限是否生效。</span></div>
-
-    <h2 id="s9">九、节点与线路同步机制</h2>
-    <div class="callout info"><span class="callout-icon">ℹ️</span><span><strong>关键：</strong>在后台修改用户会员等级或套餐权限后，不要立刻测试——需等待约 <strong>60 秒</strong>让节点同步，再验证权限是否生效。</span></div>
-    <table>
-      <tr><th>操作</th><th>生效延迟</th></tr>
-      <tr><td>修改用户会员等级</td><td>约 60 秒</td></tr>
-      <tr><td>新增 / 修改线路</td><td>约 60 秒</td></tr>
-      <tr><td>暂停 / 恢复节点</td><td>约 60 秒</td></tr>
-      <tr><td>修改套餐价格</td><td>即时（刷新页面）</td></tr>
-    </table>
-
-    <h2 id="s10">十、快速对照表 — 常见"误判为 Bug"的情况</h2>
-    <table>
-      <tr><th>测试时看到的现象</th><th>真实原因</th><th>是 Bug？</th></tr>
-      <tr class="bug-yes"><td>连续输错密码5次后无法登录</td><td>账号锁定30分钟，配置正常</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>免费账号连上10分钟后自动断线</td><td>测试环境每日时长上限10分钟</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>修改权限后立刻测，效果还没变</td><td>节点60秒同步间隔，等一下再试</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>手机锁屏5分钟以内，连接不断</td><td>ConnIdle=300秒，配置正常</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>Mac 打开 App 直接弹更新页</td><td>Mac 强制更新开关已开启</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>推荐码输入后无任何反应</td><td>推荐功能开关关闭</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>广告内容是英文 / 看起来很奇怪</td><td>测试环境用 Google 测试广告 ID</td><td>不是</td></tr>
-      <tr class="bug-yes"><td>USDT 支付后会员没有立刻生效</td><td>TRC20等15分钟，ERC20等30分钟</td><td>不是（超时未到账则是）</td></tr>
-      <tr class="bug-yes"><td>支付成功后会员等级没有变化</td><td>支付已到账，但 App 需重新登录才能刷新状态，不是支付失败</td><td>不是（支付问题）</td></tr>
-      <tr class="bug-no"><td>手机锁屏超5分钟，App显示已连线但网站打不开，延迟65535ms</td><td>客户端 Doze 模式 Bug，已知问题</td><td>是（记录）</td></tr>
-    </table>
-
-    <h2 id="s11">十一、已知问题清单</h2>
-    <p>以下问题已由开发团队确认，测试时遇到请记录，<strong>不作为阻断发布的问题</strong>：</p>
-    <table>
-      <tr><th>#</th><th>问题描述</th><th>影响范围</th><th>计划修复</th></tr>
-      <tr><td>1</td><td>手机锁屏>5分钟后 Doze 模式导致 VPN 失连</td><td>Android</td><td>Sprint 3</td></tr>
-      <tr><td>2</td><td>免费时长仅客户端计时，旧版 App（v1.6.x）完全无限制</td><td>旧版用户</td><td>Sprint 3</td></tr>
-      <tr><td>3</td><td>设备数量限制未实际执行</td><td>所有付费用户</td><td>Sprint 3</td></tr>
-      <tr><td>4</td><td>推送通知不可用（JPush / 小米 / 华为未完整注册）</td><td>所有用户</td><td>待排期</td></tr>
-      <tr><td>5</td><td>专线分配仍为手动操作（自动化已开发，待上线）</td><td>运营团队</td><td>Sprint 2</td></tr>
-      <tr><td>6</td><td>支付成功后 App 界面不自动刷新——需重新登录才能看到会员到账</td><td>所有支付用户</td><td>Sprint 2</td></tr>
-      <tr><td>7</td><td>Mac 安装后报错 <code>run core failed: connect ENOENT /tmp/arrowflsh-core.sock</code>——socket 路径存在拼写错误（arrowfl<strong>sh</strong> 缺少字母 i）</td><td>Mac 用户</td><td>Sprint 2</td></tr>
-    </table>
-
-    <h2 id="s12">十二、测试账号管理建议</h2>
-    <table>
-      <tr><th>账号类型</th><th>建议数量</th><th>用途</th></tr>
-      <tr><td>免费体验账号</td><td>3–5 个</td><td>测试时长限制、广告奖励</td></tr>
-      <tr><td>标准会员账号</td><td>2 个</td><td>测试标准线路、设备限制</td></tr>
-      <tr><td>精品会员账号</td><td>2 个</td><td>测试精品线路、流媒体解锁</td></tr>
-      <tr><td>备用免费账号</td><td>5 个以上</td><td>防止触发账号锁定后影响测试进度</td></tr>
-    </table>
-    <h3>账号重置方法</h3>
-    <table>
-      <tr><th>需要重置的状态</th><th>方法</th></tr>
-      <tr><td>账号被锁定（密码输错5次）</td><td>联系后端开发手动解除</td></tr>
-      <tr><td>免费时长耗尽</td><td>联系后端清零当天已用时长</td></tr>
-      <tr><td>会员到期</td><td>联系后端手动赋予会员权限</td></tr>
-      <tr><td>需要专线节点</td><td>联系后端在 BO 后台配发</td></tr>
-    </table>
-
-    <h2 id="s13">十三、测试环境 vs 生产环境差异</h2>
-    <table>
-      <tr><th>配置项</th><th>测试环境</th><th>生产环境</th></tr>
-      <tr><td>每日免费时长</td><td><strong>10 分钟</strong></td><td>30 分钟</td></tr>
-      <tr><td>广告奖励时长/次</td><td><strong>10 分钟</strong></td><td>30 分钟</td></tr>
-      <tr><td>每日广告次数上限</td><td><strong>3 次</strong></td><td>2 次</td></tr>
-      <tr><td>Android 版本</td><td>1.7.36</td><td>1.7.38</td></tr>
-      <tr><td>AdMob ID</td><td>测试 ID</td><td>正式生产 ID</td></tr>
-      <tr><td>Mac 强制更新</td><td><strong>开启</strong></td><td>关闭</td></tr>
-      <tr><td>推荐功能</td><td>关闭</td><td>关闭（也待修复）</td></tr>
-      <tr><td>数据库</td><td>独立实例，数据独立</td><td>主从架构，真实数据</td></tr>
-      <tr><td>节点端口</td><td>1443</td><td>443</td></tr>
-      <tr><td>iOS（HiYou SSH）</td><td>App Store 上架版本 v1.3.0，<strong>已停止更新</strong>（开发者账号被封）</td><td>仅供现有用户使用，无法推送新版本</td></tr>
-    </table>
-
-    <h2 id="s14">十四、最近发布变更（本 Sprint）</h2>
-    <p>本节列出 QA 最需关注的近期后端 / 客户端变更。测试时请参照这里的新行为，避免把正常行为误报为 Bug。</p>
-
-    <h3>1. Android 免注册 / 游客注册流程重构（2026-04-24）</h3>
-    <p><strong>变更：</strong>Android 的"无需注册使用"按钮背后的后端交互从三步（<code>device/status</code> → <code>nonce/generate</code> → <code>auto-register</code>）简化为<strong>单步</strong> <code>POST /user/auto-register</code>。响应体新增 <code>status</code> 字段：</p>
-    <table>
-      <tr><th>status</th><th>触发条件</th><th>客户端行为</th></tr>
-      <tr><td><code>NEW</code></td><td>全新设备（未注册过）</td><td>显示新生成的 16 位登录码，等用户点"开始使用"</td></tr>
-      <tr><td><code>PASSWORDLESS</code></td><td>同一台设备之前已注册过免密账号，但本地缓存被清除</td><td>显示原来的 16 位登录码（后端找回），等用户点"开始使用"</td></tr>
-      <tr><td><code>CONVERTED</code></td><td>设备之前注册过账号，且已转为正式账号（绑定用户名/密码）</td><td><strong>自动登录</strong>，直接跳进主页，不再显示登录码</td></tr>
-    </table>
-
-    <h3>QA 测试场景</h3>
-    <table>
-      <tr><th>#</th><th>场景</th><th>预期行为</th></tr>
-      <tr><td>1</td><td>全新安装 Android App，点"无需注册"</td><td>1 次网络请求到 <code>/user/auto-register</code>，响应 status=NEW，显示新登录码</td></tr>
-      <tr><td>2</td><td>清除 App 数据（不卸载），重新打开，点"无需注册"</td><td>1 次请求，status=PASSWORDLESS，显示<strong>原来的</strong>登录码（而非新码）</td></tr>
-      <tr><td>3</td><td>清除 App 数据后，重新打开并点"无需注册"，账号之前已转正（绑定手机号/邮箱/密码）</td><td>1 次请求，status=CONVERTED，<strong>自动进入主页</strong>（不弹错误、不显示码）</td></tr>
-      <tr><td>4</td><td>旋转屏幕 / 后台切换回来</td><td>不触发额外网络请求；Adjust 和渠道事件<strong>仅首次注册时</strong>发送一次</td></tr>
-      <tr><td>5</td><td>一秒内快速连续点击"无需注册"</td><td>后端限流 2 次/秒。第 3 次请求应返回 429。不是 Bug。</td></tr>
-    </table>
-
-    <h3>已修复（不再重现）</h3>
-    <div class="callout success"><span class="callout-icon">✅</span><span><strong>"此设备创建账号次数过多"错误</strong>（错误码 <code>400155</code>）：2026-04-24 修复。清除数据后重新打开不应再弹此错误。如果 QA 还能重现，请立刻记录设备型号 + 用户 ID + 时间，反馈给后端。</span></div>
-
-    <h3>iOS / Windows 客户端影响</h3>
-    <ul>
-      <li><strong>iOS (HiYou SSH v2.2.71)</strong>：不使用 <code>/user/auto-register</code>，完全<strong>不受影响</strong>。</li>
-      <li><strong>Windows (skytree_pc v2.2.71)</strong>：继续使用旧的两步流程（<code>nonce/generate</code> → <code>auto-register</code>）。响应多出 <code>status</code> 字段但客户端忽略，<strong>不受影响</strong>。转正后重新安装仍可拿到原登录码（不会无限循环）。</li>
+    <ul class="en">
+      <li>Close button standardized to top-right, redesigned for legibility on any background</li>
+      <li>Multiple-ad popup sequencing fixed (no two popups racing for foreground)</li>
+      <li>VIP users no longer see display ads or stale daily-sign-in popups</li>
+      <li>Lottery + ad caches cleared on account switch</li>
     </ul>
 
-    <h3>2. 错误码变更</h3>
+    <h2 id="s8"><span class="zh">八、支付功能（含 IAP 续订）</span><span class="en">8. Payment Features (incl. IAP renewal)</span></h2>
+
+    <div class="callout warn zh"><span class="callout-icon">⚠️</span><span>测试支付请使用<strong>最低金额</strong>（如 ¥1），避免不必要的真实扣款。</span></div>
+    <div class="callout warn en"><span class="callout-icon">⚠️</span><span>Use <strong>minimum amounts</strong> (e.g. ¥1) for test payments to avoid unnecessary real charges.</span></div>
+
     <table>
-      <tr><th>错误码</th><th>含义</th><th>说明</th></tr>
-      <tr><td><code>400155</code> ErrDeviceRegisterLimitExceeded</td><td>设备注册次数超限</td><td>仍保留，但本次修复后正常用户<strong>不应再触发</strong>。仅异常情况或攻击行为会触发。</td></tr>
-      <tr><td><code>400160</code> ErrDeviceAlreadyRegistered</td><td>设备已注册</td><td>新增错误码（客户端若绕过新流程直接重复调用才会看到）。现有用户不应看到。</td></tr>
+      <thead>
+        <tr><th class="zh">通道</th><th class="zh">注意事项</th><th class="zh">到账时间</th><th class="en">Channel</th><th class="en">Caveat</th><th class="en">Settlement</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">微信 / 支付宝</td><td class="zh">真实账号，最低金额</td><td class="zh">通常 30 秒内</td><td class="en">WeChat / Alipay</td><td class="en">Real account, min amount</td><td class="en">Usually within 30 s</td></tr>
+        <tr><td class="zh">USDT TRC20</td><td class="zh">链上手续费真实，谨慎测试</td><td class="zh">最长 15 分钟</td><td class="en">USDT TRC20</td><td class="en">Real on-chain fees apply</td><td class="en">Up to 15 min</td></tr>
+        <tr><td class="zh">USDT ERC20</td><td class="zh">同上，确认时间更长</td><td class="zh">最长 30 分钟</td><td class="en">USDT ERC20</td><td class="en">Same; longer confirmation</td><td class="en">Up to 30 min</td></tr>
+        <tr><td class="zh">Google Play 内购</td><td class="zh">以测试包配置为准</td><td class="zh">即时</td><td class="en">Google Play IAP</td><td class="en">Per test build config</td><td class="en">Instant</td></tr>
+        <tr><td class="zh">Apple IAP</td><td class="zh">使用沙盒账号</td><td class="zh">即时</td><td class="en">Apple IAP</td><td class="en">Use sandbox account</td><td class="en">Instant</td></tr>
+      </tbody>
     </table>
 
-    <h3>3. 限流（Rate Limit）</h3>
+    <h3><span class="zh">IAP 续订回归测试（重要）</span><span class="en">IAP renewal regression test (important)</span></h3>
+    <div class="callout success zh"><span class="callout-icon">✅</span><span><strong>「续订代币推进」P0 已修复（2026-05）</strong>：之前 Google Play / Apple IAP 续订到第二个月时仍用第一个月的代币验证 → <strong>客户已扣款但 VIP 没生效</strong>。每次发版务必跑下面的回归测试。</span></div>
+    <div class="callout success en"><span class="callout-icon">✅</span><span><strong>"Renewal token advance" P0 fixed (May 2026)</strong>: previously, IAP month-2 renewal verified against month-1 token → <strong>charged but VIP not granted</strong>. Run the regression test below on every release.</span></div>
+
     <table>
-      <tr><th>限流类型</th><th>限制</th><th>说明</th></tr>
-      <tr><td>Auth-burst 限流</td><td><strong>2 次 / 秒</strong>（按 IP + 指纹）</td><td>针对所有登录/注册/免密类接口。客户端 1 秒内发超过 2 个请求会被 429。</td></tr>
-      <tr><td>L1 每设备日限</td><td>3 次 / 天</td><td>每个设备每天最多创建 3 个免密账号。</td></tr>
-      <tr><td>L2 每 IP 日限</td><td>30 次 / 天</td><td>每个 IP 每天最多 30 次免密注册（含自动恢复不算）。</td></tr>
+      <thead>
+        <tr><th>#</th><th class="zh">步骤</th><th class="zh">预期</th><th class="en">Step</th><th class="en">Expected</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="zh">沙盒账号订阅月度套餐 → 完成首次扣款</td><td class="zh">VIP 立即生效，订单页可见</td><td class="en">Sandbox account subscribes to monthly plan → first charge</td><td class="en">VIP instantly active, order visible</td></tr>
+        <tr><td>2</td><td class="zh">等沙盒账号触发续订（约 5 分钟一次）</td><td class="zh">第二次续订到账后 VIP 继续有效，<strong>不需要重新登录</strong></td><td class="en">Wait for sandbox renewal (every ~5 min)</td><td class="en">VIP remains active after 2nd renewal, <strong>no re-login required</strong></td></tr>
+        <tr><td>3</td><td class="zh">检查后端订单 → <code>purchase_token</code> 应该是新代币</td><td class="zh">代币每次续订后推进；不再卡在首月代币</td><td class="en">Check backend order → <code>purchase_token</code> is the new token</td><td class="en">Token advances on each renewal; no longer stuck on month-1 token</td></tr>
+        <tr><td>4</td><td class="zh">移动端「余额支付」相关投诉</td><td class="zh">不应再看到「余额支付失败但 BE 已发 VIP」</td><td class="en">Mobile "balance pay" complaints</td><td class="en">"Balance pay failed but BE granted VIP" should not appear</td></tr>
+      </tbody>
     </table>
 
-    <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>QA 批量测试提醒：</strong>如果你在一台机器上做批量压力测试（快速连续"无需注册"），很容易触发 429 或 L1/L2 日限。这<strong>不是 Bug</strong>。如果需要更大测试量，请先联系后端临时放宽限流。</span></div>
+    <h3><span class="zh">支付到账后 UI 刷新</span><span class="en">Post-payment UI refresh</span></h3>
+    <ul class="zh">
+      <li>v3.7.0 起：支付成功后 App 通过 WS 事件 + onResume 轮询双路径刷新，<strong>无需重新登录即可看到 VIP</strong></li>
+      <li>如果仍偶发「重新登录才看到 VIP」：记录用户 ID + 订单号 + 时间，提交后端</li>
+    </ul>
+    <ul class="en">
+      <li>From v3.7.0: post-payment UI refreshes via WS event + onResume poll; <strong>no re-login required to see VIP</strong></li>
+      <li>If "re-login required" still occurs sporadically: log user ID + order ID + timestamp, send to backend</li>
+    </ul>
+
+    <h2 id="s9"><span class="zh">九、节点同步机制（含一键开通 / Format）</span><span class="en">9. Node Sync (incl. Quick Setup / Format)</span></h2>
+
+    <div class="callout info zh"><span class="callout-icon">ℹ️</span><span><strong>关键：</strong>修改用户会员等级或套餐权限后，不要立刻测试 — 节点同步约 60 秒。</span></div>
+    <div class="callout info en"><span class="callout-icon">ℹ️</span><span><strong>Important:</strong> after changing membership level or plan in admin, wait ~60 s for node sync before testing.</span></div>
+
+    <table>
+      <thead>
+        <tr><th class="zh">操作</th><th class="zh">生效延迟</th><th class="en">Action</th><th class="en">Sync delay</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">修改用户会员等级</td><td class="zh">~60 秒</td><td class="en">Change user membership</td><td class="en">~60 s</td></tr>
+        <tr><td class="zh">新增 / 修改线路</td><td class="zh">~60 秒</td><td class="en">Add / modify line</td><td class="en">~60 s</td></tr>
+        <tr><td class="zh">暂停 / 恢复节点</td><td class="zh">~60 秒</td><td class="en">Pause / resume node</td><td class="en">~60 s</td></tr>
+        <tr><td class="zh">修改套餐价格</td><td class="zh">即时（刷新页面）</td><td class="en">Change plan price</td><td class="en">Instant (refresh page)</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">后台一键开通 / Format（v3.2.0 后台已上线）</span><span class="en">Admin one-click Setup / Format (v3.2.0 admin)</span></h3>
+    <ul class="zh">
+      <li><strong>Quick Setup（开通新节点）</strong>：~30 秒后台点击；后端自动 SSH 到 VM 跑引导脚本</li>
+      <li><strong>Format（一键回收）</strong>：~2 分钟全擦写后重装；UI 有确认弹窗（<strong>有破坏性</strong>）</li>
+      <li><strong>批量升级</strong>：每台独立进度条；失败的可单独重试，不影响其他</li>
+      <li><strong>失败排查</strong>：每台「查看日志」按钮分阶段展示失败位置（连接 / 引导 / 安装 / 启动）</li>
+    </ul>
+    <ul class="en">
+      <li><strong>Quick Setup (provision new node)</strong>: ~30 s admin click; backend auto-SSHs into VM and runs bootstrap</li>
+      <li><strong>Format (one-click recycle)</strong>: ~2 min full wipe + reinstall; UI shows confirm dialog (<strong>destructive</strong>)</li>
+      <li><strong>Bulk upgrade</strong>: per-host progress bar; failed rows individually retryable, others not affected</li>
+      <li><strong>Failure triage</strong>: per-host "View Logs" shows stage-tagged failure location (connect / bootstrap / install / start)</li>
+    </ul>
+
+    <h3><span class="zh">运维 / QA 测试场景</span><span class="en">Ops / QA Test Scenarios</span></h3>
+    <table>
+      <thead>
+        <tr><th>#</th><th class="zh">场景</th><th class="zh">预期</th><th class="en">Scenario</th><th class="en">Expected</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="zh">Quick Setup 一台新 VM</td><td class="zh">~30 秒后节点变绿；BO 列表心跳正常</td><td class="en">Quick Setup a fresh VM</td><td class="en">Node turns green within ~30 s; BO heartbeat normal</td></tr>
+        <tr><td>2</td><td class="zh">勾选 Format 升级一台已用节点</td><td class="zh">~2 分钟后节点恢复，旧服务残留全部清空</td><td class="en">Check Format on an existing node and upgrade</td><td class="en">Node back online ~2 min; all old service residue wiped</td></tr>
+        <tr><td>3</td><td class="zh">批量升级 5 台，故意让其中 1 台 SSH 不通</td><td class="zh">4 台成功，失败那台显示具体阶段错误，可单独重试</td><td class="en">Bulk-upgrade 5 hosts, deliberately block SSH on 1</td><td class="en">4 succeed; failing host shows stage-specific error; retry button works</td></tr>
+        <tr><td>4</td><td class="zh">查看节点活动面板</td><td class="zh">每个节点的开通 / 升级 / Format 历史可见</td><td class="en">Open per-host activity panel</td><td class="en">Setup / upgrade / Format history visible per node</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s10"><span class="zh">十、常见误判对照表</span><span class="en">10. Common False Positives Reference</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">现象</th><th class="zh">真实原因</th><th class="zh">是 Bug？</th><th class="en">Symptom</th><th class="en">Real cause</th><th class="en">Bug?</th></tr>
+      </thead>
+      <tbody>
+        <tr class="bug-yes"><td class="zh">连续输错密码 5 次后无法登录</td><td class="zh">账号锁 30 分钟</td><td class="zh">不是</td><td class="en">5 wrong passwords → cannot log in</td><td class="en">30-min account lockout</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">免费账号连接 10 分钟后断线</td><td class="zh">测试每日时长上限 10 分钟</td><td class="zh">不是</td><td class="en">Free account disconnects after 10 min</td><td class="en">Staging daily cap 10 min</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">改权限后立刻测，效果还没变</td><td class="zh">节点 ~60 秒同步</td><td class="zh">不是</td><td class="en">Changed permission, no effect immediately</td><td class="en">~60 s node sync</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">Wi-Fi 抖一下，VPN 没断</td><td class="zh">v3.6.x 隧道持久重连特性</td><td class="zh">不是</td><td class="en">Wi-Fi flickers, VPN stays connected</td><td class="en">v3.6.x persistent-tunnel feature</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">连接挂着不用，10 分钟后还连着</td><td class="zh">闲置自动断开已移除（产品政策）</td><td class="zh">不是</td><td class="en">Idle 10 min still connected</td><td class="en">Idle auto-disconnect removed (policy)</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">Mac 打开 App 直接弹更新页</td><td class="zh">Mac 强制更新已开启</td><td class="zh">不是</td><td class="en">Mac app opens directly to update screen</td><td class="en">Mac force-update is on</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">推荐码输入无反应</td><td class="zh">推荐功能开关关闭</td><td class="zh">不是</td><td class="en">Referral code does nothing</td><td class="en">Referral feature off in staging</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">广告内容是英文 / 看起来很奇怪</td><td class="zh">测试用 Google 测试广告 ID</td><td class="zh">不是</td><td class="en">Ads in English / look odd</td><td class="en">Staging uses Google test ad ID</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">USDT 支付后会员没立刻到账</td><td class="zh">链上确认 TRC20 ~15 分 / ERC20 ~30 分</td><td class="zh">不是</td><td class="en">USDT paid, VIP not immediate</td><td class="en">On-chain confirm TRC20 ~15 min / ERC20 ~30 min</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">支付成功，App 等几秒才显示 VIP</td><td class="zh">v3.7.0 双路径刷新，几秒延迟正常</td><td class="zh">不是</td><td class="en">Paid, app shows VIP after a few seconds</td><td class="en">v3.7.0 dual-path refresh; few-second delay normal</td><td class="en">No</td></tr>
+        <tr class="bug-yes"><td class="zh">三星 Galaxy Store 找不到 App</td><td class="zh">三星渠道已下线</td><td class="zh">不是</td><td class="en">Cannot find app on Samsung Galaxy Store</td><td class="en">Samsung distribution discontinued</td><td class="en">No</td></tr>
+        <tr class="bug-no"><td class="zh">支付成功 + 重启 App 仍未到账</td><td class="zh">真实问题：联系后端核查订单</td><td class="zh">是</td><td class="en">Paid + app restarted, still no VIP</td><td class="en">Real issue: ask backend to verify order</td><td class="en">Yes</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s11"><span class="zh">十一、已知问题清单</span><span class="en">11. Known Issues List</span></h2>
+    <p class="zh">以下问题已开发团队确认，<strong>不作为阻断发布的问题</strong>：</p>
+    <p class="en">Confirmed by engineering, <strong>not release blockers</strong>:</p>
+    <table>
+      <thead>
+        <tr><th>#</th><th class="zh">问题</th><th class="zh">影响范围</th><th class="zh">计划</th><th class="en">Issue</th><th class="en">Scope</th><th class="en">Plan</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="zh">推送通知不可用（JPush / 小米 / 华为未完整注册）</td><td class="zh">所有用户</td><td class="zh">待排期</td><td class="en">Push notifications unavailable (JPush / Xiaomi / Huawei incomplete)</td><td class="en">All users</td><td class="en">TBD</td></tr>
+        <tr><td>2</td><td class="zh">专线到期需要重新购买（节点会换）</td><td class="zh">专线付费用户</td><td class="zh">第4阶段（自动续费 + 保留绑定）</td><td class="en">Dedicated-line renewal requires re-purchase (node changes)</td><td class="en">Dedicated paying users</td><td class="en">Sprint 4 (auto-renew + keep node)</td></tr>
+        <tr><td>3</td><td class="zh">Mac 客户端强制更新开启 → 老版本被拦截</td><td class="zh">Mac 用户</td><td class="zh">等新版发布</td><td class="en">Mac force-update on, old build blocked</td><td class="en">Mac users</td><td class="en">Awaiting new release</td></tr>
+        <tr><td>4</td><td class="zh">iOS / Windows 已冻结（外部商务依赖）</td><td class="zh">iOS / Windows 用户</td><td class="zh">解锁路径：iOS 账号申诉 + Windows 虚拟签名调研</td><td class="en">iOS / Windows frozen (external dependency)</td><td class="en">iOS / Windows users</td><td class="en">Unlock: iOS appeal + Windows virtual-sign R&amp;D</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">已修复（不再重现）</span><span class="en">Fixed (no longer reproducible)</span></h3>
+    <div class="callout success zh"><span class="callout-icon">✅</span><span><strong>2026-05 已修复</strong>：续订代币推进 P0；免费注册跨账号串号 P0 + ASN 段滥用上限；专线到期自动释放节点回库存；网络瞬断 VPN 误断；升级 v2.x → v3.x 连接失败；选择线路抖动；启动屏冻屏；登录失效弹窗打断；支付成功后 UI 不刷新；启动时孤儿 JWT 残留；ClassCastException 路由选择；updateOutbounds 主线程 Room crash；&quot;此设备创建账号次数过多&quot;（错误码 400155）；闲置自动断开（按政策回滚）。</span></div>
+    <div class="callout success en"><span class="callout-icon">✅</span><span><strong>Fixed in May 2026</strong>: IAP renewal token advance P0; free auto-register cross-user leak P0 + ASN-class abuse cap; dedicated allocation node release on expiry; network-flicker VPN false-disconnect; v2.x → v3.x upgrade-connect-fail; line-switch reconnect double-up; splash-screen freeze; auth-error popup interruption; post-payment UI not refreshing; orphan JWT at app open; ClassCastException on route selection; updateOutbounds Room main-thread crash; "device creates too many accounts" error 400155; idle auto-disconnect (reverted per policy).</span></div>
+
+    <h2 id="s12"><span class="zh">十二、测试账号管理</span><span class="en">12. Test Account Management</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">类型</th><th class="zh">建议数量</th><th class="zh">用途</th><th class="en">Type</th><th class="en">Count</th><th class="en">Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">免费体验</td><td class="zh">3-5 个</td><td class="zh">时长限制 / 广告奖励</td><td class="en">Free trial</td><td class="en">3-5</td><td class="en">Time limits / ad reward</td></tr>
+        <tr><td class="zh">标准会员</td><td class="zh">2 个</td><td class="zh">标准线路 / 设备限制</td><td class="en">Standard</td><td class="en">2</td><td class="en">Standard lines / device cap</td></tr>
+        <tr><td class="zh">精品会员</td><td class="zh">2 个</td><td class="zh">精品线路 / 流媒体</td><td class="en">Premium</td><td class="en">2</td><td class="en">Premium lines / streaming</td></tr>
+        <tr><td class="zh">备用免费</td><td class="zh">5+ 个</td><td class="zh">防止账号锁定影响进度</td><td class="en">Spare free</td><td class="en">5+</td><td class="en">Buffer against lockouts</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="zh">账号重置方法</span><span class="en">Account reset methods</span></h3>
+    <table>
+      <thead>
+        <tr><th class="zh">需要重置</th><th class="zh">方法</th><th class="en">Reset what</th><th class="en">How</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">账号锁定（5 次错密）</td><td class="zh">联系后端解除</td><td class="en">Account locked (5 wrong passwords)</td><td class="en">Ask backend to unlock</td></tr>
+        <tr><td class="zh">免费时长耗尽</td><td class="zh">联系后端清零当天已用</td><td class="en">Free time exhausted</td><td class="en">Ask backend to reset today's usage</td></tr>
+        <tr><td class="zh">会员到期</td><td class="zh">联系后端补发会员权限</td><td class="en">VIP expired</td><td class="en">Ask backend to re-grant VIP</td></tr>
+        <tr><td class="zh">需要专线节点</td><td class="zh">联系后端在 BO 配发</td><td class="en">Need dedicated line</td><td class="en">Ask backend to assign in BO</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s13"><span class="zh">十三、测试 vs 生产差异</span><span class="en">13. Staging vs Production Differences</span></h2>
+    <table>
+      <thead>
+        <tr><th class="zh">配置</th><th class="zh">测试</th><th class="zh">生产</th><th class="en">Config</th><th class="en">Staging</th><th class="en">Production</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="zh">每日免费时长</td><td class="zh"><strong>10 分钟</strong></td><td class="zh">30 分钟</td><td class="en">Daily free time</td><td class="en"><strong>10 min</strong></td><td class="en">30 min</td></tr>
+        <tr><td class="zh">广告奖励 / 次</td><td class="zh"><strong>10 分钟</strong></td><td class="zh">30 分钟</td><td class="en">Per-ad reward</td><td class="en"><strong>10 min</strong></td><td class="en">30 min</td></tr>
+        <tr><td class="zh">每日广告次数</td><td class="zh"><strong>3 次</strong></td><td class="zh">2 次</td><td class="en">Ads per day</td><td class="en"><strong>3</strong></td><td class="en">2</td></tr>
+        <tr><td class="zh">Android 版本</td><td class="zh"><strong>3.7.0</strong></td><td class="zh">3.7.0</td><td class="en">Android version</td><td class="en"><strong>3.7.0</strong></td><td class="en">3.7.0</td></tr>
+        <tr><td class="zh">AdMob ID</td><td class="zh">测试 ID</td><td class="zh">正式生产 ID</td><td class="en">AdMob ID</td><td class="en">Test ID</td><td class="en">Production ID</td></tr>
+        <tr><td class="zh">Mac 强制更新</td><td class="zh"><strong>开启</strong></td><td class="zh">关闭</td><td class="en">Mac force update</td><td class="en"><strong>On</strong></td><td class="en">Off</td></tr>
+        <tr><td class="zh">推荐功能</td><td class="zh">关闭</td><td class="zh">关闭（也待修复）</td><td class="en">Referral</td><td class="en">Off</td><td class="en">Off (also TBD)</td></tr>
+        <tr><td class="zh">数据库</td><td class="zh">独立实例</td><td class="zh">主从架构 + 真实数据</td><td class="en">Database</td><td class="en">Dedicated instance</td><td class="en">Primary-replica + real data</td></tr>
+        <tr><td class="zh">节点端口</td><td class="zh">1443</td><td class="zh">443</td><td class="en">Node port</td><td class="en">1443</td><td class="en">443</td></tr>
+        <tr><td class="zh">iOS（HiYou）</td><td class="zh">v1.3.0 已冻结</td><td class="zh">仅供现有用户</td><td class="en">iOS (HiYou)</td><td class="en">v1.3.0 frozen</td><td class="en">Existing users only</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s14"><span class="zh">十四、最近发布变更（v3.7.0 / v3.2.0 上线）</span><span class="en">14. Recent Releases (v3.7.0 / v3.2.0)</span></h2>
+
+    <h3><span class="zh">v3.2.0 稳定版（2026-05 上线）</span><span class="en">v3.2.0 Stable (released May 2026)</span></h3>
+    <ul class="zh">
+      <li>接手项目以来首个本团队完整把控的稳定版本，QA 主体复验通过</li>
+      <li>APK 体积比 v1.7.38 小 67%（33 MB vs 101 MB）— 移除 utilcodex（5MB + 80 个传递依赖）+ Compose 框架下线</li>
+      <li>4 渠道一次构建（Google Play / 官网 / 华为；三星已下线），15:52 自动上传到下载站</li>
+      <li>启动屏 + 进度条决策树重做（旧方案 3 秒以上场景下「冻屏」）</li>
+      <li>免费注册跨账号串号修复 + ASN 段滥用上限</li>
+      <li>翻译混乱清理（混用中英、模板占位符泄漏到 UI）— 后端写入语言守门 + 三语补齐</li>
+    </ul>
+    <ul class="en">
+      <li>First post-handover stable fully owned by the team; QA main verification passed</li>
+      <li>APK 67% smaller than v1.7.38 (33 MB vs 101 MB) — utilcodex removed (5MB + 80 transitive deps) + Compose dropped</li>
+      <li>4-variant single build (Google Play / Official / Huawei; Samsung discontinued); 15:52 auto-upload to download portal</li>
+      <li>Splash + loader decision tree rework (old design "froze" past 3 s)</li>
+      <li>Free-register cross-user leak fix + ASN-class abuse cap</li>
+      <li>Translation cleanup (mixed CN/EN, template placeholders leaking to UI) — write-time language gate + 3-language completion</li>
+    </ul>
+
+    <h3><span class="zh">v3.6.x 可靠性流</span><span class="en">v3.6.x Reliability Stream</span></h3>
+    <ul class="zh">
+      <li>Wi-Fi ↔ 4G/5G 切换不掉线（隧道持久重连）</li>
+      <li>网络瞬断误判修复（旧 allNetworks 接口改用 activeNetwork + capabilities）</li>
+      <li>自动重连配置：用户可关闭，默认 VIP 开启 → v3.7.0 起所有用户默认开启</li>
+      <li>从 v2.x 升级连接失败修复（本地状态自愈）</li>
+      <li>选择线路时合并双重重连为单次切换</li>
+    </ul>
+    <ul class="en">
+      <li>Tunnel survives Wi-Fi ↔ cellular handoff (persistent reconnect)</li>
+      <li>Network-flicker false-positive fixed (deprecated allNetworks → activeNetwork + capabilities)</li>
+      <li>Auto-reconnect setting: user-toggle, VIP default ON → v3.7.0 all users default ON</li>
+      <li>v2.x → v3.x upgrade-connect-fail fixed (local state self-heals)</li>
+      <li>Line-switch reconnect double-up merged to single transition</li>
+    </ul>
+
+    <h3><span class="zh">v3.7.0（当前生产）</span><span class="en">v3.7.0 (current production)</span></h3>
+    <ul class="zh">
+      <li>自动重连默认开启（所有用户）</li>
+      <li>移除已弃用的 allNetworks 接口（旧 Android 编译警告清零）</li>
+      <li>闲置自动断开按政策<strong>移除</strong>（VPN 永远不因闲置主动断开）</li>
+      <li>请求关联 ID（X-Request-ID）端到端贯通 — 任何崩溃可关联到后端那次请求</li>
+    </ul>
+    <ul class="en">
+      <li>Auto-reconnect default ON for all users</li>
+      <li>Deprecated allNetworks API removed (old Android compile warnings gone)</li>
+      <li>Idle auto-disconnect <strong>removed</strong> per policy (VPN never auto-disconnects on idle)</li>
+      <li>End-to-end request correlation ID — every crash links to the matching backend request</li>
+    </ul>
+
+    <h2 id="s15"><span class="zh">十五、4 渠道下载站验证流程</span><span class="en">15. 4-Variant Download Portal QA Flow</span></h2>
+
+    <p class="zh">CI 流水线一次构建 4 个渠道（Google Play / 官网 / 华为；三星已下线，剩 3 渠道实际上传），自动上传到 <code>apk.arrowfishadv.com</code>。每次发版后 QA 验证下面流程：</p>
+    <p class="en">The CI pipeline produces 4-variant builds in one run (Google Play / Official / Huawei; Samsung discontinued, 3 variants now uploaded), auto-uploaded to <code>apk.arrowfishadv.com</code>. After each release, QA verifies:</p>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th class="zh">检查项</th><th class="zh">如何验证</th><th class="en">Check</th><th class="en">How to verify</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="zh">下载页可打开（双语）</td><td class="zh">浏览器访问 <code>apk.arrowfishadv.com</code>；切换 ZH / EN 两种语言</td><td class="en">Download page opens (bilingual)</td><td class="en">Visit <code>apk.arrowfishadv.com</code>; toggle ZH / EN</td></tr>
+        <tr><td>2</td><td class="zh">3 个渠道 APK 都能下载</td><td class="zh">点 google / official / huawei 三个下载按钮；文件大小 ~33 MB</td><td class="en">All 3 variant APKs download</td><td class="en">Click google / official / huawei buttons; file size ~33 MB</td></tr>
+        <tr><td>3</td><td class="zh">版本号正确</td><td class="zh">下载页与 APK 安装后显示一致：v3.7.0 / versionCode 30700</td><td class="en">Version number correct</td><td class="en">Page version matches installed app: v3.7.0 / versionCode 30700</td></tr>
+        <tr><td>4</td><td class="zh">渠道事件上报</td><td class="zh">从 google APK 安装、注册一次；首次注册时上报渠道事件（Adjust 一次）</td><td class="en">Channel event reported</td><td class="en">Install + register once from Google APK; channel event fires once at first registration (Adjust)</td></tr>
+        <tr><td>5</td><td class="zh">华为 APK 不引入 Google Billing 编译</td><td class="zh">华为版本应不依赖 Google Play Services；安装到无 GMS 设备应能启动</td><td class="en">Huawei APK has no Google Billing</td><td class="en">Huawei build runs on GMS-less device</td></tr>
+        <tr><td>6</td><td class="zh">下载页 staging fallback</td><td class="zh">如生产版本未发布，应能切换到 staging 包链接</td><td class="en">Download page staging fallback</td><td class="en">Switchable to staging link if production not yet released</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn zh"><span class="callout-icon">⚠️</span><span><strong>QA 批量提醒</strong>：在一台机器上做批量压力测试（快速连续「无需注册」）容易触发 429 或 L1/L2 日限。<strong>这不是 Bug。</strong>需要更大测试量请联系后端临时放宽限流。</span></div>
+    <div class="callout warn en"><span class="callout-icon">⚠️</span><span><strong>QA bulk-test reminder</strong>: rapid-fire "passwordless register" on one machine easily hits 429 or L1/L2 daily caps. <strong>This is not a bug.</strong> For larger test volume, ask backend to temporarily raise the limit.</span></div>
 
   </main>
 </div>
@@ -380,7 +571,6 @@ function toggleToc() {
     links.forEach((l, i) => l.classList.toggle('active', i === active));
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 })();
 </script>
 <script src="../lang.js"></script>

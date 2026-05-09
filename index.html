@@ -111,6 +111,8 @@
   .badge-qa   { background: #D1FAE5; color: #065F46; }
   .badge-story{ background: #EDE9FE; color: #5B21B6; }
   .badge-dev  { background: #FEF3C7; color: #92400E; }
+  .badge-ops  { background: #E0F2FE; color: #075985; }
+  .badge-ba   { background: #FCE7F3; color: #9D174D; }
   .card-date { font-size: .78rem; color: var(--text-3); }
   .card-icon {
     width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
@@ -120,6 +122,8 @@
   .card-icon-qa   { background: #F0FDF4; }
   .card-icon-story{ background: #F5F3FF; }
   .card-icon-dev  { background: #FFFBEB; }
+  .card-icon-ops  { background: #F0F9FF; }
+  .card-icon-ba   { background: #FDF2F8; }
   .card-icon svg { width: 20px; height: 20px; }
   .card-title { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
   .card-desc { font-size: .85rem; color: var(--text-2); line-height: 1.6; flex: 1; }
@@ -189,9 +193,11 @@
 <div class="filter-bar">
   <button class="filter-btn active" onclick="filterDocs('all', this)" data-i18n="filter.all">全部</button>
   <button class="filter-btn" onclick="filterDocs('prd', this)" data-i18n="filter.prd">PRD</button>
+  <button class="filter-btn" onclick="filterDocs('ba', this)" data-i18n="filter.ba">BA</button>
   <button class="filter-btn" onclick="filterDocs('qa', this)" data-i18n="filter.qa">QA</button>
-  <button class="filter-btn" onclick="filterDocs('story', this)" data-i18n="filter.story">Story</button>
   <button class="filter-btn" onclick="filterDocs('dev', this)" data-i18n="filter.dev">Dev</button>
+  <button class="filter-btn" onclick="filterDocs('ops', this)" data-i18n="filter.ops">Ops</button>
+  <button class="filter-btn" onclick="filterDocs('story', this)" data-i18n="filter.story">Story</button>
 </div>
 
 <div class="section-label" data-i18n="section.docs">文档列表</div>
@@ -279,21 +285,46 @@
   <a class="doc-card" href="docs/node-operations.html" data-type="ops">
     <div class="card-top">
       <div class="card-meta">
-        <span class="badge badge-dev">OPS</span>
+        <span class="badge badge-ops">OPS</span>
         <span class="card-date">2026年5月</span>
       </div>
-      <div class="card-icon card-icon-dev">
+      <div class="card-icon card-icon-ops">
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="10" r="3" stroke="#2563EB" stroke-width="1.5"/>
-          <path d="M10 1v3M10 16v3M19 10h-3M4 10H1" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="10" cy="10" r="3" stroke="#075985" stroke-width="1.5"/>
+          <path d="M10 1v3M10 16v3M19 10h-3M4 10H1" stroke="#075985" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
     </div>
     <div class="card-title" data-i18n="card.ops.title">节点运维手册 — 生命周期与自动化</div>
-    <div class="card-desc" data-i18n="card.ops.desc">从节点采购到退役的全流程：健康状态机、自动下线/恢复、DNS 自动化（GoDaddy + Cloudflare）、kebab 操作菜单、TG 告警规则、部署 SOP。</div>
+    <div class="card-desc" data-i18n="card.ops.desc">从节点采购到退役的全流程：健康状态机、自动下线/恢复、DNS 自动化（GoDaddy + Cloudflare）、后台一键开通 / Format、Telegram 告警规则、部署 SOP。</div>
     <div class="card-audience">
       <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
       <span data-i18n="card.ops.audience">适合：开发团队 · 运维</span>
+    </div>
+    <div class="card-arrow">
+      <span data-i18n="card.read">阅读文档</span>
+      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 4l4 3-4 3" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </a>
+
+  <!-- Card: BA Business Handbook -->
+  <a class="doc-card" href="docs/ba-handbook.html" data-type="ba">
+    <div class="card-top">
+      <div class="card-meta">
+        <span class="badge badge-ba">BA</span>
+        <span class="card-date">2026年5月</span>
+      </div>
+      <div class="card-icon card-icon-ba">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 17V8M8 17V4M13 17V11M18 17V7" stroke="#9D174D" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-title" data-i18n="card.ba.title">BA 业务分析手册 — 数据 · 流程 · 后台</div>
+    <div class="card-desc" data-i18n="card.ba.desc">用户漏斗、关键指标、付费套餐 / 专线流程、退款与客服升级、抽奖 / 优惠券机制、后台常用操作。BA 与运营日常工作的速查手册。</div>
+    <div class="card-audience">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="#94A3B8" stroke-width="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span data-i18n="card.ba.audience">适合：BA · 运营 · 客服</span>
     </div>
     <div class="card-arrow">
       <span data-i18n="card.read">阅读文档</span>
