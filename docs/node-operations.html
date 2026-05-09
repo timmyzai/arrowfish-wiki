@@ -12,7 +12,7 @@
   :root {
     --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
     --text: #0F172A; --text-2: #475569; --text-3: #94A3B8;
-    --accent: #2563EB; --accent-light: #DBEAFE;
+    --accent: #2563EB; --accent-light: #DBEAFE; --navy: #1E3A5F;
     --warn: #F59E0B; --warn-bg: #FEF3C7;
     --ok: #059669; --ok-bg: #D1FAE5;
     --danger: #DC2626; --danger-bg: #FEE2E2;
@@ -23,9 +23,23 @@
     font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
     background: var(--bg); color: var(--text); line-height: 1.6;
   }
+  .topbar { background: var(--navy); height: 56px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .back-btn { display: flex; align-items: center; gap: 6px; color: #94A3B8; font-size: .85rem; text-decoration: none; transition: color .15s; }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-ops { background: #E0F2FE; color: #075985; }
+  .topbar-date { font-size: .78rem; color: #64748B; }
+  .lang-switch { display:flex; background:rgba(255,255,255,.12); border-radius:20px; padding:2px; gap:2px; }
+  .lang-btn { padding:4px 12px; border-radius:18px; border:none; background:transparent; color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .lang-btn.active { background:#fff; color:#1E3A5F; }
+
+  /* Bilingual content toggle */
+  html[lang='zh-CN'] .en { display: none; }
+  html[lang='en']    .zh { display: none; }
+
   .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
-  .back { display: inline-block; color: var(--text-2); margin-bottom: 24px; font-size: 14px; text-decoration: none; }
-  .back:hover { color: var(--accent); }
   h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
   .subtitle { color: var(--text-2); font-size: 15px; margin-bottom: 32px; }
   h2 { font-size: 20px; font-weight: 600; margin: 32px 0 12px; padding-top: 24px; border-top: 1px solid var(--border); }
@@ -47,113 +61,208 @@
   .audience { background: #F1F5F9; padding: 10px 14px; border-radius: 8px; font-size: 13px; color: var(--text-2); margin-bottom: 24px; }
 </style>
 </head>
-<body>
-<div class="container">
-<a class="back" href="../index.html">← 返回首页</a>
+<body data-doc-id="ops">
 
-<h1>节点运维手册</h1>
-<p class="subtitle">VPN 节点生命周期、自动化能力清单、运维 SOP — 内部团队参考</p>
-
-<div class="audience">
-  <strong>适合：</strong>开发团队、运维 · <strong>更新于：</strong>2026 年 5 月
+<div class="topbar">
+  <a class="back-btn" href="../index.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="zh">返回文档中心</span><span class="en">Back to Docs</span>
+  </a>
+  <div class="topbar-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">ZH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+    <span class="badge badge-ops">OPS</span>
+    <span class="topbar-date" data-meta="dateShort"></span>
+  </div>
 </div>
 
-<h2>1. 节点生命周期一览</h2>
-<p>从单个 VPN 节点诞生到退役的完整路径，标注每一步的自动化程度：</p>
+<div class="container">
+
+<h1 class="zh">节点运维手册</h1>
+<h1 class="en">Node Operations Handbook</h1>
+<p class="subtitle zh">VPN 节点生命周期、自动化能力清单、运维 SOP — 内部团队参考</p>
+<p class="subtitle en">VPN node lifecycle, automation inventory, and ops SOPs — internal team reference</p>
+
+<div class="audience zh">
+  <strong>适合：</strong>开发团队、运维 · <strong>更新于：</strong><span data-meta="dateShort"></span>
+</div>
+<div class="audience en">
+  <strong>For:</strong> Developers · Operations · <strong>Updated:</strong> <span data-meta="dateShort"></span>
+</div>
+
+<h2 class="zh">1. 节点生命周期一览</h2>
+<h2 class="en">1. Node Lifecycle Overview</h2>
+<p class="zh">从单个 VPN 节点诞生到退役的完整路径，标注每一步的自动化程度：</p>
+<p class="en">The full path of a single VPN node from creation to retirement, with the level of automation at each step:</p>
 
 <table>
   <thead>
-    <tr><th>阶段</th><th>动作</th><th>自动化状态</th></tr>
+    <tr class="zh"><th>阶段</th><th>动作</th><th>自动化状态</th></tr>
+    <tr class="en"><th>Stage</th><th>Action</th><th>Automation</th></tr>
   </thead>
   <tbody>
-    <tr><td>1. 采购</td><td>从 Lisahost / iPRaft / GCore 等供应商手动购买 VM</td><td><span class="pill pill-danger">手动</span></td></tr>
-    <tr><td>2. 注册到 BO</td><td>BO 创建节点记录或通过 <code>/agent/register-or-heal</code> 自识别（按 main_ip）</td><td><span class="pill pill-ok">自动</span></td></tr>
-    <tr><td>3. DNS 子域</td><td>kebab → Provision DNS → 自动选下一个 <code>{region}{seq:02d}.{zone}</code></td><td><span class="pill pill-ok">自动 (Phase B)</span></td></tr>
-    <tr><td>4. Bootstrap 部署</td><td>BO 生成一次性引导 URL，节点 SSH 执行脚本，安装 sing-box + agent</td><td><span class="pill pill-warn">半自动</span></td></tr>
-    <tr><td>5. 配置同步</td><td>agent 每 60s 拉取用户列表 + 上游配置</td><td><span class="pill pill-ok">自动</span></td></tr>
-    <tr><td>6. 健康监控</td><td><code>NodeHealthReconcileJob</code> 每分钟跑状态机：active → degraded → billing_dead / temp_down → active</td><td><span class="pill pill-ok">自动 (Phase 2)</span></td></tr>
-    <tr><td>7. 自动下线</td><td>billing_dead / temp_down / 流量超阈值 → 自动从线路池移除 + 一条 TG</td><td><span class="pill pill-ok">自动 (Phase A)</span></td></tr>
-    <tr><td>8. 自动恢复</td><td>双信号稳定 2 分钟 → 自动还原线路池 + 一条 TG</td><td><span class="pill pill-ok">自动</span></td></tr>
-    <tr><td>9. 续费 / 标记已付</td><td>kebab → Mark paid + retry → 立即重探 + 推后 30 天到期</td><td><span class="pill pill-ok">自动 (Phase 2)</span></td></tr>
-    <tr><td>10. DNS 释放（节点退役）</td><td>kebab → Release DNS → "保留以备复用" 进入释放池</td><td><span class="pill pill-ok">自动 (Phase B)</span></td></tr>
-    <tr><td>11. 孤立 DNS 清理</td><td>BO 干跑预览 → 勾选 → Apply。<strong>强制干跑优先</strong></td><td><span class="pill pill-ok">自动 (Phase B)</span></td></tr>
-    <tr><td>12. 整批升级 agent</td><td>BO 设置 <code>target_agent_version</code> + 维护时间窗，agent 自更新</td><td><span class="pill pill-ok">自动 (Phase 2)</span></td></tr>
+    <tr class="zh"><td>1. 采购</td><td>从 Lisahost / iPRaft / GCore 等供应商手动购买 VM</td><td><span class="pill pill-danger">手动</span></td></tr>
+    <tr class="en"><td>1. Purchase</td><td>Manually buy a VM from providers like Lisahost / iPRaft / GCore</td><td><span class="pill pill-danger">Manual</span></td></tr>
+    <tr class="zh"><td>2. 注册到 BO</td><td>BO 创建节点记录或通过 <code>/agent/register-or-heal</code> 自识别（按 main_ip）</td><td><span class="pill pill-ok">自动</span></td></tr>
+    <tr class="en"><td>2. Register in BO</td><td>BO creates the node record, or it self-identifies via <code>/agent/register-or-heal</code> (by main_ip)</td><td><span class="pill pill-ok">Auto</span></td></tr>
+    <tr class="zh"><td>3. DNS 子域</td><td>kebab → Provision DNS → 自动选下一个 <code>{region}{seq:02d}.{zone}</code></td><td><span class="pill pill-ok">自动 (Phase B)</span></td></tr>
+    <tr class="en"><td>3. DNS subdomain</td><td>kebab menu → Provision DNS → auto-picks next <code>{region}{seq:02d}.{zone}</code></td><td><span class="pill pill-ok">Auto (Phase B)</span></td></tr>
+    <tr class="zh"><td>4. Bootstrap 部署</td><td>BO 生成一次性引导 URL，节点 SSH 执行脚本，安装 sing-box + agent</td><td><span class="pill pill-warn">半自动</span></td></tr>
+    <tr class="en"><td>4. Bootstrap deploy</td><td>BO generates a one-time bootstrap URL; SSH into the node, run the script — installs sing-box + agent</td><td><span class="pill pill-warn">Semi-auto</span></td></tr>
+    <tr class="zh"><td>5. 配置同步</td><td>agent 每 60s 拉取用户列表 + 上游配置</td><td><span class="pill pill-ok">自动</span></td></tr>
+    <tr class="en"><td>5. Config sync</td><td>Agent pulls user list + upstream config every 60s</td><td><span class="pill pill-ok">Auto</span></td></tr>
+    <tr class="zh"><td>6. 健康监控</td><td><code>NodeHealthReconcileJob</code> 每分钟跑状态机：active → degraded → billing_dead / temp_down → active</td><td><span class="pill pill-ok">自动 (Phase 2)</span></td></tr>
+    <tr class="en"><td>6. Health monitoring</td><td><code>NodeHealthReconcileJob</code> runs the state machine every minute: active → degraded → billing_dead / temp_down → active</td><td><span class="pill pill-ok">Auto (Phase 2)</span></td></tr>
+    <tr class="zh"><td>7. 自动下线</td><td>billing_dead / temp_down / 流量超阈值 → 自动从线路池移除 + 一条 TG</td><td><span class="pill pill-ok">自动 (Phase A)</span></td></tr>
+    <tr class="en"><td>7. Auto-offline</td><td>billing_dead / temp_down / over-quota → auto-remove from line pool + one TG alert</td><td><span class="pill pill-ok">Auto (Phase A)</span></td></tr>
+    <tr class="zh"><td>8. 自动恢复</td><td>双信号稳定 2 分钟 → 自动还原线路池 + 一条 TG</td><td><span class="pill pill-ok">自动</span></td></tr>
+    <tr class="en"><td>8. Auto-recover</td><td>Both signals stable for 2 min → auto-restore to line pool + one TG alert</td><td><span class="pill pill-ok">Auto</span></td></tr>
+    <tr class="zh"><td>9. 续费 / 标记已付</td><td>kebab → Mark paid + retry → 立即重探 + 推后 30 天到期</td><td><span class="pill pill-ok">自动 (Phase 2)</span></td></tr>
+    <tr class="en"><td>9. Renew / Mark paid</td><td>kebab → Mark paid + retry → immediate re-probe + push expiry 30 days later</td><td><span class="pill pill-ok">Auto (Phase 2)</span></td></tr>
+    <tr class="zh"><td>10. DNS 释放（节点退役）</td><td>kebab → Release DNS → "保留以备复用" 进入释放池</td><td><span class="pill pill-ok">自动 (Phase B)</span></td></tr>
+    <tr class="en"><td>10. DNS release (node retirement)</td><td>kebab → Release DNS → "Keep for reuse" sends it to the released pool</td><td><span class="pill pill-ok">Auto (Phase B)</span></td></tr>
+    <tr class="zh"><td>11. 孤立 DNS 清理</td><td>BO 干跑预览 → 勾选 → Apply。<strong>强制干跑优先</strong></td><td><span class="pill pill-ok">自动 (Phase B)</span></td></tr>
+    <tr class="en"><td>11. Orphan DNS cleanup</td><td>BO dry-run preview → tick boxes → Apply. <strong>Dry-run first, always</strong></td><td><span class="pill pill-ok">Auto (Phase B)</span></td></tr>
+    <tr class="zh"><td>12. 整批升级 agent</td><td>BO 设置 <code>target_agent_version</code> + 维护时间窗，agent 自更新</td><td><span class="pill pill-ok">自动 (Phase 2)</span></td></tr>
+    <tr class="en"><td>12. Batch agent upgrade</td><td>BO sets <code>target_agent_version</code> + maintenance window — agents self-update</td><td><span class="pill pill-ok">Auto (Phase 2)</span></td></tr>
   </tbody>
 </table>
 
-<h2>2. 节点健康状态机</h2>
-<p>每个节点 (<code>node_hosts</code> 表 1 行 = 1 台 VM) 都有一个 status：</p>
+<h2 class="zh">2. 节点健康状态机</h2>
+<h2 class="en">2. Node Health State Machine</h2>
+<p class="zh">每个节点 (<code>node_hosts</code> 表 1 行 = 1 台 VM) 都有一个 status：</p>
+<p class="en">Each node (one row in <code>node_hosts</code> = one VM) carries a status:</p>
 
 <table>
-  <thead><tr><th>状态</th><th>含义</th><th>触发条件</th><th>线路池影响</th></tr></thead>
+  <thead>
+    <tr class="zh"><th>状态</th><th>含义</th><th>触发条件</th><th>线路池影响</th></tr>
+    <tr class="en"><th>Status</th><th>Meaning</th><th>Trigger</th><th>Line-pool impact</th></tr>
+  </thead>
   <tbody>
-    <tr><td><span class="pill pill-ok">active</span></td><td>正常服务</td><td>—</td><td>在线</td></tr>
-    <tr><td><span class="pill pill-warn">degraded</span></td><td>心跳沉默 5 分钟以上 OR TCP 探测失败</td><td>开始诊断</td><td>暂未移除</td></tr>
-    <tr><td><span class="pill pill-warn">provider_temp_down</span></td><td>探测失败 + 付费日未到</td><td>判定为临时故障</td><td><strong>移除</strong></td></tr>
-    <tr><td><span class="pill pill-danger">billing_dead</span></td><td>探测失败 + 付费日已过 (或宽限 2h 后未知)</td><td>欠费下线</td><td><strong>移除</strong></td></tr>
-    <tr><td><span class="pill pill-danger">unknown_dead</span></td><td>已知死亡但原因不明</td><td>等待管理员判断</td><td>移除</td></tr>
-    <tr><td><span class="pill pill-info">reconciling</span></td><td>整批重装进行中</td><td>BO 触发</td><td>移除</td></tr>
+    <tr class="zh"><td><span class="pill pill-ok">active</span></td><td>正常服务</td><td>—</td><td>在线</td></tr>
+    <tr class="en"><td><span class="pill pill-ok">active</span></td><td>Serving normally</td><td>—</td><td>Online</td></tr>
+    <tr class="zh"><td><span class="pill pill-warn">degraded</span></td><td>心跳沉默 5 分钟以上 OR TCP 探测失败</td><td>开始诊断</td><td>暂未移除</td></tr>
+    <tr class="en"><td><span class="pill pill-warn">degraded</span></td><td>Heartbeat silent &gt; 5 min OR TCP probe failed</td><td>Diagnosis starts</td><td>Not yet removed</td></tr>
+    <tr class="zh"><td><span class="pill pill-warn">provider_temp_down</span></td><td>探测失败 + 付费日未到</td><td>判定为临时故障</td><td><strong>移除</strong></td></tr>
+    <tr class="en"><td><span class="pill pill-warn">provider_temp_down</span></td><td>Probe fails + still within paid period</td><td>Treated as temporary outage</td><td><strong>Removed</strong></td></tr>
+    <tr class="zh"><td><span class="pill pill-danger">billing_dead</span></td><td>探测失败 + 付费日已过 (或宽限 2h 后未知)</td><td>欠费下线</td><td><strong>移除</strong></td></tr>
+    <tr class="en"><td><span class="pill pill-danger">billing_dead</span></td><td>Probe fails + paid date passed (or unknown after 2h grace)</td><td>Offline due to non-payment</td><td><strong>Removed</strong></td></tr>
+    <tr class="zh"><td><span class="pill pill-danger">unknown_dead</span></td><td>已知死亡但原因不明</td><td>等待管理员判断</td><td>移除</td></tr>
+    <tr class="en"><td><span class="pill pill-danger">unknown_dead</span></td><td>Confirmed dead, cause unknown</td><td>Awaiting admin decision</td><td>Removed</td></tr>
+    <tr class="zh"><td><span class="pill pill-info">reconciling</span></td><td>整批重装进行中</td><td>BO 触发</td><td>移除</td></tr>
+    <tr class="en"><td><span class="pill pill-info">reconciling</span></td><td>Batch reinstall in progress</td><td>BO-triggered</td><td>Removed</td></tr>
   </tbody>
 </table>
 
-<p>所有阈值都在 <code>设置 → 节点健康 / DNS 自动化</code> 调整，无需重启后端。</p>
+<p class="zh">所有阈值都在 <code>设置 → 节点健康 / DNS 自动化</code> 调整，无需重启后端。</p>
+<p class="en">All thresholds are adjusted under <code>Settings → Node Health / DNS Automation</code>; no backend restart required.</p>
 
-<h2>3. 后台管理介面</h2>
+<h2 class="zh">3. 后台管理介面</h2>
+<h2 class="en">3. Admin Interface</h2>
 
-<h3>3.1 节点列表 — kebab 操作菜单</h3>
-<p>每行一个 <code>⋮</code> 按钮，包含 11 个操作（已分组）：</p>
-<ul>
+<h3 class="zh">3.1 节点列表 — kebab 操作菜单</h3>
+<h3 class="en">3.1 Node list — kebab actions menu</h3>
+<p class="zh">每行一个 <code>⋮</code> 按钮，包含 11 个操作（已分组）：</p>
+<p class="en">Each row has a <code>⋮</code> button with 11 actions (grouped):</p>
+<ul class="zh">
   <li><strong>查看：</strong>详情 / 在线用户 / 部署日志</li>
   <li><strong>管理：</strong>编辑 / 引导 URL / IP 池 / Mark Paid / 重装 Agent / 申请 DNS / 释放 DNS</li>
   <li><strong>状态：</strong>暂停 / 恢复</li>
   <li><strong>危险：</strong>软删除（红字）</li>
 </ul>
+<ul class="en">
+  <li><strong>View:</strong> Details / Online users / Deploy log</li>
+  <li><strong>Manage:</strong> Edit / Bootstrap URL / IP pool / Mark Paid / Reinstall agent / Provision DNS / Release DNS</li>
+  <li><strong>Status:</strong> Pause / Resume</li>
+  <li><strong>Danger:</strong> Soft delete (in red)</li>
+</ul>
 
-<h3>3.2 设置 → 节点健康 / DNS 自动化</h3>
-<ul>
+<h3 class="zh">3.2 设置 → 节点健康 / DNS 自动化</h3>
+<h3 class="en">3.2 Settings → Node Health / DNS Automation</h3>
+<ul class="zh">
   <li><strong>健康阈值：</strong>心跳超时、探测超时、未知付费日宽限、恢复稳定窗口、临时故障告警门槛、巡检间隔（共 8 项整数）</li>
   <li><strong>自动下线：</strong>流量阈值百分比（默认 95%）</li>
   <li><strong>DNS：</strong>GoDaddy Key/Secret、Cloudflare Token（默认隐藏，眼睛图标可显示）、托管 zone CSV、子域命名模板</li>
   <li>API Key 留空 = DNS 自动化关闭。每个 Key 旁有 <code>测试连通</code> 按钮</li>
 </ul>
+<ul class="en">
+  <li><strong>Health thresholds:</strong> heartbeat timeout, probe timeout, unknown-paid-date grace, recovery-stable window, temporary-outage alert threshold, probe interval (8 integers total)</li>
+  <li><strong>Auto-offline:</strong> traffic threshold percentage (default 95%)</li>
+  <li><strong>DNS:</strong> GoDaddy Key/Secret, Cloudflare Token (hidden by default, eye icon to reveal), managed-zone CSV, subdomain naming template</li>
+  <li>Empty API key = DNS automation disabled. Each key has a <code>Test connectivity</code> button next to it</li>
+</ul>
 
-<h3>3.3 节点管理 → DNS 孤立记录清理</h3>
-<ol>
+<h3 class="zh">3.3 节点管理 → DNS 孤立记录清理</h3>
+<h3 class="en">3.3 Node Management → Orphan DNS cleanup</h3>
+<ol class="zh">
   <li>页面打开自动跑干跑</li>
   <li>列出每个 zone 的孤立记录（DB 中无、或标记为 orphan）</li>
   <li>勾选要删除的，点 <code>应用所选</code>，确认后才真正删除</li>
   <li><strong>已释放（released）的子域永远不会被清理触碰</strong></li>
 </ol>
+<ol class="en">
+  <li>Dry-run runs automatically when the page opens</li>
+  <li>Lists orphan records per zone (not in DB, or marked orphan)</li>
+  <li>Tick the ones to delete, click <code>Apply selected</code>; deletion only happens after confirmation</li>
+  <li><strong>Released subdomains are never touched by cleanup</strong></li>
+</ol>
 
-<h2>4. 子域命名规范</h2>
-<p>默认模板：<code>{region}{seq:02d}.{zone}</code>，例如：</p>
-<ul>
+<h2 class="zh">4. 子域命名规范</h2>
+<h2 class="en">4. Subdomain Naming Convention</h2>
+<p class="zh">默认模板：<code>{region}{seq:02d}.{zone}</code>，例如：</p>
+<p class="en">Default template: <code>{region}{seq:02d}.{zone}</code>, for example:</p>
+<ul class="zh">
   <li><code>jp01.oportal.cc</code> — 第 1 个日本节点</li>
   <li><code>hk03.oportal.cc</code> — 第 3 个香港节点</li>
   <li><code>us2002.oportal.cc</code> — 4 位序号也支持（模板可改为 <code>{seq:04d}</code>）</li>
 </ul>
+<ul class="en">
+  <li><code>jp01.oportal.cc</code> — 1st Japan node</li>
+  <li><code>hk03.oportal.cc</code> — 3rd Hong Kong node</li>
+  <li><code>us2002.oportal.cc</code> — 4-digit sequences also supported (template can be changed to <code>{seq:04d}</code>)</li>
+</ul>
 
-<h3>子域复用规则（按地区严格）</h3>
-<p>退役节点若 Release 时选 <code>保留以备复用</code>，子域进入释放池：</p>
-<ul>
+<h3 class="zh">子域复用规则（按地区严格）</h3>
+<h3 class="en">Subdomain reuse rules (strict per region)</h3>
+<p class="zh">退役节点若 Release 时选 <code>保留以备复用</code>，子域进入释放池：</p>
+<p class="en">When a retired node is released with <code>Keep for reuse</code>, the subdomain goes into the released pool:</p>
+<ul class="zh">
   <li>新节点 → Provision DNS 时显示 <strong>「自动生成新名称」</strong> 和 <strong>「从已释放池复用」</strong> 两个 tab</li>
   <li>只能复用同地区子域（jp 释放池只能给 jp 新节点用）</li>
   <li>跨地区复用 = 手动 SQL 修改（不允许）</li>
 </ul>
+<ul class="en">
+  <li>For a new node, Provision DNS shows two tabs: <strong>"Auto-generate new name"</strong> and <strong>"Reuse from released pool"</strong></li>
+  <li>Only same-region subdomains can be reused (the JP released pool serves only new JP nodes)</li>
+  <li>Cross-region reuse = manual SQL edit (not allowed)</li>
+</ul>
 
-<h2>5. Telegram 告警规则（每个事件最多一条）</h2>
-<p>合并到现有 <code>专线付款</code> 频道。仅以下事件会发：</p>
-<ol>
+<h2 class="zh">5. Telegram 告警规则（每个事件最多一条）</h2>
+<h2 class="en">5. Telegram Alert Rules (one alert per event, max)</h2>
+<p class="zh">合并到现有 <code>专线付款</code> 频道。仅以下事件会发：</p>
+<p class="en">Merged into the existing <code>Dedicated-line payment</code> channel. Only these events fire:</p>
+<ol class="zh">
   <li><strong>节点进入 BILLING_DEAD：</strong>「<code>{host}</code> 移除：billing_dead — 影响 N 条线路。请支付发票并在 BO 点 Mark Paid」</li>
   <li><strong>节点进入 PROVIDER_TEMP_DOWN（持续 30 分钟未恢复）：</strong>提示可能需要联系供应商</li>
   <li><strong>节点进入 UNKNOWN_DEAD（2h 未知）：</strong>请管理员确认</li>
   <li><strong>恢复 → ACTIVE：</strong>「<code>{host}</code> 已恢复 — N 条线路重新上线」</li>
   <li><strong>抖动（1h 内 ≥ 3 次状态切换）：</strong>一条总结性告警</li>
 </ol>
-<p><strong>不会发送：</strong>5 分钟级别的心跳偶发、单次探测失败、节点常态 active 状态。</p>
+<ol class="en">
+  <li><strong>Node enters BILLING_DEAD:</strong> "<code>{host}</code> removed: billing_dead — N lines affected. Please pay the invoice and click Mark Paid in BO"</li>
+  <li><strong>Node enters PROVIDER_TEMP_DOWN (no recovery for 30 min):</strong> Suggests contacting the provider</li>
+  <li><strong>Node enters UNKNOWN_DEAD (2h unknown):</strong> Asks admin to confirm</li>
+  <li><strong>Recovery → ACTIVE:</strong> "<code>{host}</code> recovered — N lines back online"</li>
+  <li><strong>Flapping (≥ 3 status changes in 1h):</strong> One summary alert</li>
+</ol>
+<p class="zh"><strong>不会发送：</strong>5 分钟级别的心跳偶发、单次探测失败、节点常态 active 状态。</p>
+<p class="en"><strong>Not sent:</strong> 5-minute-scale heartbeat blips, a single probe failure, or steady-state active.</p>
 
-<h2>6. 部署 SOP（生产首次启用）</h2>
-<ol>
+<h2 class="zh">6. 部署 SOP（生产首次启用）</h2>
+<h2 class="en">6. Deploy SOP (first production rollout)</h2>
+<ol class="zh">
   <li><code>fea/node-driven-quota</code> 经 MR review 后并入 <code>main</code></li>
   <li>CI/CD 自动应用所有迁移到 Staging</li>
   <li><strong>Day 1：</strong>验 <code>node_hosts</code> 行随 agent 注册成功；<code>vpn_node_usages</code> 有数据；<code>NodeHealthReconcileJob</code> 不会乱标</li>
@@ -161,29 +270,56 @@
   <li><strong>Day 3-5：</strong>持续观察 TG 告警；如阈值不合适在 BO 调整（不需重启后端）</li>
   <li><strong>Day 5+：</strong>打 production tag，CI/CD 部署到生产；维护时间窗内整批重装生产节点</li>
 </ol>
+<ol class="en">
+  <li>Merge <code>fea/node-driven-quota</code> into <code>main</code> after MR review</li>
+  <li>CI/CD applies all migrations to Staging automatically</li>
+  <li><strong>Day 1:</strong> verify <code>node_hosts</code> rows are created on agent registration, <code>vpn_node_usages</code> has data, and <code>NodeHealthReconcileJob</code> doesn't mislabel anything</li>
+  <li><strong>Day 2:</strong> pick one staging node, run a BO batch-reinstall, observe for 24h</li>
+  <li><strong>Day 3-5:</strong> keep watching TG alerts; if thresholds need tuning, adjust in BO (no backend restart)</li>
+  <li><strong>Day 5+:</strong> tag for production, CI/CD deploys; batch-reinstall production nodes within the maintenance window</li>
+</ol>
 
-<div class="callout">
+<div class="callout zh">
   <strong>回滚路径：</strong>每个迁移都是增量（只 ADD COLUMN，没有 DROP）。回滚代码即可恢复原行为，新表保留但无人使用。所有新设置默认为 OFF 或安全值。
 </div>
+<div class="callout en">
+  <strong>Rollback path:</strong> every migration is additive (ADD COLUMN only, no DROP). Rolling back the code restores the old behavior; new tables remain but go unused. All new settings default to OFF or to safe values.
+</div>
 
-<h2>7. 相关文档与代码索引</h2>
-<ul>
+<h2 class="zh">7. 相关文档与代码索引</h2>
+<h2 class="en">7. Related Docs &amp; Code Index</h2>
+<ul class="zh">
   <li>架构：<code>vpn-internal-reports/architecture/free-user-timer-redesign.md</code></li>
   <li>计划：<code>vpn-internal-reports/plans/node-dns-automation-and-admin-ui.md</code></li>
   <li>知识库：<code>.claude/knowledge/dns-automation-decision.md</code> · <code>node-health-state-machine-decision.md</code></li>
   <li>代码：<code>orebackend/internal/{nodehealth,dnsprovider,dnsmgr}/</code> · <code>handler/admin/{dns,node_host}.go</code></li>
   <li>分支：<code>fea/node-driven-quota</code></li>
 </ul>
+<ul class="en">
+  <li>Architecture: <code>vpn-internal-reports/architecture/free-user-timer-redesign.md</code></li>
+  <li>Plan: <code>vpn-internal-reports/plans/node-dns-automation-and-admin-ui.md</code></li>
+  <li>Knowledge base: <code>.claude/knowledge/dns-automation-decision.md</code> · <code>node-health-state-machine-decision.md</code></li>
+  <li>Code: <code>orebackend/internal/{nodehealth,dnsprovider,dnsmgr}/</code> · <code>handler/admin/{dns,node_host}.go</code></li>
+  <li>Branch: <code>fea/node-driven-quota</code></li>
+</ul>
 
-<h2>8. 历史记录</h2>
+<h2 class="zh">8. 历史记录</h2>
+<h2 class="en">8. History</h2>
 <table>
   <tbody>
-    <tr><td>2026-05-02</td><td>Phase A/B/C/D 全部完成 + 文档更新</td></tr>
-    <tr><td>2026-05-02</td><td>Phase 2 状态机 + node_hosts 重构上线</td></tr>
-    <tr><td>2026-05-02</td><td>Phase 0/1 上线（节点驱动计费 + active flag）</td></tr>
+    <tr class="zh"><td>2026-05-02</td><td>Phase A/B/C/D 全部完成 + 文档更新</td></tr>
+    <tr class="en"><td>2026-05-02</td><td>Phases A/B/C/D all complete + docs updated</td></tr>
+    <tr class="zh"><td>2026-05-02</td><td>Phase 2 状态机 + node_hosts 重构上线</td></tr>
+    <tr class="en"><td>2026-05-02</td><td>Phase 2 state machine + node_hosts refactor live</td></tr>
+    <tr class="zh"><td>2026-05-02</td><td>Phase 0/1 上线（节点驱动计费 + active flag）</td></tr>
+    <tr class="en"><td>2026-05-02</td><td>Phases 0/1 live (node-driven billing + active flag)</td></tr>
   </tbody>
 </table>
 
 </div>
+
+<script src="../docs-meta.js"></script>
+<script src="../lang.js"></script>
+<script>initLang();</script>
 </body>
 </html>

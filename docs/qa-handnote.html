@@ -84,7 +84,7 @@
   }
 </style>
 </head>
-<body>
+<body data-doc-id="qa">
 
 <div class="topbar">
   <a class="back-btn" href="../index.html">
@@ -98,7 +98,7 @@
     </div>
     <span class="badge badge-qa">QA</span>
     <span class="badge badge-staging">Staging Only</span>
-    <span class="topbar-date" data-i18n="doc.date">2026年5月</span>
+    <span class="topbar-date" data-meta="dateShort"></span>
   </div>
 </div>
 
@@ -153,8 +153,7 @@
       <h1 class="zh">QA 测试手册 — v3.7.0 测试环境配置</h1>
       <h1 class="en">QA Test Handbook — v3.7.0 Staging Configuration</h1>
       <div class="doc-meta">
-        <span class="zh">更新日期：2026年5月9日</span>
-        <span class="en">Updated: 2026-05-09</span>
+        <span data-meta="dateFull"></span>
         <span class="zh">适合：QA 测试人员</span>
         <span class="en">For: QA Testers</span>
       </div>
@@ -173,7 +172,7 @@
         <tr><td class="zh">Android 测试基线</td><td class="zh"><code>v3.7.0</code>（versionCode 30700）</td><td class="en">Android baseline</td><td class="en"><code>v3.7.0</code> (versionCode 30700)</td></tr>
         <tr><td class="zh">下载入口</td><td class="zh"><code>apk.arrowfishadv.com</code>（双语门户，4 渠道）</td><td class="en">Download portal</td><td class="en"><code>apk.arrowfishadv.com</code> (bilingual, 4 variants)</td></tr>
         <tr><td class="zh">数据库</td><td class="zh">独立 staging 实例</td><td class="en">Database</td><td class="en">Dedicated staging instance</td></tr>
-        <tr><td class="zh">节点端口</td><td class="zh">1443</td><td class="en">Node port</td><td class="en">1443</td></tr>
+        <tr><td class="zh">节点端口</td><td class="zh">443</td><td class="en">Node port</td><td class="en">443</td></tr>
         <tr><td class="zh">SSH 端口（运维）</td><td class="zh">35698</td><td class="en">SSH port (ops)</td><td class="en">35698</td></tr>
       </tbody>
     </table>
@@ -474,7 +473,6 @@
         <tr><td class="zh">Mac 强制更新</td><td class="zh"><strong>开启</strong></td><td class="zh">关闭</td><td class="en">Mac force update</td><td class="en"><strong>On</strong></td><td class="en">Off</td></tr>
         <tr><td class="zh">推荐功能</td><td class="zh">关闭</td><td class="zh">关闭（也待修复）</td><td class="en">Referral</td><td class="en">Off</td><td class="en">Off (also TBD)</td></tr>
         <tr><td class="zh">数据库</td><td class="zh">独立实例</td><td class="zh">主从架构 + 真实数据</td><td class="en">Database</td><td class="en">Dedicated instance</td><td class="en">Primary-replica + real data</td></tr>
-        <tr><td class="zh">节点端口</td><td class="zh">1443</td><td class="zh">443</td><td class="en">Node port</td><td class="en">1443</td><td class="en">443</td></tr>
         <tr><td class="zh">iOS（HiYou）</td><td class="zh">v1.3.0 已冻结</td><td class="zh">仅供现有用户</td><td class="en">iOS (HiYou)</td><td class="en">v1.3.0 frozen</td><td class="en">Existing users only</td></tr>
       </tbody>
     </table>
@@ -573,6 +571,7 @@ function toggleToc() {
   window.addEventListener('scroll', onScroll, { passive: true });
 })();
 </script>
+<script src="../docs-meta.js"></script>
 <script src="../lang.js"></script>
 <script>initLang();</script>
 </body>

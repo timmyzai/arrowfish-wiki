@@ -75,7 +75,7 @@
   }
 </style>
 </head>
-<body>
+<body data-doc-id="ba">
 
 <div class="topbar">
   <a class="back-btn" href="../index.html">
@@ -88,7 +88,7 @@
       <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
     </div>
     <span class="badge badge-ba">BA</span>
-    <span class="topbar-date" data-i18n="doc.date">2026年5月</span>
+    <span class="topbar-date" data-meta="dateShort"></span>
   </div>
 </div>
 
@@ -133,8 +133,7 @@
       <h1 class="zh">BA 业务分析手册 — 数据 · 流程 · 后台</h1>
       <h1 class="en">BA Business Handbook — Data · Flow · Admin</h1>
       <div class="doc-meta">
-        <span class="zh">更新日期：2026年5月9日</span>
-        <span class="en">Updated: 2026-05-09</span>
+        <span data-meta="dateFull"></span>
         <span class="zh">适合：BA · 运营 · 客服</span>
         <span class="en">For: BA · Operations · Customer Support</span>
       </div>
@@ -429,6 +428,7 @@ function toggleToc() {
   window.addEventListener('scroll', onScroll, { passive: true });
 })();
 </script>
+<script src="../docs-meta.js"></script>
 <script src="../lang.js"></script>
 <script>initLang();</script>
 </body>
